@@ -42,6 +42,7 @@ func init() {
 		return event
 	})
 
+	messagesView.SetRegions(true)
 	messagesView.SetWrap(true)
 	messagesView.SetWordWrap(true)
 	messagesView.SetScrollable(false)
@@ -107,7 +108,7 @@ func init() {
 		input.SetText("")
 	})
 
-	messagesFrame.SetBorders(2, 2, 0, 0, 2, 2)
+	messagesFrame.SetBorders(0, 1, 0, 0, 2, 2)
 	flex.AddItem(messagesFrame, 0, 1, false)
 	flex.AddItem(input, 1, 1, true)
 

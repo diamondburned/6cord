@@ -2,8 +2,11 @@
 
 ## Todo
 
-- [ ] Use TextView instead of List for Messages
-	- [ ] Consider tv.Write() bytes
+- [x] Use TextView instead of List for Messages
+	- [x] Consider tv.Write() bytes
+	- [ ] Split messages into Primitives or find a way to edit them individually
+- [ ] Fetch nicknames and colors (16-bit hex to 256 cols somehow...)
+	- Async should be for later, when Split messages is done
 - [ ] Implement embed SIXEL images
 - [ ] Implement inline emojis
 - [ ] Implement auto-completion popups

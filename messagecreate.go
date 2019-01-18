@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	messageFormat = "\n[::b]%s  [-:-:-]%s"
+	messageFormat = "\n[\"%d\"][::b]%s  [-:-:-]%s[\"\"]"
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -22,7 +22,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 
 		messagesView.Write([]byte(
-			fmt.Sprintf(messageFormat, m.Author.Username, tview.Escape(m.Content)),
+			fmt.Sprintf(messageFormat, m.ID, m.Author.Username, tview.Escape(m.Content)),
 		))
 
 		messagesView.ScrollToEnd()

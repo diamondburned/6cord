@@ -15,7 +15,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		log.Panicln(err)
 	}
 
-	messagesFrame.AddText(ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
+	messagesFrame.AddText("#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
 
 	msgs, err := s.ChannelMessages(ChannelID, 75, 0, 0, 0)
 	if err != nil {
@@ -35,7 +35,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			}
 
 			messagesView.Write([]byte(
-				fmt.Sprintf(messageFormat, msg.Author.Username, tview.Escape(msg.Content)),
+				fmt.Sprintf(messageFormat, msg.ID, msg.Author.Username, tview.Escape(msg.Content)),
 			))
 
 			LastAuthor = msg.Author.ID
