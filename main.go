@@ -21,10 +21,13 @@ const (
 )
 
 var (
-	app          = tview.NewApplication()
-	messagesList = tview.NewList()
+	app           = tview.NewApplication()
+	messagesView  = tview.NewTextView()
+	messagesFrame = tview.NewFrame(messagesView)
 
 	ChannelID int64 = 0
+
+	LastAuthor int64 = 0
 
 	d *discordgo.Session
 )
@@ -38,6 +41,11 @@ func init() {
 
 		return event
 	})
+
+	messagesView.SetWrap(true)
+	messagesView.SetWordWrap(true)
+	messagesView.SetScrollable(false)
+	messagesView.SetDynamicColors(true)
 
 	token := flag.String("t", "", "Discord token (1)")
 
@@ -77,7 +85,7 @@ func init() {
 	}
 
 	if len(flag.Args()) != 1 {
-		panic("Invalid args! First and second args should be GuildID and ChannelID!")
+		panic("Invalid args! First arg should be ChannelID!")
 	}
 
 	ChannelID, err = strconv.ParseInt(flag.Args()[0], 10, 64)
@@ -86,11 +94,11 @@ func init() {
 	}
 
 	flex := tview.NewFlex().SetDirection(tview.FlexRow)
-	flex.SetBackgroundColor(tview.Styles.PrimitiveBackgroundColor)
+	flex.SetBackgroundColor(tcell.ColorDefault)
 
 	input := tview.NewInputField()
 
-	input.SetBackgroundColor(tview.Styles.PrimitiveBackgroundColor)
+	input.SetBackgroundColor(tcell.ColorDefault)
 	input.SetDoneFunc(func(key tcell.Key) {
 		if key == tcell.KeyEnter {
 			d.ChannelMessageSend(ChannelID, input.GetText())
@@ -99,7 +107,8 @@ func init() {
 		input.SetText("")
 	})
 
-	flex.AddItem(messagesList, 0, 1, false)
+	messagesFrame.SetBorders(2, 2, 0, 0, 2, 2)
+	flex.AddItem(messagesFrame, 0, 1, false)
 	flex.AddItem(input, 1, 1, true)
 
 	app.SetRoot(flex, true)

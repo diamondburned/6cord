@@ -1,6 +1,15 @@
 package main
 
-import "github.com/RumbleFrog/discordgo"
+import (
+	"fmt"
+
+	"github.com/RumbleFrog/discordgo"
+	"github.com/rivo/tview"
+)
+
+const (
+	messageFormat = "\n[::b]%s  [-:-:-]%s"
+)
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if m.ChannelID != ChannelID {
@@ -8,14 +17,16 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	app.QueueUpdateDraw(func() {
-		messagesList.AddItem(
-			m.Author.Username,
-			m.Content,
-			0, nil,
-		)
+		if LastAuthor != m.Author.ID {
+			messagesView.Write([]byte("\n"))
+		}
 
-		messagesList.SetCurrentItem(
-			messagesList.GetItemCount(),
-		)
+		messagesView.Write([]byte(
+			fmt.Sprintf(messageFormat, m.Author.Username, tview.Escape(m.Content)),
+		))
+
+		messagesView.ScrollToEnd()
+
+		LastAuthor = m.Author.ID
 	})
 }
