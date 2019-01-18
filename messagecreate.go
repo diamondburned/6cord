@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	messageFormat = "\n[\"%d\"][::b]%s  [-:-:-]%s[\"\"]"
+	messageFormat = "\n[\"%d\"][::b]%s  [::-]%s[\"\"]"
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
