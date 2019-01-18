@@ -1,0 +1,29 @@
+The NEWS file was generated from xterm.log.html, which serves as the changelog
+for xterm.
+--------------------------------------------------------------------------------
+                            Patch #343 - 2019/01/13
+
+     * modify run-tic.sh to prefer ncurses6 over ncurses5, when available.
+     * add  COPYING file, and dummy "check" makefile rule for testing Arch
+       packages.
+     * add/update package scripts for FreeBSD and NetBSD, for testing.
+     * update  tables  of  combining  and  ambiguous-width  characters  in
+       wcwidth.c based on Unicode 11.0.0.
+     * modify  xterm-new  sample  terminfo  entry to correspond to ncurses
+       6.1, using the SGR 1006 mouse protocol.
+     * improve  manual  page  discussion  of  selection  ownership  versus
+       highlighting (prompted by discussion with Martin Hostettler).
+     * restore/repair keepClipboard feature which was broken by changes in
+       patch #338 (report by Martin Hostettler).
+     * improve documentation for deleteIsDEL resource.
+     * modify  DECRQM  response for private mode 1037 to account for cases
+       where the resource deleteIsDEL is initially neither true nor false,
+       but  dependent  upon  the  keyboard type (report/analysis by Martin
+       Hostettler).
+     * clear pointers for pattern/fontset after destroying their data when
+       switching facename with an escape sequence (report by Robert Ross).
+     * modify  logic  for  TrueType fallback fonts to match the sort-order
+       used by fc-match (report by Robert Ross).
+     * add  resource  setting  limitFontsets which can be used to limit or
+       disable the new TrueType fontset feature (request by Robert Ross).
+
