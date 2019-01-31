@@ -22,7 +22,7 @@ const (
 
 var (
 	app           = tview.NewApplication()
-	messagesView  = tview.NewTextView()
+	messagesView  = tview.NewTable()
 	messagesFrame = tview.NewFrame(messagesView)
 
 	ChannelID int64 = 0
@@ -42,11 +42,11 @@ func init() {
 		return event
 	})
 
-	messagesView.SetRegions(true)
-	messagesView.SetWrap(true)
-	messagesView.SetWordWrap(true)
-	messagesView.SetScrollable(false)
-	messagesView.SetDynamicColors(true)
+	// messagesView.SetRegions(false)
+	// messagesView.SetWrap(false)
+	// messagesView.SetWordWrap(false)
+	// messagesView.SetScrollable(true)
+	// messagesView.SetDynamicColors(true)
 
 	token := flag.String("t", "", "Discord token (1)")
 
@@ -85,14 +85,7 @@ func init() {
 		log.Panicln(err)
 	}
 
-	if len(flag.Args()) != 1 {
-		panic("Invalid args! First arg should be ChannelID!")
-	}
-
-	ChannelID, err = strconv.ParseInt(flag.Args()[0], 10, 64)
-	if err != nil {
-		panic(err)
-	}
+	d.State.MaxMessageCount = 50
 
 	flex := tview.NewFlex().SetDirection(tview.FlexRow)
 	flex.SetBackgroundColor(tcell.ColorDefault)
@@ -139,8 +132,18 @@ func main() {
 	// 	}
 	// }
 
+	if len(flag.Args()) != 1 {
+		panic("Invalid args! First arg should be ChannelID!")
+	}
+
+	ChannelID, err = strconv.ParseInt(flag.Args()[0], 10, 64)
+	if err != nil {
+		panic(err)
+	}
+
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
+	d.AddHandler(messageUpdate)
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

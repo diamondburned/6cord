@@ -1,8 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"strconv"
+	"strings"
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gdamore/tcell"
@@ -15,7 +16,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		log.Panicln(err)
 	}
 
-	messagesFrame.AddText("#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
+	messagesFrame.AddText("\t#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
 
 	msgs, err := s.ChannelMessages(ChannelID, 75, 0, 0, 0)
 	if err != nil {
@@ -30,17 +31,39 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	app.QueueUpdateDraw(func() {
 		for _, msg := range msgs {
-			if LastAuthor != msg.Author.ID {
-				messagesView.Write([]byte("\n"))
-			}
-
-			messagesView.Write([]byte(
-				fmt.Sprintf(messageFormat, msg.ID, msg.Author.Username, tview.Escape(msg.Content)),
-			))
-
-			LastAuthor = msg.Author.ID
+			i := messagesView.GetRowCount()
+			setMessage(msg, i)
 		}
 
 		messagesView.ScrollToEnd()
+
 	})
+}
+
+func setMessage(msg *discordgo.Message, i int) (n int) {
+	if msg.Author != nil {
+		messagesView.SetCellSimple(i, 0, msg.Author.Username)
+	}
+
+	lines := strings.Split(msg.Content, "\n")
+
+	c := tview.NewTableCell(lines[0]).SetExpansion(1)
+
+	messagesView.SetCell(i, 1, c)
+
+	for e := 1; e < len(lines); e++ {
+		c := tview.NewTableCell(lines[e]).SetExpansion(1)
+
+		messagesView.InsertRow(i + e)
+		messagesView.SetCell(i+e, 1, c)
+		messagesView.SetCellSimple(i+e, 2, strconv.FormatInt(msg.ID, 10))
+	}
+
+	n = len(lines)
+
+	messagesView.SetCellSimple(i, 2, strconv.FormatInt(msg.ID, 10))
+
+	LastAuthor = msg.Author.ID
+
+	return
 }

@@ -30,7 +30,7 @@ func SixelImage(r io.Reader, w, h uint) (wr bytes.Buffer, err error) {
 			h = uint(float64(img.Bounds().Dy()) / rx)
 		}
 
-		tmp := image.NewNRGBA64(image.Rect(0, 0, int(w), int(h)))
+		tmp := image.NewNRGBA(image.Rect(0, 0, int(w), int(h)))
 
 		if err := graphics.Scale(tmp, img); err != nil {
 			return wr, err
