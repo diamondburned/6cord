@@ -1,0 +1,3 @@
+[submodule "xterm-343"]
+	path = xterm-343
+	url = https://gitlab.com/diamondburned/xterm-343
