@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"os"
-	"strconv"
 
 	_ "image/gif"
 	_ "image/jpeg"
@@ -22,12 +21,14 @@ const (
 
 var (
 	app           = tview.NewApplication()
-	messagesView  = tview.NewTable()
+	guildView     = tview.NewTreeView()
+	messagesView  = tview.NewTextView()
 	messagesFrame = tview.NewFrame(messagesView)
+	input         = tview.NewInputField()
 
-	ChannelID int64 = 0
+	ChannelID int64
 
-	LastAuthor int64 = 0
+	LastAuthor int64
 
 	d *discordgo.Session
 )
@@ -42,11 +43,11 @@ func init() {
 		return event
 	})
 
-	// messagesView.SetRegions(false)
-	// messagesView.SetWrap(false)
-	// messagesView.SetWordWrap(false)
-	// messagesView.SetScrollable(true)
-	// messagesView.SetDynamicColors(true)
+	messagesView.SetRegions(true)
+	messagesView.SetWrap(true)
+	messagesView.SetWordWrap(true)
+	messagesView.SetScrollable(true)
+	messagesView.SetDynamicColors(true)
 
 	token := flag.String("t", "", "Discord token (1)")
 
@@ -87,25 +88,47 @@ func init() {
 
 	d.State.MaxMessageCount = 50
 
-	flex := tview.NewFlex().SetDirection(tview.FlexRow)
-	flex.SetBackgroundColor(tcell.ColorDefault)
+	appflex := tview.NewFlex().SetDirection(tview.FlexColumn)
 
-	input := tview.NewInputField()
+	{ // Left container
+		appflex.AddItem(guildView, 0, 1, true)
+	}
 
-	input.SetBackgroundColor(tcell.ColorDefault)
-	input.SetDoneFunc(func(key tcell.Key) {
-		if key == tcell.KeyEnter {
-			d.ChannelMessageSend(ChannelID, input.GetText())
-		}
+	{ // Right container
+		flex := tview.NewFlex().SetDirection(tview.FlexRow)
+		flex.SetBackgroundColor(tcell.ColorDefault)
 
-		input.SetText("")
-	})
+		input.SetBackgroundColor(tcell.ColorDefault)
+		input.SetDoneFunc(func(key tcell.Key) {
+			if key == tcell.KeyEnter {
+				d.ChannelMessageSend(ChannelID, input.GetText())
+			}
 
-	messagesFrame.SetBorders(0, 1, 0, 0, 2, 2)
-	flex.AddItem(messagesFrame, 0, 1, false)
-	flex.AddItem(input, 1, 1, true)
+			input.SetText("")
+		})
 
-	app.SetRoot(flex, true)
+		input.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+			if input.GetText() != "" {
+				return ev
+			}
+
+			switch ev.Key() {
+			case tcell.KeyLeft:
+				app.SetFocus(guildView)
+				return nil
+			}
+
+			return ev
+		})
+
+		messagesFrame.SetBorders(0, 1, 0, 0, 2, 2)
+		flex.AddItem(messagesFrame, 0, 1, false)
+		flex.AddItem(input, 1, 1, true)
+
+		appflex.AddItem(flex, 0, 4, true)
+	}
+
+	app.SetRoot(appflex, true)
 }
 
 func main() {
@@ -132,18 +155,8 @@ func main() {
 	// 	}
 	// }
 
-	if len(flag.Args()) != 1 {
-		panic("Invalid args! First arg should be ChannelID!")
-	}
-
-	ChannelID, err = strconv.ParseInt(flag.Args()[0], 10, 64)
-	if err != nil {
-		panic(err)
-	}
-
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
-	d.AddHandler(messageUpdate)
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())
@@ -160,26 +173,4 @@ func main() {
 	if err := app.Run(); err != nil {
 		log.Panicln(err)
 	}
-
-	// go func(ml *tview.List) {
-	// 	time.Sleep(time.Second * 2)
-	// 	f, _ := os.Open("/home/diamond/Pictures/emoji.jpg")
-	// 	defer f.Close()
-
-	// 	img, _, _ := image.Decode(f)
-
-	// 	tmp := image.NewNRGBA64(image.Rect(0, 0, int(20), int(20)))
-	// 	_ = graphics.Scale(tmp, img)
-
-	// 	img = tmp
-
-	// 	app.QueueUpdateDraw(func() {
-	// 		ml.AddItem(
-	// 			"ym555#5555",
-	// 			"uwu im gay",
-	// 			' ', nil,
-	// 		)
-	// 	})
-	// }(messagesList)
-
 }

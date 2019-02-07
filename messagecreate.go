@@ -1,13 +1,17 @@
 package main
 
 import (
-	"strconv"
+	"fmt"
+	"strings"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/rivo/tview"
 )
 
 const (
-	messageFormat = "  %s"
+	authorFormat = "\n\n[::b]%s"
+
+	messageFormat = "\n[\"%d\"][::-]%s[\"\"]"
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -16,42 +20,25 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	app.QueueUpdateDraw(func() {
-		i := messagesView.GetRowCount()
-		setMessage(m.Message, i)
+		if LastAuthor != m.Author.ID {
+			messagesView.Write([]byte(
+				fmt.Sprintf(authorFormat, m.Author.Username),
+			))
+		}
 
-		messagesView.ScrollToEnd()
-	})
-}
-
-func messageUpdate(s *discordgo.Session, m *discordgo.MessageUpdate) {
-	if m.ChannelID != ChannelID {
-		return
-	}
-
-	IDstring := strconv.FormatInt(m.ID, 10)
-
-	for i := 0; i < messagesView.GetRowCount(); i++ {
-		if c := messagesView.GetCell(i, 2); c != nil {
-			if c.Text == IDstring {
-				messagesView.InsertRow(i)
-
-				// At this point, i is the empty row.
-				// We will edit the i row
-				n := setMessage(m.Message, i)
-
-				for e := n - 1 + i; i < messagesView.GetRowCount(); e++ {
-					if c := messagesView.GetCell(i, 2); c != nil {
-						if c.Text == IDstring {
-							messagesView.RemoveRow(e)
-						}
-					}
+		messagesView.Write([]byte(
+			fmt.Sprintf(messageFormat, m.ID, func() string {
+				var c string
+				for _, l := range strings.Split(m.Content, "\n") {
+					c += "\t\t" + tview.Escape(l) + "\n"
 				}
 
-				app.Draw()
+				return c
+			}()),
+		))
 
-				return
-			}
-		}
-	}
+		messagesView.ScrollToEnd()
 
+		LastAuthor = m.Author.ID
+	})
 }

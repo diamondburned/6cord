@@ -1,24 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"log"
-	"strconv"
-	"strings"
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
 
-func onReady(s *discordgo.Session, r *discordgo.Ready) {
-	ch, err := s.Channel(ChannelID) // todo: state first
+func loadChannel() {
+	ch, err := d.Channel(ChannelID) // todo: state first
 	if err != nil {
 		log.Panicln(err)
 	}
 
-	messagesFrame.AddText("\t#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
+	messagesFrame.AddText("#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
 
-	msgs, err := s.ChannelMessages(ChannelID, 75, 0, 0, 0)
+	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
 	if err != nil {
 		log.Panicln(err)
 	}
@@ -31,39 +30,68 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	app.QueueUpdateDraw(func() {
 		for _, msg := range msgs {
-			i := messagesView.GetRowCount()
-			setMessage(msg, i)
+			if LastAuthor != msg.Author.ID {
+				messagesView.Write([]byte("\n"))
+			}
+
+			messagesView.Write([]byte(
+				fmt.Sprintf(messageFormat, msg.ID, msg.Author.Username, tview.Escape(msg.Content)),
+			))
+
+			LastAuthor = msg.Author.ID
 		}
 
 		messagesView.ScrollToEnd()
-
 	})
 }
 
-func setMessage(msg *discordgo.Message, i int) (n int) {
-	if msg.Author != nil {
-		messagesView.SetCellSimple(i, 0, msg.Author.Username)
+func onReady(s *discordgo.Session, r *discordgo.Ready) {
+	// loadChannel()
+
+	guildNode := tview.NewTreeNode("Guilds")
+
+	guildView.SetRoot(guildNode)
+	guildView.SetCurrentNode(guildNode)
+	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
+		reference := node.GetReference()
+		if reference == nil {
+			node.SetExpanded(!node.IsExpanded())
+			return
+		}
+
+		if id, ok := reference.(int64); ok {
+			ChannelID = id
+			loadChannel()
+		}
+	})
+
+	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+		switch ev.Key() {
+		case tcell.KeyRight:
+			app.SetFocus(input)
+		}
+
+		return ev
+	})
+
+	for _, gID := range r.Settings.GuildPositions {
+		g, e := d.State.Guild(gID)
+		if e != nil {
+			log.Fatalln(e)
+		}
+
+		this := tview.NewTreeNode(g.Name)
+		this.Collapse()
+
+		for _, ch := range g.Channels {
+			chNode := tview.NewTreeNode("#" + ch.Name)
+			chNode.SetReference(ch.ID)
+
+			this.AddChild(chNode)
+		}
+
+		guildNode.AddChild(this)
 	}
 
-	lines := strings.Split(msg.Content, "\n")
-
-	c := tview.NewTableCell(lines[0]).SetExpansion(1)
-
-	messagesView.SetCell(i, 1, c)
-
-	for e := 1; e < len(lines); e++ {
-		c := tview.NewTableCell(lines[e]).SetExpansion(1)
-
-		messagesView.InsertRow(i + e)
-		messagesView.SetCell(i+e, 1, c)
-		messagesView.SetCellSimple(i+e, 2, strconv.FormatInt(msg.ID, 10))
-	}
-
-	n = len(lines)
-
-	messagesView.SetCellSimple(i, 2, strconv.FormatInt(msg.ID, 10))
-
-	LastAuthor = msg.Author.ID
-
-	return
+	app.Draw()
 }
