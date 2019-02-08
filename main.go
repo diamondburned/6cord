@@ -43,6 +43,11 @@ func init() {
 		return event
 	})
 
+	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+		// workaround to prevent crash when no root in tree
+		return nil
+	})
+
 	messagesView.SetRegions(true)
 	messagesView.SetWrap(true)
 	messagesView.SetWordWrap(true)
@@ -98,7 +103,8 @@ func init() {
 		flex := tview.NewFlex().SetDirection(tview.FlexRow)
 		flex.SetBackgroundColor(tcell.ColorDefault)
 
-		input.SetBackgroundColor(tcell.ColorDefault)
+		input.SetBackgroundColor(tcell.ColorAqua)
+
 		input.SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEnter {
 				d.ChannelMessageSend(ChannelID, input.GetText())
@@ -121,11 +127,12 @@ func init() {
 			return ev
 		})
 
-		messagesFrame.SetBorders(0, 1, 0, 0, 2, 2)
+		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
+
 		flex.AddItem(messagesFrame, 0, 1, false)
 		flex.AddItem(input, 1, 1, true)
 
-		appflex.AddItem(flex, 0, 4, true)
+		appflex.AddItem(flex, 0, 3, true)
 	}
 
 	app.SetRoot(appflex, true)
@@ -157,6 +164,7 @@ func main() {
 
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
+	d.AddHandler(messageUpdate)
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gdamore/tcell"
@@ -29,16 +30,33 @@ func loadChannel() {
 	}
 
 	app.QueueUpdateDraw(func() {
-		for _, msg := range msgs {
-			if LastAuthor != msg.Author.ID {
-				messagesView.Write([]byte("\n"))
+		for _, m := range msgs {
+			if rstore.Check(m.Author, RelationshipBlocked) {
+				continue
+			}
+
+			if LastAuthor != m.Author.ID {
+				messagesView.Write([]byte(
+					fmt.Sprintf(authorFormat, m.Author.Username),
+				))
+			} else {
+				messagesView.Write([]byte(
+					"\n" + strings.Repeat(" ", len(m.Author.Username)+3),
+				))
 			}
 
 			messagesView.Write([]byte(
-				fmt.Sprintf(messageFormat, msg.ID, msg.Author.Username, tview.Escape(msg.Content)),
+				fmt.Sprintf(messageFormat, m.ID, func() string {
+					var c []string
+					for _, l := range strings.Split(m.Content, "\n") {
+						c = append(c, tview.Escape(l))
+					}
+
+					return strings.Join(c, "\n")
+				}()),
 			))
 
-			LastAuthor = msg.Author.ID
+			LastAuthor = m.Author.ID
 		}
 
 		messagesView.ScrollToEnd()
@@ -46,6 +64,8 @@ func loadChannel() {
 }
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
+	rstore.Relationships = r.Relationships
+
 	// loadChannel()
 
 	guildNode := tview.NewTreeNode("Guilds")
@@ -69,6 +89,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		switch ev.Key() {
 		case tcell.KeyRight:
 			app.SetFocus(input)
+			return nil
+		case tcell.KeyLeft:
+			return nil
 		}
 
 		return ev
