@@ -16,6 +16,7 @@ func loadChannel() {
 		log.Panicln(err)
 	}
 
+	messagesFrame.Clear()
 	messagesFrame.AddText("#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
 
 	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
@@ -46,14 +47,10 @@ func loadChannel() {
 			}
 
 			messagesView.Write([]byte(
-				fmt.Sprintf(messageFormat, m.ID, func() string {
-					var c []string
-					for _, l := range strings.Split(m.Content, "\n") {
-						c = append(c, tview.Escape(l))
-					}
-
-					return strings.Join(c, "\n")
-				}()),
+				fmt.Sprintf(
+					messageFormat,
+					m.ID, fmtMessage(m, false),
+				),
 			))
 
 			LastAuthor = m.Author.ID

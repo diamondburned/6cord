@@ -43,7 +43,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		messagesView.Write([]byte(
 			fmt.Sprintf(
 				messageFormat,
-				m.ID, spaceIndent(m.Author, m.Content, false),
+				m.ID, fmtMessage(m.Message, false),
 			),
 		))
 
@@ -82,7 +82,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
-	st := spaceIndent(m.Author, u.Content, true) + "[::-][\"\"]"
+	st := fmtMessage(m, true) + "[::-][\"\"]"
 	app.QueueUpdateDraw(func() {
 		messagesView.Write([]byte(st))
 	})
@@ -93,11 +93,20 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 	})
 }
 
-func spaceIndent(au *discordgo.User, ct string, editmode bool) string {
+func fmtMessage(m *discordgo.Message, editmode bool) string {
 	var (
+		ct = m.ContentWithMentionsReplaced()
+		au = m.Author
+
+		username = "\t\t"
+
 		c []string
 		l = strings.Split(ct, "\n")
 	)
+
+	if au != nil {
+		username = au.Username
+	}
 
 	if !editmode {
 		c = append(c, tview.Escape(l[0]))
@@ -117,10 +126,16 @@ func spaceIndent(au *discordgo.User, ct string, editmode bool) string {
 			sfx += ">"
 		}
 
-		sp := strings.Repeat(" ", len(au.Username)+3) + sfx
+		sp := strings.Repeat(" ", len(username)+3) + sfx
 
 		for i := a; i < len(l); i++ {
 			c = append(c, sp+tview.Escape(l[i]))
+		}
+
+		c = append(c, "\n")
+
+		for _, a := range m.Attachments {
+			c = append(c, sp+tview.Escape(a.URL))
 		}
 	}
 

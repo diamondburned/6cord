@@ -107,7 +107,16 @@ func init() {
 
 		input.SetDoneFunc(func(key tcell.Key) {
 			if key == tcell.KeyEnter {
-				d.ChannelMessageSend(ChannelID, input.GetText())
+				text := input.GetText()
+				if text == "" {
+					return
+				}
+
+				go func(text string) {
+					if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
+						log.Println(err)
+					}
+				}(text)
 			}
 
 			input.SetText("")
@@ -127,7 +136,7 @@ func init() {
 			return ev
 		})
 
-		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
+		messagesFrame.SetBorders(0, 0, 0, 1, 0, 0)
 
 		flex.AddItem(messagesFrame, 0, 1, false)
 		flex.AddItem(input, 1, 1, true)
