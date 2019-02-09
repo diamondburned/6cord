@@ -47,7 +47,8 @@ func loadChannel() {
 				return
 			}
 
-			username, color := getUserData(m)
+			// Too expensive, performance wise
+			// username, color := getUserData(m)
 
 			sentTime, err := m.Timestamp.Parse()
 			if err != nil {
@@ -58,7 +59,7 @@ func loadChannel() {
 			if LastAuthor != m.Author.ID {
 				msg = fmt.Sprintf(
 					authorFormat,
-					color, username,
+					16777215, m.Author.Username,
 					sentTime.Format(time.Stamp),
 				)
 			}
@@ -76,12 +77,14 @@ func loadChannel() {
 
 	wg.Wait()
 
+	messagesView.Clear()
 	messagesView.Write([]byte(
 		strings.Join(messages, ""),
 	))
 
 	messagesView.ScrollToEnd()
 
+	app.SetFocus(guildView)
 }
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {

@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 
+	"github.com/rivo/tview"
+
 	"github.com/RumbleFrog/discordgo"
 )
 
@@ -51,7 +53,7 @@ func getUserData(m *discordgo.Message) (name string, color int) {
 	}
 
 	if member.Nick != "" {
-		name = member.Nick
+		name = tview.Escape(member.Nick)
 	}
 
 	return

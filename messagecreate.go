@@ -72,6 +72,10 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
+	if rstore.Check(m.Author, RelationshipBlocked) {
+		return
+	}
+
 	username, _ := getUserData(m)
 
 	app.QueueUpdateDraw(func() {
@@ -85,7 +89,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		messagesView.Highlight(fmt.Sprintf("%d", u.ID))
 	})
 
-	st := fmtMessage(m) + "[::-][\"\"]"
+	st := fmtMessage(m) + "[::-][\"\"]\n"
 	app.QueueUpdateDraw(func() {
 		messagesView.Write([]byte(st))
 	})

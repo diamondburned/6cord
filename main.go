@@ -23,11 +23,13 @@ const (
 
 var (
 	app           = tview.NewApplication()
+	rightflex     = tview.NewFlex()
 	guildView     = tview.NewTreeView()
 	messagesView  = tview.NewTextView()
 	messagesFrame = tview.NewFrame(messagesView)
 	wrapFrame     *tview.Frame
 	input         = tview.NewInputField()
+	autocomp      = tview.NewList()
 
 	// ChannelID stores the current channel's ID
 	ChannelID int64
@@ -44,15 +46,6 @@ func main() {
 		`\n`, "\n",
 		`\t`, "\t",
 	)
-
-	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
-		switch event.Key() {
-		case tcell.KeyEscape:
-			app.Stop()
-		}
-
-		return event
-	})
 
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 		// workaround to prevent crash when no root in tree
@@ -104,6 +97,8 @@ func main() {
 
 	d.State.MaxMessageCount = 50
 
+	// Main app page
+
 	appflex := tview.NewFlex().SetDirection(tview.FlexColumn)
 
 	{ // Left container
@@ -113,14 +108,29 @@ func main() {
 	}
 
 	{ // Right container
-		flex := tview.NewFlex().SetDirection(tview.FlexRow)
-		flex.SetBackgroundColor(tcell.ColorDefault)
+		rightflex.SetDirection(tview.FlexRow)
+		rightflex.SetBackgroundColor(tcell.ColorDefault)
 
-		wrapFrame = tview.NewFrame(flex)
+		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
 		wrapFrame.SetTitleColor(tcell.ColorWhite)
+
+		autocomp.ShowSecondaryText(false)
+		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+			switch ev.Key() {
+			case tcell.KeyDown:
+				if autocomp.GetCurrentItem() == autocomp.GetItemCount()-1 {
+					app.SetFocus(input)
+					return nil
+				}
+
+				return ev
+			}
+
+			return ev
+		})
 
 		input.SetBackgroundColor(tcell.ColorAqua)
 		input.SetPlaceholder("Send a message or input a command")
@@ -134,6 +144,8 @@ func main() {
 
 				app.SetFocus(guildView)
 				return nil
+			case tcell.KeyUp:
+				app.SetFocus(autocomp)
 			case tcell.KeyEnter:
 				text := input.GetText()
 				if text == "" {
@@ -156,15 +168,58 @@ func main() {
 			return ev
 		})
 
-		input.SetChangedFunc(func(text string) {})
+		input.SetChangedFunc(func(text string) {
+			// switch {
+			// case strings.HasPrefix(text, "@"):
+
+			// }
+			// if text == "magic" {
+			// 	for i := 0; i < 10; i++ {
+			// 		autocomp.InsertItem(i, "magic", "", '1', nil)
+			// 	}
+
+			// 	rightflex.ResizeItem(autocomp, 10, 1)
+			// } else {
+			// 	clearList()
+			// }
+
+			// app.Draw()
+		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
 
-		flex.AddItem(messagesFrame, 0, 1, false)
-		flex.AddItem(input, 1, 1, true)
+		rightflex.AddItem(messagesFrame, 0, 1, false)
+		rightflex.AddItem(autocomp, 1, 1, true)
+		rightflex.AddItem(input, 1, 1, true)
 
 		appflex.AddItem(wrapFrame, 0, 3, true)
 	}
+
+	var showChannels = true
+
+	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyEscape:
+			app.Stop()
+		case tcell.KeyTab:
+			showChannels = !showChannels
+			if showChannels {
+				wrapFrame.SetBorder(true)
+				appflex.RemoveItem(wrapFrame)
+
+				appflex.AddItem(guildView, 0, 1, true)
+				appflex.AddItem(wrapFrame, 0, 3, true)
+
+				app.SetFocus(guildView)
+			} else {
+				wrapFrame.SetBorder(false)
+				appflex.RemoveItem(guildView)
+				app.SetFocus(input)
+			}
+		}
+
+		return event
+	})
 
 	app.SetRoot(appflex, true)
 
