@@ -63,7 +63,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 	app.QueueUpdateDraw(func() {
 		messagesView.Write([]byte(
 			fmt.Sprintf(
-				"[\"EDIT_MESSAGE\"]\n"+`[::d]User edited message ID %d:`+"\n",
+				"[\"EDIT_MESSAGE\"]\n\n"+`[::d]User edited message ID %d:`+"\n",
 				u.ID,
 			),
 		))
@@ -123,7 +123,7 @@ func fmtMessage(m *discordgo.Message, editmode bool) string {
 
 		if editmode {
 			a = 0
-			sfx += ">"
+			// sfx += ">"
 		}
 
 		sp := strings.Repeat(" ", len(username)+3) + sfx
@@ -132,10 +132,12 @@ func fmtMessage(m *discordgo.Message, editmode bool) string {
 			c = append(c, sp+tview.Escape(l[i]))
 		}
 
-		c = append(c, "\n")
+		if len(m.Attachments) > 0 {
+			c = append(c, "\n")
 
-		for _, a := range m.Attachments {
-			c = append(c, sp+tview.Escape(a.URL))
+			for _, a := range m.Attachments {
+				c = append(c, sp+tview.Escape(a.URL))
+			}
 		}
 	}
 
