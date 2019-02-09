@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 
 	"github.com/RumbleFrog/discordgo"
@@ -103,7 +104,19 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this := tview.NewTreeNode(g.Name)
 		this.Collapse()
 
+		sort.Slice(g.Channels, func(i, j int) bool {
+			return g.Channels[i].Position < g.Channels[j].Position
+		})
+
 		for _, ch := range g.Channels {
+			if !isValidCh(ch.Type) {
+				continue
+			}
+
+			if g.Name == "r/unixporn" {
+				log.Println(ch.Name, ch.Topic)
+			}
+
 			chNode := tview.NewTreeNode("#" + ch.Name)
 			chNode.SetReference(ch.ID)
 
@@ -114,4 +127,10 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	}
 
 	app.Draw()
+}
+
+func isValidCh(t discordgo.ChannelType) bool {
+	/**/ return t == discordgo.ChannelTypeGuildText ||
+		/*****/ t == discordgo.ChannelTypeDM ||
+		/*****/ t == discordgo.ChannelTypeGroupDM
 }
