@@ -121,7 +121,11 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	for _, gID := range r.Settings.GuildPositions {
 		g, e := d.State.Guild(gID)
 		if e != nil {
-			log.Fatalln(e)
+			g, e = d.Guild(gID)
+			if e != nil {
+				log.Println("Can't populate guild list on Guild ID:", gID, e)
+				continue
+			}
 		}
 
 		this := tview.NewTreeNode(g.Name)
