@@ -4,6 +4,7 @@ import (
 	"flag"
 	"log"
 	"os"
+	"strings"
 
 	_ "image/gif"
 	_ "image/jpeg"
@@ -16,6 +17,7 @@ import (
 )
 
 const (
+	// AppName used for keyrings
 	AppName = "6cord"
 )
 
@@ -27,14 +29,22 @@ var (
 	wrapFrame     *tview.Frame
 	input         = tview.NewInputField()
 
+	// ChannelID stores the current channel's ID
 	ChannelID int64
 
+	// LastAuthor stores for appending messages
+	// TODO: migrate to table + lastRow
 	LastAuthor int64
 
 	d *discordgo.Session
 )
 
-func init() {
+func main() {
+	sender := strings.NewReplacer(
+		`\n`, "\n",
+		`\t`, "\t",
+	)
+
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyEscape:
@@ -107,44 +117,48 @@ func init() {
 		flex.SetBackgroundColor(tcell.ColorDefault)
 
 		wrapFrame = tview.NewFrame(flex)
+		wrapFrame.SetBorder(true)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
 		wrapFrame.SetTitleColor(tcell.ColorWhite)
 
 		input.SetBackgroundColor(tcell.ColorAqua)
+		input.SetPlaceholder("Send a message or input a command")
 
-		input.SetDoneFunc(func(key tcell.Key) {
-			if key == tcell.KeyEnter {
+		input.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+			switch ev.Key() {
+			case tcell.KeyLeft:
+				if input.GetText() != "" {
+					return ev
+				}
+
+				app.SetFocus(guildView)
+				return nil
+			case tcell.KeyEnter:
 				text := input.GetText()
 				if text == "" {
-					return
+					return nil
 				}
+
+				text = sender.Replace(text)
 
 				go func(text string) {
 					if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
 						log.Println(err)
 					}
 				}(text)
-			}
 
-			input.SetText("")
-		})
+				input.SetText("")
 
-		input.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
-			if input.GetText() != "" {
-				return ev
-			}
-
-			switch ev.Key() {
-			case tcell.KeyLeft:
-				app.SetFocus(guildView)
 				return nil
 			}
 
 			return ev
 		})
 
-		messagesFrame.SetBorders(0, 1, 0, 1, 0, 0)
+		input.SetChangedFunc(func(text string) {})
+
+		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
 
 		flex.AddItem(messagesFrame, 0, 1, false)
 		flex.AddItem(input, 1, 1, true)
@@ -153,10 +167,13 @@ func init() {
 	}
 
 	app.SetRoot(appflex, true)
-}
 
-func main() {
-	logFile, err := os.OpenFile("/tmp/6cord.log", os.O_RDWR|os.O_CREATE|os.O_APPEND|os.O_SYNC, 0664)
+	logFile, err := os.OpenFile(
+		"/tmp/6cord.log",
+		os.O_RDWR|os.O_CREATE|os.O_APPEND|os.O_SYNC,
+		0664,
+	)
+
 	if err != nil {
 		panic(err)
 	}
@@ -183,6 +200,14 @@ func main() {
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
 	d.AddHandler(onTyping)
+
+	// d.AddHandler(func(s *discordgo.Session, ev *discordgo.Event) {
+	// 	log.Println(spew.Sdump(ev))
+	// })
+
+	// d.AddHandler(func(s *discordgo.Session, a *discordgo.MessageAck) {
+	// 	log.Println(spew.Sdump(a))
+	// })
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

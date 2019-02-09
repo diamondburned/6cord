@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
@@ -27,12 +28,14 @@ type TypingUser struct {
 var typing = &TypingUsers{}
 
 func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
+	log.Println(spew.Sdump(ts))
+
 	if ts.ChannelID != ChannelID {
 		return
 	}
 
 	log.Println(ts.UserID, ts.Timestamp)
-	typing.AddUser(ts.UserID, time.Now())
+	go typing.AddUser(ts.UserID, time.Now())
 }
 
 func renderCallback(tu *TypingUsers) {
@@ -102,7 +105,8 @@ func (tu *TypingUsers) AddUser(id int64, t time.Time) {
 
 	tu.lock.Unlock()
 
-	time.Sleep(time.Second * 10)
+	// 6 seconds according to djs code
+	time.Sleep(time.Second * 6)
 
 	tu.lock.Lock()
 	defer tu.lock.Unlock()

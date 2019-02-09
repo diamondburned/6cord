@@ -14,7 +14,7 @@
 	- Esc closes the popup, Enter puts the popup content into the box
 	- When 0 results, hide dialog
 	- Show dialog when: `@`, `#` and potentially `:` (: is pointless as I don't plan on adding emoji inputs any time soon)
-- [ ] An actual channel browser
+- [x] An actual channel browser
 
 ## Credits
 

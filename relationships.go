@@ -22,11 +22,11 @@ type RStore struct {
 type Relationship int
 
 const (
-	RelationshipNone                  Relationship = 0
-	RelationshipFriend                Relationship = 1 // friend
-	RelationshipBlocked               Relationship = 2 // blocked
-	RelationshipIncomingFriendRequest Relationship = 3 // incoming friend request
-	RelationshipSentFriendRequest     Relationship = 4 // sent friend request
+	RelationshipNone                  Relationship = iota
+	RelationshipFriend                             // friend
+	RelationshipBlocked                            // blocked
+	RelationshipIncomingFriendRequest              // incoming friend request
+	RelationshipSentFriendRequest                  // sent friend request
 )
 
 var (

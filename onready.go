@@ -5,6 +5,8 @@ import (
 	"log"
 	"sort"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gdamore/tcell"
@@ -31,34 +33,55 @@ func loadChannel() {
 		msgs[i], msgs[opp] = msgs[opp], msgs[i]
 	}
 
-	app.QueueUpdateDraw(func() {
-		for _, m := range msgs {
+	var (
+		messages = make([]string, len(msgs))
+		wg       sync.WaitGroup
+	)
+
+	for i, m := range msgs {
+		wg.Add(1)
+		go func(m *discordgo.Message, i int) {
+			defer wg.Done()
+
 			if rstore.Check(m.Author, RelationshipBlocked) {
-				continue
+				return
 			}
 
+			username, color := getUserData(m)
+
+			sentTime, err := m.Timestamp.Parse()
+			if err != nil {
+				sentTime = time.Now()
+			}
+
+			var msg string
 			if LastAuthor != m.Author.ID {
-				messagesView.Write([]byte(
-					fmt.Sprintf(authorFormat, m.Author.Username),
-				))
-			} else {
-				messagesView.Write([]byte(
-					"\n" + strings.Repeat(" ", len(m.Author.Username)+3),
-				))
+				msg = fmt.Sprintf(
+					authorFormat,
+					color, username,
+					sentTime.Format(time.Stamp),
+				)
 			}
 
-			messagesView.Write([]byte(
-				fmt.Sprintf(
-					messageFormat,
-					m.ID, fmtMessage(m, false),
-				),
-			))
+			msg += fmt.Sprintf(
+				messageFormat,
+				m.ID, fmtMessage(m),
+			)
+
+			messages[i] = msg
 
 			LastAuthor = m.Author.ID
-		}
+		}(m, i)
+	}
 
-		messagesView.ScrollToEnd()
-	})
+	wg.Wait()
+
+	messagesView.Write([]byte(
+		strings.Join(messages, ""),
+	))
+
+	messagesView.ScrollToEnd()
+
 }
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
@@ -111,10 +134,6 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		for _, ch := range g.Channels {
 			if !isValidCh(ch.Type) {
 				continue
-			}
-
-			if g.Name == "r/unixporn" {
-				log.Println(ch.Name, ch.Topic)
 			}
 
 			chNode := tview.NewTreeNode("#" + ch.Name)
