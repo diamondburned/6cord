@@ -24,6 +24,7 @@ var (
 	guildView     = tview.NewTreeView()
 	messagesView  = tview.NewTextView()
 	messagesFrame = tview.NewFrame(messagesView)
+	wrapFrame     *tview.Frame
 	input         = tview.NewInputField()
 
 	ChannelID int64
@@ -96,12 +97,19 @@ func init() {
 	appflex := tview.NewFlex().SetDirection(tview.FlexColumn)
 
 	{ // Left container
+		guildView.SetPrefixes([]string{"", "", "#"})
+		guildView.SetTopLevel(1)
 		appflex.AddItem(guildView, 0, 1, true)
 	}
 
 	{ // Right container
 		flex := tview.NewFlex().SetDirection(tview.FlexRow)
 		flex.SetBackgroundColor(tcell.ColorDefault)
+
+		wrapFrame = tview.NewFrame(flex)
+		wrapFrame.SetTitle("")
+		wrapFrame.SetTitleAlign(tview.AlignLeft)
+		wrapFrame.SetTitleColor(tcell.ColorWhite)
 
 		input.SetBackgroundColor(tcell.ColorAqua)
 
@@ -136,12 +144,12 @@ func init() {
 			return ev
 		})
 
-		messagesFrame.SetBorders(0, 0, 0, 1, 0, 0)
+		messagesFrame.SetBorders(0, 1, 0, 1, 0, 0)
 
 		flex.AddItem(messagesFrame, 0, 1, false)
 		flex.AddItem(input, 1, 1, true)
 
-		appflex.AddItem(flex, 0, 3, true)
+		appflex.AddItem(wrapFrame, 0, 3, true)
 	}
 
 	app.SetRoot(appflex, true)
@@ -174,6 +182,7 @@ func main() {
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
+	d.AddHandler(onTyping)
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

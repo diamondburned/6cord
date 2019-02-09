@@ -16,8 +16,8 @@ func loadChannel() {
 		log.Panicln(err)
 	}
 
-	messagesFrame.Clear()
-	messagesFrame.AddText("#"+ch.Name, true, tview.AlignLeft, tcell.ColorWhite)
+	wrapFrame.SetTitle("#" + ch.Name)
+	typing.Reset()
 
 	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
 	if err != nil {
