@@ -99,11 +99,16 @@ func main() {
 
 	// Main app page
 
-	appflex := tview.NewFlex().SetDirection(tview.FlexColumn)
+	appflex := tview.NewFlex()
+	appflex.SetDirection(tview.FlexColumn)
 
 	{ // Left container
-		guildView.SetPrefixes([]string{"", "", "#"})
+		guildView.SetPrefixes([]string{"", " ", "#"})
 		guildView.SetTopLevel(1)
+		guildView.SetBorder(true)
+		guildView.SetTitle("Guilds")
+		guildView.SetTitleAlign(tview.AlignLeft)
+
 		appflex.AddItem(guildView, 0, 1, true)
 	}
 
@@ -113,6 +118,7 @@ func main() {
 
 		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
+		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
 		wrapFrame.SetTitleColor(tcell.ColorWhite)
@@ -147,6 +153,11 @@ func main() {
 			case tcell.KeyUp:
 				app.SetFocus(autocomp)
 			case tcell.KeyEnter:
+				if ev.Modifiers() == tcell.ModCtrl {
+					input.SetText(input.GetText() + "\n")
+					return nil
+				}
+
 				text := input.GetText()
 				if text == "" {
 					return nil
@@ -169,10 +180,10 @@ func main() {
 		})
 
 		input.SetChangedFunc(func(text string) {
-			// switch {
-			// case strings.HasPrefix(text, "@"):
+			switch {
+			case strings.HasPrefix(text, "@"):
 
-			// }
+			}
 			// if text == "magic" {
 			// 	for i := 0; i < 10; i++ {
 			// 		autocomp.InsertItem(i, "magic", "", '1', nil)
