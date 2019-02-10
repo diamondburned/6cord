@@ -278,6 +278,14 @@ func main() {
 	log.SetOutput(logFile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
+	discordgo.Logger = func(msgL, caller int, format string, a ...interface{}) {
+		log.Println("Discordgo:", msgL, caller, format)
+
+		if *debug {
+			log.Println(spew.Sdump(a))
+		}
+	}
+
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "rmkeyring":
