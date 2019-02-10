@@ -11,6 +11,7 @@ import (
 	_ "image/png"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 	keyring "github.com/zalando/go-keyring"
@@ -297,11 +298,11 @@ func main() {
 
 	if *debug {
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {
-			log.Println(r)
+			log.Println(spew.Sdump(r))
 		})
 
 		d.AddHandler(func(s *discordgo.Session, dc *discordgo.Disconnect) {
-			log.Println(dc)
+			log.Println(spew.Sdump(dc))
 		})
 
 		// d.AddHandler(func(s *discordgo.Session, i interface{}) {
