@@ -1,91 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sort"
-	"strings"
-	"sync"
-	"time"
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
-
-func loadChannel() {
-	ch, err := d.Channel(ChannelID) // todo: state first
-	if err != nil {
-		log.Panicln(err)
-	}
-
-	wrapFrame.SetTitle("#" + ch.Name)
-	typing.Reset()
-
-	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
-	if err != nil {
-		log.Panicln(err)
-	}
-
-	// reverse
-	for i := len(msgs)/2 - 1; i >= 0; i-- {
-		opp := len(msgs) - 1 - i
-		msgs[i], msgs[opp] = msgs[opp], msgs[i]
-	}
-
-	var (
-		messages = make([]string, len(msgs))
-		wg       sync.WaitGroup
-	)
-
-	for i, m := range msgs {
-		wg.Add(1)
-		go func(m *discordgo.Message, i int) {
-			defer wg.Done()
-
-			if rstore.Check(m.Author, RelationshipBlocked) {
-				return
-			}
-
-			// Too expensive, performance wise
-			// username, color := getUserData(m)
-
-			sentTime, err := m.Timestamp.Parse()
-			if err != nil {
-				sentTime = time.Now()
-			}
-
-			var msg string
-			if LastAuthor != m.Author.ID {
-				msg = fmt.Sprintf(
-					authorFormat,
-					16777215, m.Author.Username,
-					sentTime.Format(time.Stamp),
-				)
-			}
-
-			msg += fmt.Sprintf(
-				messageFormat,
-				m.ID, fmtMessage(m),
-			)
-
-			messages[i] = msg
-
-			LastAuthor = m.Author.ID
-		}(m, i)
-	}
-
-	wg.Wait()
-
-	messagesView.Clear()
-	messagesView.Write([]byte(
-		strings.Join(messages, ""),
-	))
-
-	messagesView.ScrollToEnd()
-
-	app.SetFocus(guildView)
-}
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	rstore.Relationships = r.Relationships
@@ -116,10 +38,31 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return nil
 		case tcell.KeyLeft:
 			return nil
+		case tcell.KeyTab:
+			return nil
 		}
 
 		return ev
 	})
+
+	{
+		this := tview.NewTreeNode("Direct Messages")
+		this.Collapse()
+
+		guildNode.AddChild(this)
+
+		for _, ch := range r.PrivateChannels {
+			var names = make([]string, len(ch.Recipients))
+			for i, p := range ch.Recipients {
+				names[i] = p.Username
+			}
+
+			chNode := tview.NewTreeNode(HumanizeStrings(names))
+			chNode.SetReference(ch.ID)
+
+			this.AddChild(chNode)
+		}
+	}
 
 	for _, gID := range r.Settings.GuildPositions {
 		g, e := d.State.Guild(gID)

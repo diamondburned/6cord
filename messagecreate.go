@@ -2,13 +2,9 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"strings"
 	"time"
 
 	"github.com/RumbleFrog/discordgo"
-	"github.com/rivo/tview"
-	"gitlab.com/diamondburned/6cord/md"
 )
 
 const (
@@ -45,7 +41,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	app.QueueUpdateDraw(func() {
-		if LastAuthor != m.Author.ID {
+		if getLastAuthor() != m.Author.ID {
 			messagesView.Write([]byte(
 				fmt.Sprintf(
 					authorFormat,
@@ -62,77 +58,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			),
 		))
 
-		messagesView.ScrollToEnd()
+		scrollChat()
 
 		messagesView.Write([]byte("[::-]"))
 
-		LastAuthor = m.Author.ID
+		setLastAuthor(m.Author.ID)
 	})
-}
-
-func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
-	if ChannelID != u.ChannelID {
-		return
-	}
-
-	m, err := d.State.Message(ChannelID, u.ID)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	if rstore.Check(m.Author, RelationshipBlocked) {
-		return
-	}
-
-	username, _ := getUserData(m)
-
-	app.QueueUpdateDraw(func() {
-		messagesView.Write([]byte(
-			fmt.Sprintf(
-				"\n\n"+`[::d]%s edited message ID %d:`+"\n",
-				username, u.ID,
-			),
-		))
-
-		messagesView.Highlight(fmt.Sprintf("%d", u.ID))
-	})
-
-	st := fmtMessage(m) + "[::-][\"\"]\n"
-	app.QueueUpdateDraw(func() {
-		messagesView.Write([]byte(st))
-	})
-
-	time.Sleep(highlightInterval)
-	app.QueueUpdateDraw(func() {
-		messagesView.Highlight()
-	})
-}
-
-func fmtMessage(m *discordgo.Message) string {
-	var (
-		ct = md.Parse(
-			m.ContentWithMentionsReplaced(),
-		)
-
-		edited string
-		c      []string
-		l      = strings.Split(ct, "\n")
-	)
-
-	for i := 0; i < len(l); i++ {
-		c = append(c, "\t"+l[i])
-	}
-
-	if len(m.Attachments) > 0 {
-		for _, a := range m.Attachments {
-			c = append(c, "\t"+tview.Escape(a.URL))
-		}
-	}
-
-	if m.EditedTimestamp != "" {
-		edited = " [::d](edited)[::-]"
-	}
-
-	return strings.Join(c, "\n") + edited
 }

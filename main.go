@@ -11,6 +11,7 @@ import (
 	_ "image/png"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 	keyring "github.com/zalando/go-keyring"
@@ -62,6 +63,8 @@ func main() {
 
 	username := flag.String("u", "", "Username/Email (2)")
 	password := flag.String("p", "", "Password (2)")
+
+	debug := flag.Bool("d", false, "Logs extra events")
 
 	flag.Parse()
 
@@ -220,18 +223,12 @@ func main() {
 
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
-		case tcell.KeyBackspace:
-			if autocomp.GetItemCount() < 1 {
-				app.SetFocus(input)
-
-			} else {
-				app.SetFocus(autocomp)
-			}
-
-			return nil
+		case tcell.KeyPgDn, tcell.KeyPgUp, tcell.KeyUp, tcell.KeyDown:
+			return event
 		}
 
-		return event
+		app.SetFocus(input)
+		return nil
 	})
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
@@ -257,6 +254,8 @@ func main() {
 				appflex.RemoveItem(guildView)
 				app.SetFocus(input)
 			}
+
+			app.ForceDraw()
 		}
 
 		return event
@@ -296,6 +295,20 @@ func main() {
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
 	d.AddHandler(onTyping)
+
+	if *debug {
+		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {
+			log.Println(r)
+		})
+
+		d.AddHandler(func(s *discordgo.Session, dc *discordgo.Disconnect) {
+			log.Println(dc)
+		})
+
+		d.AddHandler(func(s *discordgo.Session, i interface{}) {
+			log.Println(spew.Sdump(i))
+		})
+	}
 
 	// d.AddHandler(func(s *discordgo.Session, ev *discordgo.Event) {
 	// 	log.Println(spew.Sdump(ev))
