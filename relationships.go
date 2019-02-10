@@ -9,10 +9,6 @@ import (
 	"github.com/RumbleFrog/discordgo"
 )
 
-const (
-	HideBlocked bool = true
-)
-
 // RStore contains Discord relationships
 type RStore struct {
 	Relationships []*discordgo.Relationship

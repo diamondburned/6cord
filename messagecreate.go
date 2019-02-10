@@ -8,10 +8,11 @@ import (
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/rivo/tview"
+	"gitlab.com/diamondburned/6cord/md"
 )
 
 const (
-	authorFormat  = "\n\n[#%X::b]%s[-::-] ([::d]%s[::-])"
+	authorFormat  = "\n\n[#%06X::b]%s[-::-] [::d]%s[::-]"
 	messageFormat = "\n" + `["%d"]%s[""]`
 )
 
@@ -26,6 +27,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if rstore.Check(m.Author, RelationshipBlocked) {
 		return
+	}
+
+	if len(m.Embeds) == 1 {
+		m := m.Embeds[0]
+		// edgiest case ever
+		if m.Description == "" && m.Title == "" && len(m.Fields) == 0 {
+			return
+		}
 	}
 
 	username, color := getUserData(m.Message)
@@ -55,7 +64,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		messagesView.ScrollToEnd()
 
-		messagesView.Write([]byte("[-:-:-]"))
+		messagesView.Write([]byte("[::-]"))
 
 		LastAuthor = m.Author.ID
 	})
@@ -102,21 +111,20 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 
 func fmtMessage(m *discordgo.Message) string {
 	var (
-		ct     = m.ContentWithMentionsReplaced()
+		ct = md.Parse(
+			m.ContentWithMentionsReplaced(),
+		)
+
 		edited string
 		c      []string
 		l      = strings.Split(ct, "\n")
 	)
 
 	for i := 0; i < len(l); i++ {
-		c = append(c, "\t"+tview.Escape(l[i]))
+		c = append(c, "\t"+l[i])
 	}
 
 	if len(m.Attachments) > 0 {
-		if m.Content != "" {
-			c = append(c, "\n")
-		}
-
 		for _, a := range m.Attachments {
 			c = append(c, "\t"+tview.Escape(a.URL))
 		}

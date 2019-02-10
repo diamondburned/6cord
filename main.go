@@ -133,6 +133,14 @@ func main() {
 				}
 
 				return ev
+
+			case tcell.KeyUp:
+				if autocomp.GetCurrentItem() < 1 {
+					app.SetFocus(messagesView)
+					return nil
+				}
+
+				return ev
 			}
 
 			return ev
@@ -150,8 +158,10 @@ func main() {
 
 				app.SetFocus(guildView)
 				return nil
+
 			case tcell.KeyUp:
 				app.SetFocus(autocomp)
+
 			case tcell.KeyEnter:
 				if ev.Modifiers() == tcell.ModCtrl {
 					input.SetText(input.GetText() + "\n")
@@ -208,10 +218,30 @@ func main() {
 
 	var showChannels = true
 
+	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
+		switch event.Key() {
+		case tcell.KeyBackspace:
+			if autocomp.GetItemCount() < 1 {
+				app.SetFocus(input)
+
+			} else {
+				app.SetFocus(autocomp)
+			}
+
+			return nil
+		}
+
+		return event
+	})
+
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyEscape:
 			app.Stop()
+
+		case tcell.KeyF5:
+			app.ForceDraw()
+
 		case tcell.KeyTab:
 			showChannels = !showChannels
 			if showChannels {
@@ -249,18 +279,18 @@ func main() {
 	log.SetOutput(logFile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
-	// if len(os.Args) > 1 {
-	// 	switch os.Args[1] {
-	// 	case "rmkeyring":
-	// 		switch err := keyring.Delete(AppName, "token"); err {
-	// 		case nil:
-	// 			log.Println("Keyring deleted.")
-	// 			return
-	// 		default:
-	// 			log.Panicln(err)
-	// 		}
-	// 	}
-	// }
+	if len(os.Args) > 1 {
+		switch os.Args[1] {
+		case "rmkeyring":
+			switch err := keyring.Delete(AppName, "token"); err {
+			case nil:
+				log.Println("Keyring deleted.")
+				return
+			default:
+				log.Panicln(err)
+			}
+		}
+	}
 
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)

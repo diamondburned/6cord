@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"sort"
 
 	"github.com/rivo/tview"
 
@@ -36,15 +37,15 @@ func getUserData(m *discordgo.Message) (name string, color int) {
 		return
 	}
 
-	//guild, err := d.State.Guild(channel.GuildID)
-	//if err != nil {
-	//if guild, err = d.Guild(channel.GuildID); err != nil {
-	//log.Println(err)
-	//return
-	//}
-	//}
+	guild, err := d.State.Guild(channel.GuildID)
+	if err != nil {
+		if guild, err = d.Guild(channel.GuildID); err != nil {
+			log.Println(err)
+			return
+		}
+	}
 
-	member, err := d.State.Member(channel.GuildID, m.Author.ID)
+	member, err := d.State.Member(guild.ID, m.Author.ID)
 	if err != nil {
 		if member, err = d.GuildMember(channel.GuildID, m.Author.ID); err != nil {
 			log.Println(err)
@@ -56,26 +57,19 @@ func getUserData(m *discordgo.Message) (name string, color int) {
 		name = tview.Escape(member.Nick)
 	}
 
-	return
+	roles := guild.Roles
+	sort.Slice(roles, func(i, j int) bool {
+		return roles[i].Position > roles[j].Position
+	})
 
-	// We're not doing role colors
-	// __YET__
-
-	/*
-		roles := guild.Roles
-		sort.Slice(roles, func(i, j int) bool {
-			return roles[i].Position > roles[j].Position
-		})
-
-		for _, role := range roles {
-			for _, roleID := range member.Roles {
-				if role.ID == roleID && role.Color != 0 {
-					color = role.Color
-					return
-				}
+	for _, role := range roles {
+		for _, roleID := range member.Roles {
+			if role.ID == roleID && role.Color != 0 {
+				color = role.Color
+				return
 			}
 		}
+	}
 
-		return
-	*/
+	return
 }
