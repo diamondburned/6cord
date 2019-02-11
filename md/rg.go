@@ -22,4 +22,7 @@ var (
 
 	// UnderlineRegex $1
 	UnderlineRegex = regexp.MustCompile(`__(.*?)__`)
+
+	// AllMarkdown matches literally everything
+	AllMarkdown = regexp.MustCompile(`(?:__|[*#])|\[(.*?)\]\(.*?\)`)
 )
