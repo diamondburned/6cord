@@ -51,6 +51,14 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 		guildNode.AddChild(this)
 
+		// https://github.com/Bios-Marcel/cordless
+		sort.Slice(r.PrivateChannels, func(a, b int) bool {
+			channelA := r.PrivateChannels[a]
+			channelB := r.PrivateChannels[b]
+
+			return channelA.LastMessageID > channelB.LastMessageID
+		})
+
 		for _, ch := range r.PrivateChannels {
 			var names = make([]string, len(ch.Recipients))
 			for i, p := range ch.Recipients {
@@ -63,6 +71,24 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			this.AddChild(chNode)
 		}
 	}
+
+	// https://github.com/Bios-Marcel/cordless
+	sort.Slice(r.Guilds, func(a, b int) bool {
+		aFound := false
+		for _, guild := range r.Settings.GuildPositions {
+			if aFound {
+				if guild == r.Guilds[b].ID {
+					return true
+				}
+			} else {
+				if guild == r.Guilds[a].ID {
+					aFound = true
+				}
+			}
+		}
+
+		return false
+	})
 
 	for _, gID := range r.Settings.GuildPositions {
 		g, e := d.State.Guild(gID)

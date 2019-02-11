@@ -28,7 +28,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
-	username, _ := getUserData(m)
+	username, _ := us.DiscordThis(m)
 
 	app.QueueUpdateDraw(func() {
 		messagesView.Write([]byte(
@@ -51,4 +51,6 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		messagesView.Highlight()
 		scrollChat()
 	})
+
+	setLastAuthor(0)
 }

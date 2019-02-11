@@ -51,9 +51,11 @@ func loadChannel() {
 
 			var msg string
 			if getLastAuthor() != m.Author.ID {
+				username, color := us.DiscordThis(m)
+
 				msg = fmt.Sprintf(
 					authorFormat,
-					16777215, m.Author.Username,
+					color, username,
 					sentTime.Format(time.Stamp),
 				)
 			}

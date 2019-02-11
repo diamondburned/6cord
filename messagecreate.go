@@ -25,6 +25,39 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	var messageText string
+
+	// https://github.com/Bios-Marcel/cordless
+	switch m.Type {
+	case discordgo.MessageTypeGuildMemberJoin:
+		messageText = "joined the server."
+	case discordgo.MessageTypeCall:
+		messageText = "is calling you."
+	case discordgo.MessageTypeChannelIconChange:
+		messageText = "changed the channel icon."
+	case discordgo.MessageTypeChannelNameChange:
+		messageText = "changed the channel name to " + m.Content + "."
+	case discordgo.MessageTypeChannelPinnedMessage:
+		messageText = "pinned a message."
+	case discordgo.MessageTypeRecipientAdd:
+		messageText = "added " + m.Mentions[0].Username + " to the group."
+	case discordgo.MessageTypeRecipientRemove:
+		messageText = "removed " + m.Mentions[0].Username + " from the group."
+	}
+
+	if messageText != "" {
+		setLastAuthor(0)
+
+		messagesView.Write([]byte(
+			fmt.Sprintf(
+				"\n\n[::d]%s %s[::-]",
+				m.Author.Username, messageText,
+			),
+		))
+
+		return
+	}
+
 	if len(m.Embeds) == 1 {
 		m := m.Embeds[0]
 		// edgiest case ever
@@ -33,8 +66,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		}
 	}
 
-	username, color := getUserData(m.Message)
-
 	sentTime, err := m.Timestamp.Parse()
 	if err != nil {
 		sentTime = time.Now()
@@ -42,6 +73,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	app.QueueUpdateDraw(func() {
 		if getLastAuthor() != m.Author.ID {
+			username, color := us.DiscordThis(m.Message)
+
 			messagesView.Write([]byte(
 				fmt.Sprintf(
 					authorFormat,
@@ -64,4 +97,5 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		setLastAuthor(m.Author.ID)
 	})
+
 }

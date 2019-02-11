@@ -9,25 +9,25 @@ import (
 	"github.com/RumbleFrog/discordgo"
 )
 
-func safeAuthor(u *discordgo.User) string {
+func safeAuthor(u *discordgo.User) (string, int64) {
 	if u != nil {
-		return u.Username
+		return u.Username, u.ID
 	}
 
-	return "invalid user"
+	return "invalid user", 0
 }
 
-func getUserData(m *discordgo.Message) (name string, color int) {
+func getUserData(u *discordgo.User, chID int64) (name string, color int) {
 	color = 16711422
-	name = safeAuthor(m.Author)
+	name, id := safeAuthor(u)
 
 	if d == nil {
 		return
 	}
 
-	channel, err := d.State.Channel(m.ChannelID)
+	channel, err := d.State.Channel(chID)
 	if err != nil {
-		if channel, err = d.Channel(m.ChannelID); err != nil {
+		if channel, err = d.Channel(chID); err != nil {
 			log.Println(err)
 			return
 		}
@@ -45,9 +45,9 @@ func getUserData(m *discordgo.Message) (name string, color int) {
 		}
 	}
 
-	member, err := d.State.Member(guild.ID, m.Author.ID)
+	member, err := d.State.Member(guild.ID, id)
 	if err != nil {
-		if member, err = d.GuildMember(channel.GuildID, m.Author.ID); err != nil {
+		if member, err = d.GuildMember(channel.GuildID, id); err != nil {
 			log.Println(err)
 			return
 		}

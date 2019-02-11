@@ -55,7 +55,7 @@ func main() {
 
 	messagesView.SetRegions(true)
 	messagesView.SetWrap(true)
-	messagesView.SetWordWrap(true)
+	messagesView.SetWordWrap(false)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
 
@@ -180,7 +180,7 @@ func main() {
 
 				go func(text string) {
 					if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
-						log.Println(err)
+						log.Println("Failed to send message:\n"+text+"\nError:", err)
 					}
 				}(text)
 
@@ -193,10 +193,17 @@ func main() {
 		})
 
 		input.SetChangedFunc(func(text string) {
-			switch {
-			case strings.HasPrefix(text, "@"):
-
+			if len(text) == 0 {
+				return
 			}
+
+			words := strings.Split(text, "\n")
+
+			switch last := words[len(words)-1]; {
+			case strings.HasPrefix(last, "@"):
+				fuzzyMentions(last)
+			}
+
 			// if text == "magic" {
 			// 	for i := 0; i < 10; i++ {
 			// 		autocomp.InsertItem(i, "magic", "", '1', nil)
@@ -282,6 +289,7 @@ func main() {
 		log.Println("Discordgo:", msgL, caller, format)
 
 		if *debug {
+			// Unsure if I should have spew as a dependency
 			log.Println(spew.Sdump(a))
 		}
 	}
