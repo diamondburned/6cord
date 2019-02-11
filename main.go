@@ -11,6 +11,7 @@ import (
 	_ "image/png"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/atotto/clipboard"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
@@ -58,6 +59,7 @@ func main() {
 	messagesView.SetWordWrap(false)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
+	messagesView.SetBackgroundColor(BackgroundColor)
 
 	token := flag.String("t", "", "Discord token (1)")
 
@@ -104,6 +106,7 @@ func main() {
 
 	appflex := tview.NewFlex()
 	appflex.SetDirection(tview.FlexColumn)
+	appflex.SetBackgroundColor(BackgroundColor)
 
 	{ // Left container
 		guildView.SetPrefixes([]string{"", " ", "#"})
@@ -111,13 +114,14 @@ func main() {
 		guildView.SetBorder(true)
 		guildView.SetTitle("Guilds")
 		guildView.SetTitleAlign(tview.AlignLeft)
+		guildView.SetBackgroundColor(BackgroundColor)
 
 		appflex.AddItem(guildView, 0, 1, true)
 	}
 
 	{ // Right container
 		rightflex.SetDirection(tview.FlexRow)
-		rightflex.SetBackgroundColor(tcell.ColorDefault)
+		rightflex.SetBackgroundColor(BackgroundColor)
 
 		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
@@ -125,8 +129,11 @@ func main() {
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
 		wrapFrame.SetTitleColor(tcell.ColorWhite)
+		wrapFrame.SetBackgroundColor(BackgroundColor)
 
 		autocomp.ShowSecondaryText(false)
+		autocomp.SetBackgroundColor(BackgroundColor)
+
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
 			case tcell.KeyDown:
@@ -153,11 +160,21 @@ func main() {
 			applyMention(i)
 		})
 
-		input.SetBackgroundColor(tcell.ColorAqua)
 		input.SetPlaceholder("Send a message or input a command")
+		input.SetFieldBackgroundColor(BackgroundColor)
+		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 
 		input.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
+			case tcell.KeyCtrlV:
+				cb, err := clipboard.ReadAll()
+				if err != nil {
+					log.Println("Couldn't get clipboard:", err)
+					return nil
+				}
+
+				input.SetText(input.GetText() + cb)
+
 			case tcell.KeyLeft:
 				if input.GetText() != "" {
 					return ev
@@ -175,8 +192,8 @@ func main() {
 					return nil
 				}
 
-				if ev.Modifiers() == tcell.ModCtrl {
-					input.SetText(input.GetText() + "\n")
+				if ev.Modifiers() == tcell.ModShift {
+					input.SetText(input.GetText() + "\\n")
 					return nil
 				}
 
@@ -219,10 +236,12 @@ func main() {
 		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
+		messagesFrame.SetBackgroundColor(BackgroundColor)
 
 		rightflex.AddItem(messagesFrame, 0, 1, false)
 		rightflex.AddItem(autocomp, 1, 1, true)
 		rightflex.AddItem(input, 1, 1, true)
+		rightflex.SetBackgroundColor(BackgroundColor)
 
 		appflex.AddItem(wrapFrame, 0, 3, true)
 	}

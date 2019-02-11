@@ -24,7 +24,7 @@ func loadChannel() {
 		us.Reset(ch.GuildID)
 	}
 
-	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
+	msgs, err := d.ChannelMessages(ChannelID, 35, 0, 0, 0)
 	if err != nil {
 		log.Panicln(err)
 	}

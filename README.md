@@ -14,13 +14,14 @@
 
 ## Todo
 
-- [ ] Fix paste not working
+- [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
 - [ ] Commands
   - [ ] `/goto`
   - [ ] `/edit`
   - [ ] `s//` with regexp
   - [ ] `/exit`, `/shrug`
   - [ ] Autocompletion for those commands
+- [ ] Fix onTyping events
 - [x] Use TextView instead of List for Messages
 	- [x] Consider tv.Write() bytes
 	- [ ] Split messages into Primitives or find a way to edit them individually (cordless does this, too much effort)
