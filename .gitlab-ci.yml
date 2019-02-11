@@ -1,0 +1,22 @@
+image: golang:latest
+
+variables:
+  REPO_NAME: gitlab.com/diamondburned/6cord
+
+before_script:
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - cd $GOPATH/src/$REPO_NAME
+
+stages:
+    - build
+
+compile:
+    stage: build
+    script:
+      - time go get
+      - time CGO_ENABLED=0 go build -ldflags "-w -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
+      - time strip $CI_PROJECT_DIR/6cord
+    artifacts:
+      paths:
+        - 6cord
