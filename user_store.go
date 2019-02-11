@@ -1,26 +1,37 @@
 package main
 
 import (
-	"sync"
-
 	"github.com/RumbleFrog/discordgo"
 )
 
 // User is used for one user
 type User struct {
-	Name  string
-	Nick  string
-	Color int
+	ID      int64
+	Discrim string
+	Name    string
+	Nick    string
+	Color   int
 }
 
 // UserStore stores multiple users
 type UserStore struct {
-	Data map[int64]User
-	Lock sync.RWMutex
+	GuildID int64
+	Data    UserStoreArray
 }
 
-var us = &UserStore{
-	Data: make(map[int64]User),
+// UserStoreArray is an array
+type UserStoreArray []User
+
+var us = &UserStore{}
+
+// Reset resets the store
+func (s *UserStore) Reset(guildID int64) {
+	if s == nil {
+		return
+	}
+
+	s.GuildID = guildID
+	s.Data = []User{}
 }
 
 // InStore checks if a user is in the store
@@ -29,27 +40,26 @@ func (s *UserStore) InStore(id int64) bool {
 		return false
 	}
 
-	s.Lock.RLock()
-	defer s.Lock.RUnlock()
+	if _, u := s.GetUser(id); u != nil {
+		return true
+	}
 
-	_, ok := s.Data[id]
-	return ok
+	return false
 }
 
 // AddUser adds an user into the store
-func (s *UserStore) AddUser(id int64, name, nick string, color int) {
+func (s *UserStore) AddUser(id int64, name, nick, discrim string, color int) {
 	if s.InStore(id) {
 		return
 	}
 
-	s.Lock.Lock()
-	defer s.Lock.Unlock()
-
-	s.Data[id] = User{
-		Name:  name,
-		Nick:  nick,
-		Color: color,
-	}
+	s.Data = append(s.Data, User{
+		ID:      id,
+		Discrim: discrim,
+		Name:    name,
+		Nick:    nick,
+		Color:   color,
+	})
 }
 
 // DiscordThis interfaces with DiscordGo
@@ -61,7 +71,7 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 		return
 	}
 
-	user := s.GetUser(m.Author.ID)
+	_, user := s.GetUser(m.Author.ID)
 	if user != nil {
 		n = user.Name
 		c = user.Color
@@ -78,6 +88,7 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 		m.Author.ID,
 		m.Author.Username,
 		nick,
+		m.Author.Discriminator,
 		color,
 	)
 
@@ -91,16 +102,20 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	return
 }
 
-// GetUser returns the user for that ID
-func (s *UserStore) GetUser(id int64) *User {
-	s.Lock.RLock()
-	defer s.Lock.RUnlock()
-
-	if u, ok := s.Data[id]; ok {
-		return &u
+// GetUser returns the index of the array and the user for that ID
+func (s *UserStore) GetUser(id int64) (int, *User) {
+	for i, u := range s.Data {
+		if u.ID == id {
+			return i, &u
+		}
 	}
 
-	return nil
+	return -1, nil
+}
+
+// GetGuildID returns the guildID for the store
+func (s *UserStore) GetGuildID() int64 {
+	return s.GuildID
 }
 
 // UpdateUser updates an user
@@ -109,10 +124,7 @@ func (s *UserStore) UpdateUser(id int64, name, nick string, color int) {
 		return
 	}
 
-	s.Lock.Lock()
-	defer s.Lock.Unlock()
-
-	if u, ok := s.Data[id]; ok {
+	if i, u := s.GetUser(id); u != nil {
 		switch {
 		case name != "":
 			u.Name = name
@@ -122,6 +134,6 @@ func (s *UserStore) UpdateUser(id int64, name, nick string, color int) {
 			u.Color = color
 		}
 
-		s.Data[id] = u
+		s.Data[i] = *u
 	}
 }

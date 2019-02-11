@@ -19,6 +19,10 @@ func fmtMessage(m *discordgo.Message) string {
 		l      = strings.Split(ct, "\n")
 	)
 
+	if m.Content == "¯\\_(ツ)_/¯" {
+		ct = "¯\\_(ツ)_/¯"
+	}
+
 	for i := 0; i < len(l); i++ {
 		c = append(c, "\t"+l[i])
 	}

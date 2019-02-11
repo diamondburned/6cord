@@ -149,6 +149,10 @@ func main() {
 			return ev
 		})
 
+		autocomp.SetSelectedFunc(func(i int, username, unused string, key rune) {
+			applyMention(i)
+		})
+
 		input.SetBackgroundColor(tcell.ColorAqua)
 		input.SetPlaceholder("Send a message or input a command")
 
@@ -166,6 +170,11 @@ func main() {
 				app.SetFocus(autocomp)
 
 			case tcell.KeyEnter:
+				if autocomp.GetItemCount() > 0 {
+					applyMention(0)
+					return nil
+				}
+
 				if ev.Modifiers() == tcell.ModCtrl {
 					input.SetText(input.GetText() + "\n")
 					return nil
@@ -197,24 +206,16 @@ func main() {
 				return
 			}
 
-			words := strings.Split(text, "\n")
+			words := strings.Fields(text)
+
+			if len(words) < 1 {
+				return
+			}
 
 			switch last := words[len(words)-1]; {
 			case strings.HasPrefix(last, "@"):
 				fuzzyMentions(last)
 			}
-
-			// if text == "magic" {
-			// 	for i := 0; i < 10; i++ {
-			// 		autocomp.InsertItem(i, "magic", "", '1', nil)
-			// 	}
-
-			// 	rightflex.ResizeItem(autocomp, 10, 1)
-			// } else {
-			// 	clearList()
-			// }
-
-			// app.Draw()
 		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)

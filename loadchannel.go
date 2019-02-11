@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"sort"
 	"strings"
 	"sync"
 	"time"
@@ -18,6 +19,10 @@ func loadChannel() {
 
 	wrapFrame.SetTitle("#" + ch.Name)
 	typing.Reset()
+
+	if us.GetGuildID() != ch.GuildID {
+		us.Reset(ch.GuildID)
+	}
 
 	msgs, err := d.ChannelMessages(ChannelID, 75, 0, 0, 0)
 	if err != nil {
@@ -50,7 +55,7 @@ func loadChannel() {
 			}
 
 			var msg string
-			if getLastAuthor() != m.Author.ID {
+			if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
 				username, color := us.DiscordThis(m)
 
 				msg = fmt.Sprintf(
@@ -66,8 +71,6 @@ func loadChannel() {
 			)
 
 			messages[i] = msg
-
-			setLastAuthor(m.Author.ID)
 		}(m, i)
 	}
 
@@ -78,9 +81,71 @@ func loadChannel() {
 		strings.Join(messages, ""),
 	))
 
+	setLastAuthor(msgs[len(msgs)-1].Author.ID)
+
 	messagesView.ScrollToEnd()
 
 	app.SetFocus(input)
+
+	go func() {
+		members := &([]*discordgo.Member{})
+		recurseMembers(members, ch.GuildID, 0)
+
+		guild, err := d.State.Guild(ch.GuildID)
+		if err != nil {
+			if guild, err = d.Guild(ch.GuildID); err != nil {
+				log.Println(err)
+				return
+			}
+		}
+
+		roles := guild.Roles
+		sort.Slice(roles, func(i, j int) bool {
+			return roles[i].Position > roles[j].Position
+		})
+
+		for _, m := range *members {
+			color := 16711422
+
+		RoleLoop:
+			for _, role := range roles {
+				for _, roleID := range m.Roles {
+					if role.ID == roleID && role.Color != 0 {
+						color = role.Color
+						break RoleLoop
+					}
+				}
+			}
+
+			us.AddUser(
+				m.User.ID,
+				m.User.Username,
+				m.Nick,
+				m.User.Discriminator,
+				color,
+			)
+		}
+	}()
+}
+
+func recurseMembers(memstore *[]*discordgo.Member, guildID, after int64) {
+	members, err := d.GuildMembers(guildID, after, 1000)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if len(members) == 1000 {
+		recurseMembers(
+			memstore,
+			guildID,
+			members[999].User.ID,
+		)
+	}
+
+	*memstore = append(*memstore, members...)
+
+	return
 }
 
 func scrollChat() {
