@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"sort"
 
 	"github.com/RumbleFrog/discordgo"
@@ -90,16 +89,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		return false
 	})
 
-	for _, gID := range r.Settings.GuildPositions {
-		g, e := d.State.Guild(gID)
-		if e != nil {
-			g, e = d.Guild(gID)
-			if e != nil {
-				log.Println("Can't populate guild list on Guild ID:", gID, e)
-				continue
-			}
-		}
-
+	for _, g := range r.Guilds {
 		this := tview.NewTreeNode(g.Name)
 		this.Collapse()
 
