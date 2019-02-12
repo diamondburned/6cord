@@ -89,7 +89,6 @@ func loadChannel() {
 
 	go func() {
 		members := &([]*discordgo.Member{})
-		recurseMembers(members, ch.GuildID, 0)
 
 		guild, err := d.State.Guild(ch.GuildID)
 		if err != nil {
@@ -97,6 +96,13 @@ func loadChannel() {
 				log.Println(err)
 				return
 			}
+		}
+
+		if len(guild.Members) < 1 {
+			recurseMembers(members, ch.GuildID, 0)
+
+		} else {
+			members = &guild.Members
 		}
 
 		roles := guild.Roles

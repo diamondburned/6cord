@@ -9,6 +9,9 @@ func Parse(s string) string {
 
 // ParseNoEscape parses md into tview string without escaping it
 func ParseNoEscape(s string) string {
+	// Delete links from hyperlinks
+	s = HyperlinkRegex.ReplaceAllString(s, "[::u]$1[::-]")
+
 	// this should have higher prio than italic
 	s = UnderlineRegex.ReplaceAllString(s, "[::u]$1[::-]")
 
@@ -24,9 +27,6 @@ func ParseNoEscape(s string) string {
 	// Dim
 	s = SpoilerRegex.ReplaceAllString(s, "[::d]$1[::-]")
 	s = StrikethroughRegex.ReplaceAllString(s, "[::d]$1[::-]")
-
-	// Clear all unparsed markdown for cleanliness
-	s = AllMarkdown.ReplaceAllString(s, "$1")
 
 	return s
 }

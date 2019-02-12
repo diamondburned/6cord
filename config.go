@@ -1,11 +1,13 @@
 package main
 
-import "github.com/gdamore/tcell"
-
 const (
 	// HideBlocked when true, ignores all blocked users
-	HideBlocked bool = true
+	HideBlocked = true
 
 	// BackgroundColor self explanatory
-	BackgroundColor = tcell.ColorBlack
+	// Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)
+	BackgroundColor = 16
+
+	// EmbedColLimit controls the line
+	EmbedColLimit = 75
 )

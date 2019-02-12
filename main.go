@@ -44,11 +44,6 @@ var (
 )
 
 func main() {
-	sender := strings.NewReplacer(
-		`\n`, "\n",
-		`\t`, "\t",
-	)
-
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 		// workaround to prevent crash when no root in tree
 		return nil
@@ -192,25 +187,14 @@ func main() {
 					return nil
 				}
 
-				if ev.Modifiers() == tcell.ModShift {
-					input.SetText(input.GetText() + "\\n")
-					return nil
-				}
+				// log.Println(ev.Name())
 
-				text := input.GetText()
-				if text == "" {
-					return nil
-				}
+				// if ev.Name() == "Shift+Enter" {
+				// 	input.SetText(input.GetText() + "\\n")
+				// 	return nil
+				// }
 
-				text = sender.Replace(text)
-
-				go func(text string) {
-					if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
-						log.Println("Failed to send message:\n"+text+"\nError:", err)
-					}
-				}(text)
-
-				input.SetText("")
+				CommandHandler()
 
 				return nil
 			}

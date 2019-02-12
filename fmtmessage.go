@@ -5,11 +5,14 @@ import (
 	"strings"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/davecgh/go-spew/spew"
+	"github.com/eidolon/wordwrap"
 	"github.com/rivo/tview"
 	"gitlab.com/diamondburned/6cord/md"
 )
 
 func fmtMessage(m *discordgo.Message) string {
+	spew.Dump()
 	var (
 		ct = md.Parse(
 			m.ContentWithMentionsReplaced(),
@@ -24,8 +27,10 @@ func fmtMessage(m *discordgo.Message) string {
 		ct = "¯\\_(ツ)_/¯"
 	}
 
-	for i := 0; i < len(l); i++ {
-		c = append(c, "\t"+l[i])
+	if ct != "" {
+		for i := 0; i < len(l); i++ {
+			c = append(c, "\t"+l[i])
+		}
 	}
 
 	for _, e := range m.Embeds {
@@ -44,7 +49,7 @@ func fmtMessage(m *discordgo.Message) string {
 		if e.Author != nil {
 			embed = append(
 				embed,
-				splitEmbedLine(e.Author.Name, "[::u]")...,
+				"[::u]"+e.Author.Name+"[::-]",
 			)
 
 			if e.Author.IconURL != "" {
@@ -184,6 +189,9 @@ func fmtMessage(m *discordgo.Message) string {
 	return strings.Join(c, "\n") + edited
 }
 
+// WordWrapper makes a global wrapper for embed use
+var WordWrapper = wordwrap.Wrapper(EmbedColLimit, false)
+
 // 2nd arg ::-
 // 3rd arg -::
 func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
@@ -207,14 +215,10 @@ func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
 	}
 
 	for _, l := range lines {
-		if len(l) > 80 {
-			spl = append(
-				spl,
-				cm+md.Parse(l[:50])+ce,
-				cm+md.Parse(l[50:])+ce,
-			)
-		} else {
-			spl = append(spl, cm+md.Parse(l)+ce)
+		splwrap := strings.Split(md.Parse(l), "\n")
+
+		for _, s := range splwrap {
+			spl = append(spl, cm+s+ce)
 		}
 	}
 
