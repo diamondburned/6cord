@@ -53,7 +53,7 @@ func CommandHandler() {
 
 		go func(text string) {
 			if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
-				log.Println("Failed to send message:\n"+text+"\nError:", err)
+				Warn("Failed to send message:\n" + text + "\nError: " + err.Error())
 			}
 		}(text)
 	}

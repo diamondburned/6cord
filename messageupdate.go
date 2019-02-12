@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/RumbleFrog/discordgo"
@@ -15,7 +14,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 
 	m, err := d.State.Message(ChannelID, u.ID)
 	if err != nil {
-		log.Println(err)
+		Warn(err.Error())
 		return
 	}
 

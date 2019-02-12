@@ -215,7 +215,7 @@ func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
 	}
 
 	for _, l := range lines {
-		splwrap := strings.Split(md.Parse(l), "\n")
+		splwrap := strings.Split(md.Parse(WordWrapper(l)), "\n")
 
 		for _, s := range splwrap {
 			spl = append(spl, cm+s+ce)

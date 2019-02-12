@@ -12,9 +12,13 @@ import (
 )
 
 func loadChannel() {
-	ch, err := d.Channel(ChannelID) // todo: state first
+	ch, err := d.State.Channel(ChannelID)
 	if err != nil {
-		log.Panicln(err)
+		ch, err = d.Channel(ChannelID) // todo: state first
+		if err != nil {
+			Warn(err.Error())
+			return
+		}
 	}
 
 	wrapFrame.SetTitle("#" + ch.Name)
@@ -26,7 +30,8 @@ func loadChannel() {
 
 	msgs, err := d.ChannelMessages(ChannelID, 35, 0, 0, 0)
 	if err != nil {
-		log.Panicln(err)
+		Warn(err.Error())
+		return
 	}
 
 	// reverse
@@ -93,7 +98,7 @@ func loadChannel() {
 		guild, err := d.State.Guild(ch.GuildID)
 		if err != nil {
 			if guild, err = d.Guild(ch.GuildID); err != nil {
-				log.Println(err)
+				Warn(err.Error())
 				return
 			}
 		}

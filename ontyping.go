@@ -41,7 +41,7 @@ func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 func renderCallback(tu *TypingUsers) {
 	ch, err := d.State.Channel(ChannelID)
 	if err != nil {
-		log.Println(err)
+		Warn(err.Error())
 		return
 	}
 
@@ -50,7 +50,7 @@ func renderCallback(tu *TypingUsers) {
 	for _, st := range tu.Store {
 		m, err := d.State.Member(ch.GuildID, st.ID)
 		if err != nil {
-			log.Println(err)
+			Warn(err.Error())
 			continue
 		}
 

@@ -290,7 +290,7 @@ func main() {
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
 	discordgo.Logger = func(msgL, caller int, format string, a ...interface{}) {
-		log.Println("Discordgo:", msgL, caller, format)
+		log.Println("Discordgo:", msgL, caller, format, a)
 
 		if *debug {
 			// Unsure if I should have spew as a dependency
