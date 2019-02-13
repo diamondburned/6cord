@@ -6,7 +6,7 @@ const (
 
 	// BackgroundColor self explanatory
 	// Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)
-	BackgroundColor = 16
+	BackgroundColor = 0xFFFFFF
 
 	// EmbedColLimit controls the line
 	EmbedColLimit = 75

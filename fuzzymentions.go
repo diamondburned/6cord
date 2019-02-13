@@ -84,4 +84,6 @@ func applyMention(i int) {
 	input.SetText(strings.Join(withoutlast, " "))
 
 	clearList()
+
+	app.SetFocus(input)
 }

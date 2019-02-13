@@ -100,9 +100,8 @@ func loadChannel() {
 			}
 		}
 
-		if len(guild.Members) < 1 {
+		if len(guild.Members) < 1 || us.GetGuildID() != ch.GuildID {
 			recurseMembers(members, ch.GuildID, 0)
-
 		} else {
 			members = &guild.Members
 		}
