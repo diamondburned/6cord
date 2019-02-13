@@ -29,6 +29,8 @@ func mentionHandler(m *discordgo.MessageCreate) {
 			); err != nil {
 				Warn(err.Error())
 			}
+
+			return
 		}
 	}
 }
