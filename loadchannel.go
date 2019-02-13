@@ -5,7 +5,6 @@ import (
 	"log"
 	"sort"
 	"strings"
-	"sync"
 	"time"
 
 	"github.com/RumbleFrog/discordgo"
@@ -40,51 +39,49 @@ func loadChannel() {
 		msgs[i], msgs[opp] = msgs[opp], msgs[i]
 	}
 
-	var (
-		messages = make([]string, len(msgs))
-		wg       sync.WaitGroup
-	)
+	//var wg sync.WaitGroup
+	messageStore = []string{}
 
 	for i, m := range msgs {
-		wg.Add(1)
-		go func(m *discordgo.Message, i int) {
-			defer wg.Done()
+		//wg.Add(1)
+		//go func(m *discordgo.Message, i int) {
+		//defer wg.Done()
 
-			if rstore.Check(m.Author, RelationshipBlocked) {
-				return
-			}
+		if rstore.Check(m.Author, RelationshipBlocked) {
+			continue
+		}
 
-			sentTime, err := m.Timestamp.Parse()
-			if err != nil {
-				sentTime = time.Now()
-			}
+		sentTime, err := m.Timestamp.Parse()
+		if err != nil {
+			sentTime = time.Now()
+		}
 
-			var msg string
-			if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
-				username, color := us.DiscordThis(m)
+		if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
+			username, color := us.DiscordThis(m)
 
-				msg = fmt.Sprintf(
-					authorFormat,
-					color, username,
-					sentTime.Format(time.Stamp),
-				)
-			}
+			messageStore = append(messageStore, fmt.Sprintf(
+				authorFormat,
+				color, username,
+				sentTime.Format(time.Stamp),
+			))
+		}
 
-			msg += fmt.Sprintf(
-				messageFormat,
-				m.ID, fmtMessage(m),
-			)
+		messageStore = append(messageStore, fmt.Sprintf(
+			messageFormat,
+			m.ID, fmtMessage(m),
+		))
 
-			messages[i] = msg
-		}(m, i)
+		//}(m, i)
 	}
 
-	wg.Wait()
+	//wg.Wait()
 
 	messagesView.Clear()
 	messagesView.Write([]byte(
-		strings.Join(messages, ""),
+		strings.Join(messageStore, ""),
 	))
+
+	app.Draw()
 
 	setLastAuthor(msgs[len(msgs)-1].Author.ID)
 

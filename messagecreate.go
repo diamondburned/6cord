@@ -14,6 +14,7 @@ const (
 
 var (
 	highlightInterval = time.Duration(time.Second * 7)
+	messageStore      []string
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
@@ -48,12 +49,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	if messageText != "" {
 		setLastAuthor(0)
 
-		messagesView.Write([]byte(
-			fmt.Sprintf(
-				"\n\n[::d]%s %s[::-]",
-				m.Author.Username, messageText,
-			),
-		))
+		msg := fmt.Sprintf(
+			"\n\n[::d]%s %s[::-]",
+			m.Author.Username, messageText,
+		)
+
+		// Writing it directly for performance
+		messagesView.Write([]byte(msg))
+		messageStore = append(messageStore, msg)
 
 		return
 	}
@@ -75,25 +78,25 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		if getLastAuthor() != m.Author.ID {
 			username, color := us.DiscordThis(m.Message)
 
-			messagesView.Write([]byte(
-				fmt.Sprintf(
-					authorFormat,
-					color, username,
-					sentTime.Format(time.Stamp),
-				),
-			))
+			msg := fmt.Sprintf(
+				authorFormat,
+				color, username,
+				sentTime.Format(time.Stamp),
+			)
+
+			messagesView.Write([]byte(msg))
+			messageStore = append(messageStore, msg)
 		}
 
-		messagesView.Write([]byte(
-			fmt.Sprintf(
-				messageFormat,
-				m.ID, fmtMessage(m.Message),
-			),
-		))
+		msg := fmt.Sprintf(
+			messageFormat+"[::-]",
+			m.ID, fmtMessage(m.Message),
+		)
+
+		messagesView.Write([]byte(msg))
+		messageStore = append(messageStore, msg)
 
 		scrollChat()
-
-		messagesView.Write([]byte("[::-]"))
 
 		setLastAuthor(m.Author.ID)
 	})

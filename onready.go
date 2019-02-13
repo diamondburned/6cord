@@ -102,7 +102,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				continue
 			}
 
-			chNode := tview.NewTreeNode("#" + ch.Name)
+			chNode := tview.NewTreeNode(ch.Name)
 			chNode.SetReference(ch.ID)
 
 			this.AddChild(chNode)

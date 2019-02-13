@@ -104,7 +104,7 @@ func main() {
 	appflex.SetBackgroundColor(BackgroundColor)
 
 	{ // Left container
-		guildView.SetPrefixes([]string{"", " ", "#"})
+		guildView.SetPrefixes([]string{"", "#"})
 		guildView.SetTopLevel(1)
 		guildView.SetBorder(true)
 		guildView.SetTitle("Guilds")
@@ -263,6 +263,7 @@ func main() {
 			} else {
 				wrapFrame.SetBorder(false)
 				appflex.RemoveItem(guildView)
+
 				app.SetFocus(input)
 			}
 

@@ -15,12 +15,21 @@ var (
 
 // Command contains a command's info
 type Command struct {
-	Function    func()
+	Function    func(string)
 	Description string
 }
 
 // Commands ..
-var Commands = make(map[string]Command)
+var Commands = map[string]Command{
+	"/status": Command{
+		Function:    setStatus,
+		Description: "[online|busy|away|invisible] - sets your status",
+	},
+}
+
+func setStatus(input string) {
+
+}
 
 func CommandHandler() {
 	text := input.GetText()

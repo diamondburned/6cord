@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"strings"
 
 	"github.com/RumbleFrog/discordgo"
 )
@@ -27,29 +27,53 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
-	username, _ := us.DiscordThis(m)
+	// username, _ := us.DiscordThis(m)
 
-	app.QueueUpdateDraw(func() {
-		messagesView.Write([]byte(
-			fmt.Sprintf(
-				"\n\n"+`[::d]%s edited message ID %d:`+"\n",
-				username, u.ID,
-			),
-		))
+	for i, msg := range messageStore {
+		if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, u.ID)) {
+			msg := fmt.Sprintf(
+				messageFormat+"[::-]",
+				m.ID, fmtMessage(m),
+			)
 
-		messagesView.Highlight(fmt.Sprintf("%d", u.ID))
-	})
+			messageStore[i] = msg
 
-	st := fmtMessage(m) + "[::-][\"\"]\n"
-	app.QueueUpdateDraw(func() {
-		messagesView.Write([]byte(st))
-	})
+			break
+		}
+	}
 
-	time.Sleep(highlightInterval)
-	app.QueueUpdateDraw(func() {
-		messagesView.Highlight()
-		scrollChat()
-	})
+	messagesView.Clear()
+	messagesView.SetText(strings.Join(messageStore, ""))
+
+	app.Draw()
+
+	scrollChat()
 
 	setLastAuthor(0)
+
+	return
+
+	//app.QueueUpdateDraw(func() {
+	//messagesView.Write([]byte(
+	//fmt.Sprintf(
+	//"\n\n"+`[::d]%s edited message ID %d:`+"\n",
+	//username, u.ID,
+	//),
+	//))
+
+	//messagesView.Highlight(fmt.Sprintf("%d", u.ID))
+	//})
+
+	//st := fmtMessage(m) + "[::-][\"\"]\n"
+	//app.QueueUpdateDraw(func() {
+	//messagesView.Write([]byte(st))
+	//})
+
+	//time.Sleep(highlightInterval)
+	//app.QueueUpdateDraw(func() {
+	//messagesView.Highlight()
+	//scrollChat()
+	//})
+
+	//setLastAuthor(0)
 }
