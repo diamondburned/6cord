@@ -18,6 +18,9 @@ var (
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+	// Notify mentions
+	go mentionHandler(m)
+
 	if m.ChannelID != ChannelID {
 		return
 	}
