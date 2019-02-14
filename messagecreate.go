@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/RumbleFrog/discordgo"
@@ -22,10 +23,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	go mentionHandler(m)
 
 	if m.ChannelID != ChannelID {
-		for _, c := range d.State.ReadState {
-			if c.ID == m.ChannelID {
-				c.LastMessageID = m.ID
-			}
+		c, err := d.State.Channel(m.ChannelID)
+		if err == nil {
+			c.LastMessageID = m.ID
+
+		} else {
+			log.Println(err)
 		}
 
 		checkReadState()

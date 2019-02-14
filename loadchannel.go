@@ -20,11 +20,6 @@ func loadChannel() {
 		}
 	}
 
-	go func(c *discordgo.Channel) {
-		ackMe(c)
-		checkReadState()
-	}(ch)
-
 	wrapFrame.SetTitle("#" + ch.Name)
 	typing.Reset()
 
@@ -93,6 +88,9 @@ func loadChannel() {
 	messagesView.ScrollToEnd()
 
 	app.SetFocus(input)
+
+	ackMe(ch, msgs[len(msgs)-1])
+	checkReadState()
 
 	go func() {
 		members := &([]*discordgo.Member{})

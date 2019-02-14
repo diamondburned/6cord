@@ -4,19 +4,18 @@ import (
 	"log"
 
 	"github.com/RumbleFrog/discordgo"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/rivo/tview"
 )
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
-	log.Println(spew.Sdump(a))
-
+	// Sets ReadState to the message you read
 	for _, c := range d.State.ReadState {
 		if c.ID == a.ChannelID {
 			c.LastMessageID = a.MessageID
 		}
 	}
 
+	// update
 	checkReadState()
 }
 
@@ -52,7 +51,7 @@ func checkReadState() {
 			name       = "[::d]" + c.Name + "[::-]"
 		)
 
-		if isUnread(c) && settingChannelIsMuted(chSettings) {
+		if isUnread(c) && !settingChannelIsMuted(chSettings) {
 			name = "[::b]" + c.Name + "[::-]"
 
 			g, ok := parent.GetReference().(string)
@@ -82,12 +81,9 @@ func isUnread(ch *discordgo.Channel) bool {
 
 var lastAck string
 
-func ackMe(c *discordgo.Channel) {
-	ack, err := d.ChannelMessageAck(
-		c.ID,
-		c.LastMessageID,
-		lastAck,
-	)
+func ackMe(c *discordgo.Channel, m *discordgo.Message) {
+	// triggers messageAck
+	ack, err := d.ChannelMessageAck(c.ID, m.ID, lastAck)
 
 	if err != nil {
 		log.Println(err)
