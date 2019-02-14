@@ -342,6 +342,7 @@ func main() {
 	// })
 
 	d.StateEnabled = true
+	d.State.MaxMessageCount = 50
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

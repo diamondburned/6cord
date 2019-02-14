@@ -22,7 +22,14 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	go mentionHandler(m)
 
 	if m.ChannelID != ChannelID {
+		for _, c := range d.State.ReadState {
+			if c.ID == m.ChannelID {
+				c.LastMessageID = m.ID
+			}
+		}
+
 		checkReadState()
+
 		return
 	}
 
@@ -54,7 +61,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		setLastAuthor(0)
 
 		msg := fmt.Sprintf(
-			"\n\n[::d]%s %s[::-]",
+			"\n\n[::d]%s %s[::-]\n",
 			m.Author.Username, messageText,
 		)
 
