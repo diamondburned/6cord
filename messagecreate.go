@@ -22,6 +22,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	go mentionHandler(m)
 
 	if m.ChannelID != ChannelID {
+		checkReadState()
 		return
 	}
 

@@ -29,25 +29,28 @@ func fuzzyEmojis(last string) {
 		}
 
 		rightflex.ResizeItem(autocomp, 10, 1)
-	}
 
-	autofillfunc = func(i int) {
-		var (
-			words = strings.Fields(input.GetText())
-			emoji = demojis.MatchEmoji(fuzzied[i])
-		)
+		autofillfunc = func(i int) {
+			var (
+				words = strings.Fields(input.GetText())
+				emoji = demojis.MatchEmoji(fuzzied[i])
+			)
 
-		withoutlast := words[:len(words)-1]
-		withoutlast = append(
-			withoutlast,
-			emoji+" ",
-		)
+			withoutlast := words[:len(words)-1]
+			withoutlast = append(
+				withoutlast,
+				emoji+" ",
+			)
 
-		input.SetText(strings.Join(withoutlast, " "))
+			input.SetText(strings.Join(withoutlast, " "))
 
-		clearList()
+			clearList()
 
-		app.SetFocus(input)
+			app.SetFocus(input)
+		}
+
+	} else {
+		rightflex.ResizeItem(autocomp, 1, 1)
 	}
 
 	app.Draw()

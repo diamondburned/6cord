@@ -250,7 +250,10 @@ func main() {
 			app.Stop()
 
 		case tcell.KeyF5:
-			app.ForceDraw()
+			go func() {
+				app.Stop()
+				app.Run()
+			}()
 
 		case tcell.KeyTab:
 			showChannels = !showChannels
@@ -318,6 +321,7 @@ func main() {
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
 	d.AddHandler(onTyping)
+	d.AddHandler(messageAck)
 
 	if *debug {
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {
@@ -337,9 +341,7 @@ func main() {
 	// 	log.Println(spew.Sdump(ev))
 	// })
 
-	// d.AddHandler(func(s *discordgo.Session, a *discordgo.MessageAck) {
-	// 	log.Println(spew.Sdump(a))
-	// })
+	d.StateEnabled = true
 
 	if err := d.Open(); err != nil {
 		log.Fatalln("Failed to connect to Discord", err.Error())

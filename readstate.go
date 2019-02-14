@@ -4,10 +4,13 @@ import (
 	"log"
 
 	"github.com/RumbleFrog/discordgo"
+	"github.com/davecgh/go-spew/spew"
 	"github.com/rivo/tview"
 )
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
+	log.Println(spew.Sdump(a))
+
 	for _, c := range d.State.ReadState {
 		if c.ID == a.ChannelID {
 			c.LastMessageID = a.MessageID
@@ -42,9 +45,13 @@ func checkReadState() {
 		if isUnread(c) {
 			name = "[::b]" + c.Name + "[::-]"
 
-			g, err := d.State.Guild(c.GuildID)
-			if err == nil {
-				parent.SetText("[::b]" + g.Name + "[::-]")
+			for _, ugs := range d.State.UserGuildSettings {
+				if ugs.GuildID == c.GuildID && !ugs.Muted {
+					g, ok := parent.GetReference().(string)
+					if ok {
+						parent.SetText("[::b]" + g + "[::-]")
+					}
+				}
 			}
 		}
 
@@ -54,6 +61,10 @@ func checkReadState() {
 	})
 
 	app.Draw()
+}
+
+func getGuildFromSettings(guildID int64) *discordgo.UserGuildSetings {
+	for _, ugs
 }
 
 // true if channelID has unread msgs

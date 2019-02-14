@@ -68,37 +68,25 @@ func fuzzyMentions(last string) {
 		}
 
 		rightflex.ResizeItem(autocomp, 10, 1)
+
+		autofillfunc = func(i int) {
+			words := strings.Fields(input.GetText())
+
+			withoutlast := words[:len(words)-1]
+			withoutlast = append(withoutlast, fmt.Sprintf(
+				"<@%d> ", currentFuzzy[i].ID,
+			))
+
+			input.SetText(strings.Join(withoutlast, " "))
+
+			clearList()
+
+			app.SetFocus(input)
+		}
+
+	} else {
+		rightflex.ResizeItem(autocomp, 1, 1)
 	}
-
-	autofillfunc = func(i int) {
-		words := strings.Fields(input.GetText())
-
-		withoutlast := words[:len(words)-1]
-		withoutlast = append(withoutlast, fmt.Sprintf(
-			"<@%d> ", currentFuzzy[i].ID,
-		))
-
-		input.SetText(strings.Join(withoutlast, " "))
-
-		clearList()
-
-		app.SetFocus(input)
-	}
-
-	autocomp.SetSelectedFunc(func(i int, username, unused string, key rune) {
-		words := strings.Fields(input.GetText())
-
-		withoutlast := words[:len(words)-1]
-		withoutlast = append(withoutlast, fmt.Sprintf(
-			"<@%d> ", currentFuzzy[i].ID,
-		))
-
-		input.SetText(strings.Join(withoutlast, " "))
-
-		clearList()
-
-		app.SetFocus(input)
-	})
 
 	app.Draw()
 }
