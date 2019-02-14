@@ -21,6 +21,8 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 }
 
 func checkReadState() {
+	var guildSettings *discordgo.UserGuildSettings
+
 	guildView.GetRoot().Walk(func(node, parent *tview.TreeNode) bool {
 		if parent == nil {
 			return true
@@ -41,17 +43,21 @@ func checkReadState() {
 			return true
 		}
 
-		var name = "[::d]" + c.Name + "[::-]"
-		if isUnread(c) {
+		if guildSettings == nil || guildSettings.GuildID != c.GuildID {
+			guildSettings = getGuildFromSettings(c.GuildID)
+		}
+
+		var (
+			chSettings = getChannelFromGuildSettings(c.ID, guildSettings)
+			name       = "[::d]" + c.Name + "[::-]"
+		)
+
+		if isUnread(c) && settingChannelIsMuted(chSettings) {
 			name = "[::b]" + c.Name + "[::-]"
 
-			for _, ugs := range d.State.UserGuildSettings {
-				if ugs.GuildID == c.GuildID && !ugs.Muted {
-					g, ok := parent.GetReference().(string)
-					if ok {
-						parent.SetText("[::b]" + g + "[::-]")
-					}
-				}
+			g, ok := parent.GetReference().(string)
+			if ok && !settingGuildIsMuted(guildSettings) {
+				parent.SetText("[::b]" + g + "[::-]")
 			}
 		}
 
@@ -61,10 +67,6 @@ func checkReadState() {
 	})
 
 	app.Draw()
-}
-
-func getGuildFromSettings(guildID int64) *discordgo.UserGuildSetings {
-	for _, ugs
 }
 
 // true if channelID has unread msgs

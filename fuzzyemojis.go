@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/sahilm/fuzzy"
-	"gitlab.com/diamondburned/6cord/6cord/demojis"
+	"gitlab.com/diamondburned/6cord/demojis"
 )
 
 func fuzzyEmojis(last string) {
