@@ -20,13 +20,18 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
 		reference := node.GetReference()
 		if reference == nil {
-			node.SetExpanded(!node.IsExpanded())
 			return
 		}
 
-		if id, ok := reference.(int64); ok {
-			ChannelID = id
-			loadChannel()
+		if name, ok := reference.(string); ok {
+			node.SetText("[::d]" + name + "[::-]")
+			node.SetExpanded(!node.IsExpanded())
+
+		} else {
+			if id, ok := reference.(int64); ok {
+				ChannelID = id
+				loadChannel()
+			}
 		}
 	})
 
@@ -90,7 +95,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	})
 
 	for _, g := range r.Guilds {
-		this := tview.NewTreeNode(g.Name)
+		this := tview.NewTreeNode("[::d]" + g.Name + "[::-]")
+		this.SetReference(g.Name)
 		this.Collapse()
 
 		sort.Slice(g.Channels, func(i, j int) bool {
@@ -117,6 +123,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	}
 
 	app.Draw()
+
+	checkReadState()
 }
 
 func isValidCh(t discordgo.ChannelType) bool {

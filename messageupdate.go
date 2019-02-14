@@ -18,11 +18,6 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
-	// self-bots? not today.
-	if m.Author.Bot && len(m.Embeds) > 0 {
-		return
-	}
-
 	if rstore.Check(m.Author, RelationshipBlocked) {
 		return
 	}
@@ -48,8 +43,6 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 	app.Draw()
 
 	scrollChat()
-
-	setLastAuthor(0)
 
 	return
 

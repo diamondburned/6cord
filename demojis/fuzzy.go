@@ -1,4 +1,4 @@
-package discordgo
+package demojis
 
 import "github.com/sahilm/fuzzy"
 

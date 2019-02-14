@@ -1,4 +1,4 @@
-package discordgo
+package demojis
 
 // NOTE: THIS FILE WAS PRODUCED BY THE
 // EMOJICODEMAP CODE GENERATION TOOL (github.com/kyokomi/generateEmojiCodeMap)

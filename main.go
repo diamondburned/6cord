@@ -151,10 +151,6 @@ func main() {
 			return ev
 		})
 
-		autocomp.SetSelectedFunc(func(i int, username, unused string, key rune) {
-			applyMention(i)
-		})
-
 		input.SetPlaceholder("Send a message or input a command")
 		input.SetFieldBackgroundColor(BackgroundColor)
 		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
@@ -183,7 +179,7 @@ func main() {
 
 			case tcell.KeyEnter:
 				if autocomp.GetItemCount() > 0 {
-					applyMention(0)
+					autofillfunc(0)
 					return nil
 				}
 
@@ -216,6 +212,8 @@ func main() {
 			switch last := words[len(words)-1]; {
 			case strings.HasPrefix(last, "@"):
 				fuzzyMentions(last)
+			case strings.HasPrefix(last, ":"):
+				fuzzyEmojis(last)
 			}
 		})
 
@@ -240,6 +238,10 @@ func main() {
 
 		app.SetFocus(input)
 		return nil
+	})
+
+	autocomp.SetSelectedFunc(func(i int, a, b string, c rune) {
+		autofillfunc(i)
 	})
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

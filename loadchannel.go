@@ -20,6 +20,11 @@ func loadChannel() {
 		}
 	}
 
+	go func(c *discordgo.Channel) {
+		ackMe(c)
+		checkReadState()
+	}(ch)
+
 	wrapFrame.SetTitle("#" + ch.Name)
 	typing.Reset()
 
