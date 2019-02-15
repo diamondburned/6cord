@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"regexp"
 	"strings"
-
-	"github.com/davecgh/go-spew/spew"
 )
 
 var (
@@ -25,8 +22,6 @@ func parseEmojis(content string) (formatted string, emojiMap map[string][]string
 		if len(nameandID) < 4 {
 			continue
 		}
-
-		log.Println(spew.Sdump(nameandID))
 
 		if _, ok := emojiMap[nameandID[3]]; !ok {
 			var format = "png"

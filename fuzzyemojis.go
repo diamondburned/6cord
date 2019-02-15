@@ -12,7 +12,7 @@ func fuzzyEmojis(last string) {
 
 	if len(last) > 0 {
 		fuzzied = demojis.FuzzyEmojis(
-			strings.TrimPrefix(last, "@"),
+			strings.TrimPrefix(last, ":"),
 		)
 	}
 

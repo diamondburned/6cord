@@ -36,14 +36,14 @@ func ParseMentionsFallback(m *discordgo.Message) (content string) {
 }
 
 // ParseAll parses everything into formatted strings
-func ParseAll(m *discordgo.Message) (content string) {
+func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]string) {
 	channel, err := d.State.Channel(m.ChannelID)
 	if err != nil {
 		content = ParseMentionsFallback(m)
 		return
 	}
 
-	content = md.Parse(m.Content)
+	content, emojiMap = parseEmojis(md.Parse(m.Content))
 
 	for _, user := range m.Mentions {
 		var username = tview.Escape(user.Username)

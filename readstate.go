@@ -26,6 +26,12 @@ func checkReadState() {
 		return
 	}
 
+	if d.State.Settings == nil {
+		return
+	}
+
+	changed := false
+
 	guildView.GetRoot().Walk(func(node, parent *tview.TreeNode) bool {
 		if parent == nil {
 			return true
@@ -59,6 +65,8 @@ func checkReadState() {
 		)
 
 		if isUnread(c) && !chMuted && !guMuted {
+			changed = true
+
 			name = "[::b]" + c.Name + "[::-]"
 
 			g, ok := parent.GetReference().(string)
@@ -72,7 +80,9 @@ func checkReadState() {
 		return true
 	})
 
-	app.Draw()
+	if changed == true {
+		app.Draw()
+	}
 }
 
 // true if channelID has unread msgs

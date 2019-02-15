@@ -9,7 +9,7 @@ import (
 )
 
 func fmtMessage(m *discordgo.Message) string {
-	ct, emojiMap := parseEmojis(ParseAll(m))
+	ct, emojiMap := ParseAll(m)
 
 	if m.EditedTimestamp != "" {
 		ct += " [::d](edited)[::-]"

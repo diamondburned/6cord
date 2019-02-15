@@ -218,6 +218,9 @@ func main() {
 				fuzzyMentions(last)
 			case strings.HasPrefix(last, ":"):
 				fuzzyEmojis(last)
+			default:
+				clearList()
+				rightflex.ResizeItem(autocomp, 1, 1)
 			}
 		})
 
