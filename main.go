@@ -25,6 +25,7 @@ const (
 
 var (
 	app           = tview.NewApplication()
+	appflex       = tview.NewFlex()
 	rightflex     = tview.NewFlex()
 	guildView     = tview.NewTreeView()
 	messagesView  = tview.NewTextView()
@@ -99,7 +100,6 @@ func main() {
 
 	// Main app page
 
-	appflex := tview.NewFlex()
 	appflex.SetDirection(tview.FlexColumn)
 	appflex.SetBackgroundColor(BackgroundColor)
 

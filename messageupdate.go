@@ -43,30 +43,4 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 	app.Draw()
 
 	scrollChat()
-
-	return
-
-	//app.QueueUpdateDraw(func() {
-	//messagesView.Write([]byte(
-	//fmt.Sprintf(
-	//"\n\n"+`[::d]%s edited message ID %d:`+"\n",
-	//username, u.ID,
-	//),
-	//))
-
-	//messagesView.Highlight(fmt.Sprintf("%d", u.ID))
-	//})
-
-	//st := fmtMessage(m) + "[::-][\"\"]\n"
-	//app.QueueUpdateDraw(func() {
-	//messagesView.Write([]byte(st))
-	//})
-
-	//time.Sleep(highlightInterval)
-	//app.QueueUpdateDraw(func() {
-	//messagesView.Highlight()
-	//scrollChat()
-	//})
-
-	//setLastAuthor(0)
 }

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"runtime"
+	"strings"
+	"time"
 
 	"github.com/rivo/tview"
 )
@@ -30,5 +32,41 @@ func Warn(c string) {
 
 	modal := tview.NewModal()
 	modal.AddButtons([]string{"mkay"})
-	modal.SetText(content + c)
+	modal.SetText(c)
+	modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+		if buttonLabel == "mkay" {
+			app.SetRoot(appflex, true).SetFocus(input)
+		}
+	})
+
+	app.SetRoot(modal, false).SetFocus(modal)
+	app.Draw()
+}
+
+// Message prints a system message
+func Message(m string) {
+	msg := fmt.Sprintf(
+		authorFormat,
+		16777215, "<!6cord bot>",
+		time.Now().Format(time.Stamp),
+	)
+
+	var (
+		l = strings.Split(m, "\n")
+		c []string
+	)
+
+	for i := 0; i < len(l); i++ {
+		c = append(c, "\t"+l[i])
+	}
+
+	msg += fmt.Sprintf(
+		messageFormat+"[::-]",
+		0, strings.Join(c, "\n"),
+	)
+
+	messagesView.Write([]byte(msg))
+	messageStore = append(messageStore, msg)
+
+	scrollChat()
 }
