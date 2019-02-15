@@ -175,7 +175,11 @@ func main() {
 				return nil
 
 			case tcell.KeyUp:
-				app.SetFocus(autocomp)
+				if autocomp.GetItemCount() < 1 {
+					app.SetFocus(messagesView)
+				} else {
+					app.SetFocus(autocomp)
+				}
 
 			case tcell.KeyEnter:
 				if autocomp.GetItemCount() > 0 {

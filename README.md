@@ -1,7 +1,7 @@
 # 6cord
 
-![](http://ix.io/1ANj.png)
-![](http://ix.io/1ANk.png)
+![](http://ix.io/1B64.png)
+![](http://ix.io/1B65.png)
 
 ## Behaviors
 
@@ -15,27 +15,39 @@
 ## Todo
 
 - [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
+    - [ ] Better paste library with image support
 - [ ] Commands
-  - [ ] `/goto`
-  - [ ] `/edit`
-  - [ ] `s//` with regexp
-  - [ ] `/exit`, `/shrug`
-  - [ ] Autocompletion for those commands
+    - [ ] `/goto`
+    - [ ] `/edit`
+    - [ ] `s//` with regexp
+    - [ ] `/exit`, `/shrug`
+    - [ ] Autocompletion for those commands
 - [ ] Fix onTyping events
 - [x] Use TextView instead of List for Messages
 	- [x] Consider tv.Write() bytes
-	- [ ] Split messages into Primitives or find a way to edit them individually (cordless does this, too much effort)
+	- [x] Proper inline message edit renders
+	- ~~Split messages into Primitives or find a way to edit them individually (cordless does this, too much effort)~~
 - [x] Fetch nicknames and colors (16-bit hex to 256 cols somehow...)
 	- [x] Async should be for later, when Split messages is done
 	- [x] Add a user store
 - [ ] Implement embed SIXEL images
-- [ ] Implement inline emojis
+    - [ ] Port library to [termui](https://github.com/gizak/termui)
+    - [ ] Work on [issue #213](https://github.com/gizak/termui/issues/213)
+- [x] Implement inline emojis
 - [x] Implement auto-completion popups
 	- Behavior: all keys except Enter and Esc belongs to the Input Field
 	- Esc closes the popup, Enter puts the popup content into the box
 	- When 0 results, hide dialog
-	- Show dialog when: `@`, `#` and potentially `:` (: is pointless as I don't plan on adding emoji inputs any time soon)
+	- Show dialog when: `@`, `#` and potentially `:` (`:` is pointless as I don't plan on adding emoji inputs any time soon)
+	- Auto-completed items:
+    	- Mentions `@`
+    	- Stock emojis `:`
 - [x] An actual channel browser
+- [x] Message acknowledgements (read/unread)
+	- Isn't fully working yet, channel overrides are still janky
+- [ ] Fix `discordgo` spasming out when a goroutine panics
+	- A solution could be `./6cord 2> /dev/null`
+- [ ] Confirm Windows compatibility
 
 ## Credits
 
