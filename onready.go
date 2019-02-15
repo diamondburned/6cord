@@ -20,11 +20,15 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
 		reference := node.GetReference()
 		if reference == nil {
+			CollapseAll(guildNode)
+			node.SetExpanded(!node.IsExpanded())
 			return
 		}
 
 		if name, ok := reference.(string); ok {
 			node.SetText("[::d]" + name + "[::-]")
+
+			CollapseAll(guildNode)
 			node.SetExpanded(!node.IsExpanded())
 
 		} else {
@@ -51,9 +55,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	{
 		this := tview.NewTreeNode("Direct Messages")
+		this.SetReference("Direct Messages")
 		this.Collapse()
-
-		guildNode.AddChild(this)
 
 		// https://github.com/Bios-Marcel/cordless
 		sort.Slice(r.PrivateChannels, func(a, b int) bool {
@@ -74,6 +77,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			this.AddChild(chNode)
 		}
+
+		guildNode.AddChild(this)
 	}
 
 	// https://github.com/Bios-Marcel/cordless
