@@ -39,6 +39,11 @@ func loadChannel() {
 		msgs[i], msgs[opp] = msgs[opp], msgs[i]
 	}
 
+	go func(c *discordgo.Channel, m *discordgo.Message) {
+		ackMe(c, m)
+		checkReadState()
+	}(ch, msgs[len(msgs)-1])
+
 	//var wg sync.WaitGroup
 	messageStore = []string{}
 
@@ -88,9 +93,6 @@ func loadChannel() {
 	messagesView.ScrollToEnd()
 
 	app.SetFocus(input)
-
-	ackMe(ch, msgs[len(msgs)-1])
-	checkReadState()
 
 	go func() {
 		members := &([]*discordgo.Member{})

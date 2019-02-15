@@ -1,6 +1,8 @@
 package main
 
 import (
+	"html"
+
 	"github.com/RumbleFrog/discordgo"
 	"github.com/gen2brain/beeep"
 )
@@ -25,7 +27,8 @@ func mentionHandler(m *discordgo.MessageCreate) {
 
 			if err := beeep.Notify(
 				m.Author.Username+" mentioned you"+channel,
-				m.ContentWithMentionsReplaced(), "",
+				html.EscapeString(m.ContentWithMentionsReplaced()),
+				"",
 			); err != nil {
 				Warn(err.Error())
 			}

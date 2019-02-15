@@ -5,22 +5,23 @@ import (
 	"strings"
 
 	"github.com/RumbleFrog/discordgo"
-	"github.com/davecgh/go-spew/spew"
-	"github.com/eidolon/wordwrap"
 	"github.com/rivo/tview"
-	"gitlab.com/diamondburned/6cord/md"
 )
 
 func fmtMessage(m *discordgo.Message) string {
-	spew.Dump()
-	var (
-		ct = md.Parse(
-			m.ContentWithMentionsReplaced(),
-		)
+	ct, emojiMap := parseEmojis(ParseAll(m))
 
-		edited string
-		c      []string
-		l      = strings.Split(ct, "\n")
+	if m.EditedTimestamp != "" {
+		ct += " [::d](edited)[::-]"
+
+		// Prevent cases where the message is empty
+		// " (edited)"
+		ct = strings.TrimPrefix(ct, " ")
+	}
+
+	var (
+		c []string
+		l = strings.Split(ct, "\n")
 	)
 
 	if m.Content == "¯\\_(ツ)_/¯" {
@@ -31,6 +32,16 @@ func fmtMessage(m *discordgo.Message) string {
 		for i := 0; i < len(l); i++ {
 			c = append(c, "\t"+l[i])
 		}
+	}
+
+	for _, arr := range emojiMap {
+		m.Attachments = append(
+			m.Attachments,
+			&discordgo.MessageAttachment{
+				Filename: arr[0],
+				URL:      arr[1],
+			},
+		)
 	}
 
 	for _, e := range m.Embeds {
@@ -91,10 +102,19 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 
 		if e.Description != "" {
+			var desc, emojis = parseEmojis(e.Description)
+
 			embed = append(
 				embed,
-				splitEmbedLine(e.Description)...,
+				splitEmbedLine(desc)...,
 			)
+
+			for _, arr := range emojis {
+				m.Attachments = append(m.Attachments, &discordgo.MessageAttachment{
+					Filename: arr[0],
+					URL:      arr[1],
+				})
+			}
 		}
 
 		if len(e.Fields) > 0 {
@@ -182,45 +202,5 @@ func fmtMessage(m *discordgo.Message) string {
 		))
 	}
 
-	if m.EditedTimestamp != "" {
-		edited = " [::d](edited)[::-]"
-	}
-
-	return strings.Join(c, "\n") + edited
-}
-
-// WordWrapper makes a global wrapper for embed use
-var WordWrapper = wordwrap.Wrapper(EmbedColLimit, false)
-
-// 2nd arg ::-
-// 3rd arg -::
-func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
-	lines := strings.Split(e, "\n")
-
-	// Todo: clean this up ETA never
-
-	var (
-		cm = ""
-		ce = ""
-	)
-
-	if len(customMarkup) > 0 {
-		cm = customMarkup[0]
-		ce = "[::-]"
-	}
-
-	if len(customMarkup) > 1 {
-		cm += customMarkup[1]
-		ce += "[-::]"
-	}
-
-	for _, l := range lines {
-		splwrap := strings.Split(md.Parse(WordWrapper(l)), "\n")
-
-		for _, s := range splwrap {
-			spl = append(spl, cm+s+ce)
-		}
-	}
-
-	return
+	return strings.Join(c, "\n")
 }

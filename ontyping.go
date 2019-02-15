@@ -8,8 +8,6 @@ import (
 
 	"github.com/RumbleFrog/discordgo"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
 )
 
 // TypingUsers is a store for all typing users
@@ -21,7 +19,6 @@ type TypingUsers struct {
 // TypingUser one user
 type TypingUser struct {
 	ID   int64
-	Name string
 	Time time.Time
 }
 
@@ -63,21 +60,17 @@ func renderCallback(tu *TypingUsers) {
 
 	text := HumanizeStrings(mems)
 	switch {
+	case len(mems) < 1:
+		text = "Send a message or input a command"
 	case len(mems) > 3:
-		text = "Several people are typing"
+		text = "Several people are typing..."
 	case len(mems) == 1:
-		text += "is typing"
+		text += " is typing..."
 	case len(mems) > 1:
-		text += "are typing"
+		text += " are typing..."
 	}
 
-	messagesFrame.Clear()
-	messagesFrame.AddText(
-		text,
-		false,
-		tview.AlignLeft,
-		tcell.ColorGray,
-	)
+	input.SetPlaceholder(text)
 }
 
 // Reset resets the store
@@ -105,6 +98,8 @@ func (tu *TypingUsers) AddUser(id int64, t time.Time) {
 
 	tu.lock.Unlock()
 
+	go renderCallback(tu)
+
 	// 6 seconds according to djs code
 	time.Sleep(time.Second * 6)
 
@@ -112,6 +107,8 @@ func (tu *TypingUsers) AddUser(id int64, t time.Time) {
 	defer tu.lock.Unlock()
 
 	tu.RemoveUser(id)
+
+	go renderCallback(tu)
 }
 
 // RemoveUser removes a user from a store array

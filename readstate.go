@@ -22,6 +22,10 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 func checkReadState() {
 	var guildSettings *discordgo.UserGuildSettings
 
+	if d.State == nil {
+		return
+	}
+
 	guildView.GetRoot().Walk(func(node, parent *tview.TreeNode) bool {
 		if parent == nil {
 			return true
@@ -49,13 +53,16 @@ func checkReadState() {
 		var (
 			chSettings = getChannelFromGuildSettings(c.ID, guildSettings)
 			name       = "[::d]" + c.Name + "[::-]"
+
+			chMuted = settingChannelIsMuted(chSettings)
+			guMuted = settingGuildIsMuted(guildSettings)
 		)
 
-		if isUnread(c) && !settingChannelIsMuted(chSettings) {
+		if isUnread(c) && !chMuted && !guMuted {
 			name = "[::b]" + c.Name + "[::-]"
 
 			g, ok := parent.GetReference().(string)
-			if ok && !settingGuildIsMuted(guildSettings) {
+			if ok {
 				parent.SetText("[::b]" + g + "[::-]")
 			}
 		}
