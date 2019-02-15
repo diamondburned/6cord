@@ -197,9 +197,10 @@ func fmtMessage(m *discordgo.Message) string {
 	}
 
 	for _, a := range m.Attachments {
-		c = append(c, "\t"+tview.Escape(
-			fmt.Sprintf("[%s]: %s", a.Filename, a.URL),
-		))
+		c = append(
+			c,
+			"\t[::d]"+tview.Escape(fmt.Sprintf("[%s]: %s", a.Filename, a.URL))+"[::-]",
+		)
 	}
 
 	return strings.Join(c, "\n")
