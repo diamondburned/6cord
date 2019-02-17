@@ -68,6 +68,20 @@ func main() {
 
 	var login []interface{}
 
+	args := flag.Args()
+	if len(args) > 0 {
+		switch args[0] {
+		case "rmkeyring":
+			switch err := keyring.Delete(AppName, "token"); err {
+			case nil:
+				log.Println("Keyring deleted.")
+				return
+			default:
+				log.Panicln(err)
+			}
+		}
+	}
+
 	k, err := keyring.Get(AppName, "token")
 	if err != nil {
 		if err != keyring.ErrNotFound {
@@ -210,6 +224,12 @@ func main() {
 			words := strings.Fields(text)
 
 			if len(words) < 1 {
+				clearList()
+				return
+			}
+
+			if text == "/" {
+				fuzzyCommands(text)
 				return
 			}
 
@@ -218,9 +238,12 @@ func main() {
 				fuzzyMentions(last)
 			case strings.HasPrefix(last, ":"):
 				fuzzyEmojis(last)
+			case strings.HasPrefix(text, "/upload "):
+				fuzzyUpload(text)
+			case strings.HasPrefix(text, "/"):
+				fuzzyCommands(text)
 			default:
 				clearList()
-				rightflex.ResizeItem(autocomp, 1, 1)
 			}
 		})
 
@@ -311,24 +334,13 @@ func main() {
 		}
 	}
 
-	if len(os.Args) > 1 {
-		switch os.Args[1] {
-		case "rmkeyring":
-			switch err := keyring.Delete(AppName, "token"); err {
-			case nil:
-				log.Println("Keyring deleted.")
-				return
-			default:
-				log.Panicln(err)
-			}
-		}
-	}
-
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
 	d.AddHandler(onTyping)
 	d.AddHandler(messageAck)
+	d.AddHandler(relationshipAdd)
+	d.AddHandler(relationshipRemove)
 
 	if *debug {
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {

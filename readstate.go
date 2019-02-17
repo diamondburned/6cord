@@ -30,6 +30,10 @@ func checkReadState() {
 		return
 	}
 
+	if guildView == nil {
+		return
+	}
+
 	changed := false
 
 	guildView.GetRoot().Walk(func(node, parent *tview.TreeNode) bool {

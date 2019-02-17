@@ -9,6 +9,33 @@ import (
 	"github.com/RumbleFrog/discordgo"
 )
 
+func relationshipAdd(s *discordgo.Session, ra *discordgo.RelationshipAdd) {
+	for i, r := range d.State.Relationships {
+		if r.ID == ra.ID {
+			d.State.Relationships[i] = ra.Relationship
+			return
+		}
+	}
+
+	d.State.Relationships = append(
+		d.State.Relationships,
+		ra.Relationship,
+	)
+}
+
+func relationshipRemove(s *discordgo.Session, rm *discordgo.RelationshipRemove) {
+	rs := d.State.Relationships
+
+	for i, r := range rs {
+		if r.ID == rm.ID {
+			rs = append(rs[:i], rs[i+1:]...)
+			return
+		}
+	}
+
+	d.State.Relationships = rs
+}
+
 // RStore contains Discord relationships
 type RStore struct {
 	Relationships []*discordgo.Relationship
@@ -18,11 +45,12 @@ type RStore struct {
 type Relationship int
 
 const (
-	RelationshipNone                  Relationship = iota
-	RelationshipFriend                             // friend
-	RelationshipBlocked                            // blocked
-	RelationshipIncomingFriendRequest              // incoming friend request
-	RelationshipSentFriendRequest                  // sent friend request
+	RelationshipNone Relationship = iota
+
+	RelationshipFriend                // friend
+	RelationshipBlocked               // blocked
+	RelationshipIncomingFriendRequest // incoming friend request
+	RelationshipSentFriendRequest     // sent friend request
 )
 
 var (

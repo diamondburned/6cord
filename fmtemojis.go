@@ -13,9 +13,9 @@ var (
 )
 
 // returns map[ID][]{name, url}
-func parseEmojis(content string) (formatted string, emojiMap map[string][]string) {
+func parseEmojis(content string) (fmtted string, emojiMap map[string][]string) {
 	emojiMap = make(map[string][]string)
-	formatted = content
+	fmtted = content
 
 	emojiIDs := EmojiRegex.FindAllStringSubmatch(content, -1)
 	for _, nameandID := range emojiIDs {
@@ -29,8 +29,8 @@ func parseEmojis(content string) (formatted string, emojiMap map[string][]string
 				format = "gif"
 			}
 
-			formatted = strings.Replace(
-				formatted,
+			fmtted = strings.Replace(
+				fmtted,
 				nameandID[0],
 				"["+nameandID[2]+"]",
 				-1,

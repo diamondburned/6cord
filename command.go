@@ -4,8 +4,6 @@ import (
 	"encoding/csv"
 	"log"
 	"strings"
-
-	"github.com/RumbleFrog/discordgo"
 )
 
 var (
@@ -15,45 +13,32 @@ var (
 	)
 )
 
+// Commands contains multiple commands
+type Commands []Command
+
 // Command contains a command's info
 type Command struct {
+	Command     string
 	Function    func([]string)
 	Description string
 }
 
-// Commands ..
-var Commands = map[string]Command{
-	"/status": Command{
+var commands = Commands{
+	Command{
+		Command:     "/status",
 		Function:    setStatus,
 		Description: "[online|busy|away|invisible] - sets your status",
 	},
-}
-
-func setStatus(input []string) {
-	if len(input) < 2 {
-		if d.State.Settings == nil {
-			Message("Settings are uninitialized")
-			return
-		}
-
-		switch s := d.State.Settings.Status; s {
-		case discordgo.StatusOnline:
-			Message("Status: Online")
-		case discordgo.StatusIdle:
-			Message("Status: Idle")
-		case discordgo.StatusDoNotDisturb:
-			Message("Status: Do not disturb")
-		case discordgo.StatusInvisible:
-			Message("Status: Invisible")
-		default:
-			Message(string(s))
-		}
-
-		return
-	}
-
-	switch input[1] {
-	}
+	Command{
+		Command:     "/upload",
+		Function:    uploadFile,
+		Description: "[file path] - uploads file",
+	},
+	Command{
+		Command:     "/block",
+		Function:    blockUser,
+		Description: "[@mention] - blocks someone",
+	},
 }
 
 // CommandHandler .
@@ -72,9 +57,9 @@ func CommandHandler() {
 			return
 		}
 
-		for cmd, command := range Commands {
-			if f[0] == cmd {
-				command.Function(f)
+		for _, cmd := range commands {
+			if f[0] == cmd.Command && cmd.Function != nil {
+				cmd.Function(f)
 				return
 			}
 		}

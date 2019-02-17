@@ -7,10 +7,10 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
-var (
-	// tell me a better way
-	currentFuzzy UserStoreArray
-)
+//var (
+//// tell me a better way
+//currentFuzzy UserStoreArray
+//)
 
 // String returns the fuzzy search part of the struct
 func (gm UserStoreArray) String(i int) string {
@@ -51,8 +51,6 @@ func fuzzyMentions(last string) {
 	clearList()
 
 	if len(fuzzied) > 0 {
-		currentFuzzy = fuzzied
-
 		for i, u := range fuzzied {
 			var username = u.Name + "[::d]#" + u.Discrim + "[::-]"
 			if u.Nick != "" {
@@ -74,7 +72,7 @@ func fuzzyMentions(last string) {
 
 			withoutlast := words[:len(words)-1]
 			withoutlast = append(withoutlast, fmt.Sprintf(
-				"<@%d> ", currentFuzzy[i].ID,
+				"<@%d> ", fuzzied[i].ID,
 			))
 
 			input.SetText(strings.Join(withoutlast, " "))

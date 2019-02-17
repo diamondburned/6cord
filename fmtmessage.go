@@ -110,10 +110,13 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 
 			for _, arr := range emojis {
-				m.Attachments = append(m.Attachments, &discordgo.MessageAttachment{
-					Filename: arr[0],
-					URL:      arr[1],
-				})
+				m.Attachments = append(
+					m.Attachments,
+					&discordgo.MessageAttachment{
+						Filename: arr[0],
+						URL:      arr[1],
+					},
+				)
 			}
 		}
 
@@ -121,8 +124,10 @@ func fmtMessage(m *discordgo.Message) string {
 			embed = append(embed, "")
 
 			for _, f := range e.Fields {
-				embed = append(embed, splitEmbedLine(f.Name, " [::b]")...)
-				embed = append(embed, splitEmbedLine(f.Value, " [::d]")...)
+				embed = append(embed,
+					splitEmbedLine(f.Name, " [::b]")...)
+				embed = append(embed,
+					splitEmbedLine(f.Value, " [::d]")...)
 				embed = append(embed, "")
 			}
 		}

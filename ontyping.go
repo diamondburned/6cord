@@ -63,11 +63,11 @@ func renderCallback(tu *TypingUsers) {
 	case len(mems) < 1:
 		text = "Send a message or input a command"
 	case len(mems) > 3:
-		text = "Several people are typing..."
+		text = "Several people are typing···"
 	case len(mems) == 1:
-		text += " is typing..."
+		text += " is typing···"
 	case len(mems) > 1:
-		text += " are typing..."
+		text += " are typing···"
 	}
 
 	input.SetPlaceholder(text)
