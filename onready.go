@@ -134,7 +134,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			if ch.Type == discordgo.ChannelTypeGuildCategory {
 				chNode := tview.NewTreeNode("> " + ch.Name)
-				chNode.SetReference(0)
+				chNode.SetSelectable(false)
 
 				this.AddChild(chNode)
 			} else {
