@@ -69,4 +69,6 @@ func Message(m string) {
 	messageStore = append(messageStore, msg)
 
 	scrollChat()
+
+	setLastAuthor(0)
 }

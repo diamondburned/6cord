@@ -37,15 +37,7 @@ func getUserData(u *discordgo.User, chID int64) (name string, color int) {
 		return
 	}
 
-	guild, err := d.State.Guild(channel.GuildID)
-	if err != nil {
-		if guild, err = d.Guild(channel.GuildID); err != nil {
-			log.Println(err)
-			return
-		}
-	}
-
-	member, err := d.State.Member(guild.ID, id)
+	member, err := d.State.Member(channel.GuildID, id)
 	if err != nil {
 		if member, err = d.GuildMember(channel.GuildID, id); err != nil {
 			log.Println(err)
@@ -57,19 +49,32 @@ func getUserData(u *discordgo.User, chID int64) (name string, color int) {
 		name = tview.Escape(member.Nick)
 	}
 
-	roles := guild.Roles
+	color = getUserColor(channel.GuildID, member.Roles)
+
+	return
+}
+
+func getUserColor(guildID int64, rls discordgo.IDSlice) int {
+	g, err := d.State.Guild(guildID)
+	if err != nil {
+		if g, err = d.Guild(guildID); err != nil {
+			log.Println(err)
+			return 16711422
+		}
+	}
+
+	roles := g.Roles
 	sort.Slice(roles, func(i, j int) bool {
 		return roles[i].Position > roles[j].Position
 	})
 
 	for _, role := range roles {
-		for _, roleID := range member.Roles {
+		for _, roleID := range rls {
 			if role.ID == roleID && role.Color != 0 {
-				color = role.Color
-				return
+				return role.Color
 			}
 		}
 	}
 
-	return
+	return 16711422
 }

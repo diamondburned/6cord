@@ -118,22 +118,52 @@ func (s *UserStore) GetGuildID() int64 {
 	return s.GuildID
 }
 
+// RemoveUser removes the user from the store
+func (s *UserStore) RemoveUser(id int64) {
+	var index int
+
+	for i, u := range s.Data {
+		if u.ID == id {
+			index = i
+			goto Remove
+		}
+	}
+
+	return
+
+Remove:
+	var st = s.Data
+
+	st[len(st)-1], st[index] = st[index], st[len(st)-1]
+	s.Data = st[:len(st)-1]
+}
+
 // UpdateUser updates an user
-func (s *UserStore) UpdateUser(id int64, name, nick string, color int) {
+func (s *UserStore) UpdateUser(id int64, name, nick, discrim string, color int) {
 	if s == nil {
 		return
 	}
 
 	if i, u := s.GetUser(id); u != nil {
-		switch {
-		case name != "":
+		if name != "" {
 			u.Name = name
-		case nick != "":
+		}
+
+		if nick != "" {
 			u.Nick = nick
-		case color > 0:
+		}
+
+		if discrim != "" {
+			u.Discrim = discrim
+		}
+
+		if color > 0 {
 			u.Color = color
 		}
 
 		s.Data[i] = *u
+
+	} else {
+		us.AddUser(id, name, nick, discrim, color)
 	}
 }

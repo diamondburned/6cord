@@ -46,6 +46,7 @@
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky
 - [ ] Scrolling up gets more messages
+- [ ] Port current user stores into only Discord state caches
 - [ ] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
 - [ ] Confirm Windows compatibility

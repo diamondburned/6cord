@@ -60,6 +60,12 @@ func main() {
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
 	messagesView.SetBackgroundColor(BackgroundColor)
+	messagesView.SetText(`    [::b]Quick Start[::-]
+        - Right arrow from guild list to focus to input
+		- Left arrow from input to focus to guild list
+		- Up arrow from input to go to autocomplete/message scrollback
+		- Tab to show/hide channels
+		- /goto [#channel] jumps to that channel`)
 
 	token := flag.String("t", "", "Discord token (1)")
 
@@ -281,6 +287,7 @@ func main() {
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyPgDn, tcell.KeyPgUp, tcell.KeyUp, tcell.KeyDown:
+			log.Println(messagesView.GetScrollOffset())
 			return event
 		}
 
@@ -359,6 +366,9 @@ func main() {
 	d.AddHandler(messageAck)
 	d.AddHandler(relationshipAdd)
 	d.AddHandler(relationshipRemove)
+	d.AddHandler(guildMemberAdd)
+	d.AddHandler(guildMemberUpdate)
+	d.AddHandler(guildMemberRemove)
 
 	if *debug {
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {
