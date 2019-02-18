@@ -33,6 +33,11 @@ func loadChannel() {
 		return
 	}
 
+	if len(msgs) < 1 {
+		// Drop out early if no messages
+		return
+	}
+
 	// reverse
 	for i := len(msgs)/2 - 1; i >= 0; i-- {
 		opp := len(msgs) - 1 - i
