@@ -3,7 +3,7 @@ package main
 import (
 	"html"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 	"github.com/gen2brain/beeep"
 )
 

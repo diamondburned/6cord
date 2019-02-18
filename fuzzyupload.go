@@ -53,7 +53,11 @@ func fuzzyUpload(text string) {
 
 		results := fuzzy.Find(inputfile, filenames)
 
-		for _, r := range results {
+		for i, r := range results {
+			if i == 10 {
+				break
+			}
+
 			fuzzied = append(
 				fuzzied,
 				[]string{
@@ -77,7 +81,7 @@ func fuzzyUpload(text string) {
 			)
 		}
 
-		rightflex.ResizeItem(autocomp, 10, 1)
+		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
 			input.SetText("/upload " + fuzzied[i][1])

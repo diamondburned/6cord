@@ -25,6 +25,11 @@ type Command struct {
 
 var commands = Commands{
 	Command{
+		Command:     "/goto",
+		Function:    gotoChannel,
+		Description: "[channel name] - jumps to a channel",
+	},
+	Command{
 		Command:     "/status",
 		Function:    setStatus,
 		Description: "[online|busy|away|invisible] - sets your status",
@@ -38,6 +43,16 @@ var commands = Commands{
 		Command:     "/block",
 		Function:    blockUser,
 		Description: "[@mention] - blocks someone",
+	},
+	Command{
+		Command:     "/unblock",
+		Function:    unblockUser,
+		Description: "[@mention] - unblocks someone",
+	},
+	Command{
+		Command:     "/nick",
+		Function:    changeSelfNick,
+		Description: "[nickname] - changes nickname for the current guild",
 	},
 }
 

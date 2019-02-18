@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func getGuildFromSettings(guildID int64) *discordgo.UserGuildSettings {

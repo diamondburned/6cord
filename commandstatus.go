@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func setStatus(input []string) {

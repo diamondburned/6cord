@@ -7,11 +7,6 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
-//var (
-//// tell me a better way
-//currentFuzzy UserStoreArray
-//)
-
 // String returns the fuzzy search part of the struct
 func (gm UserStoreArray) String(i int) string {
 	var s = gm[i].Name
@@ -24,15 +19,15 @@ func (gm UserStoreArray) String(i int) string {
 	return s
 }
 
-// Len returns the length of the Emojis slice
+// Len returns the length
 func (gm UserStoreArray) Len() int {
 	return len(gm)
 }
 
-// FuzzyMembers fuzzy searches the list of emojis and returns the slice of results
+// FuzzyMembers fuzzy searches and returns the slice of results
 func FuzzyMembers(pattern string, s *UserStore) (fzr UserStoreArray) {
 	results := fuzzy.FindFrom(pattern, s.Data)
-	for i := 0; i < len(results) && i < 8; i++ {
+	for i := 0; i < len(results) && i < 10; i++ {
 		fzr = append(fzr, s.Data[results[i].Index])
 	}
 
@@ -65,7 +60,7 @@ func fuzzyMentions(last string) {
 			)
 		}
 
-		rightflex.ResizeItem(autocomp, 10, 1)
+		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
 			words := strings.Fields(input.GetText())

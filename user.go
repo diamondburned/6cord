@@ -6,7 +6,7 @@ import (
 
 	"github.com/rivo/tview"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func safeAuthor(u *discordgo.User) (string, int64) {

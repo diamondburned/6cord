@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"github.com/RumbleFrog/discordgo"
 	"github.com/rivo/tview"
+	"github.com/rumblefrog/discordgo"
 )
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
@@ -36,7 +36,12 @@ func checkReadState() {
 
 	changed := false
 
-	guildView.GetRoot().Walk(func(node, parent *tview.TreeNode) bool {
+	root := guildView.GetRoot()
+	if root == nil {
+		return
+	}
+
+	root.Walk(func(node, parent *tview.TreeNode) bool {
 		if parent == nil {
 			return true
 		}

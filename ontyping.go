@@ -6,7 +6,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 	"github.com/davecgh/go-spew/spew"
 )
 

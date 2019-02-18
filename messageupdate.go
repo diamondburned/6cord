@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {

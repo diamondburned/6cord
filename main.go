@@ -10,11 +10,11 @@ import (
 	_ "image/jpeg"
 	_ "image/png"
 
-	"github.com/RumbleFrog/discordgo"
 	"github.com/atotto/clipboard"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
+	"github.com/rumblefrog/discordgo"
 	keyring "github.com/zalando/go-keyring"
 )
 
@@ -43,6 +43,10 @@ var (
 
 	d *discordgo.Session
 )
+
+func init() {
+	commands = append(commands, CustomCommands...)
+}
 
 func main() {
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
@@ -109,6 +113,8 @@ func main() {
 	if err != nil {
 		log.Panicln(err)
 	}
+
+	d.UserAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3534.4 Safari/537.36`
 
 	d.State.MaxMessageCount = 50
 
@@ -218,6 +224,17 @@ func main() {
 
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {
+				clearList()
+				return
+			}
+
+			if text == "/" {
+				fuzzyCommands(text)
+				return
+			}
+
+			if string(text[len(text)-1]) == " " {
+				clearList()
 				return
 			}
 
@@ -228,14 +245,11 @@ func main() {
 				return
 			}
 
-			if text == "/" {
-				fuzzyCommands(text)
-				return
-			}
-
 			switch last := words[len(words)-1]; {
 			case strings.HasPrefix(last, "@"):
 				fuzzyMentions(last)
+			case strings.HasPrefix(last, "#"):
+				fuzzyChannels(last)
 			case strings.HasPrefix(last, ":"):
 				fuzzyEmojis(last)
 			case strings.HasPrefix(text, "/upload "):

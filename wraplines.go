@@ -3,12 +3,9 @@ package main
 import (
 	"strings"
 
-	"github.com/eidolon/wordwrap"
+	"github.com/rivo/tview"
 	"gitlab.com/diamondburned/6cord/md"
 )
-
-// WordWrapper makes a global wrapper for embed use
-var WordWrapper = wordwrap.Wrapper(EmbedColLimit, false)
 
 // 2nd arg ::-
 // 3rd arg -::
@@ -32,8 +29,16 @@ func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
 		ce += "[-::]"
 	}
 
+	_, _, _, col := messagesView.GetInnerRect()
+
 	for _, l := range lines {
-		splwrap := strings.Split(md.Parse(WordWrapper(l)), "\n")
+		splwrap := strings.Split(
+			md.Parse(strings.Join(
+				tview.WordWrap(l, col-5),
+				"\n",
+			)),
+			"\n",
+		)
 
 		for _, s := range splwrap {
 			spl = append(spl, cm+s+ce)

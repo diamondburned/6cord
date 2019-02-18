@@ -5,7 +5,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 const (

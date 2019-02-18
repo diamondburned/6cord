@@ -19,13 +19,17 @@ func (cmds Commands) Len() int {
 func fuzzyCommands(last string) {
 	var fuzzied Commands
 
-	if len(last) > 0 {
+	if len(last) > 1 {
 		results := fuzzy.FindFrom(
 			strings.TrimPrefix(last, "/"),
 			commands,
 		)
 
-		for _, r := range results {
+		for i, r := range results {
+			if i == 10 {
+				break
+			}
+
 			fuzzied = append(
 				fuzzied,
 				commands[r.Index],
@@ -49,7 +53,7 @@ func fuzzyCommands(last string) {
 			)
 		}
 
-		rightflex.ResizeItem(autocomp, 10, 1)
+		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
 			input.SetText(fuzzied[i].Command + " ")

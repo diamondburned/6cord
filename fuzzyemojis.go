@@ -20,6 +20,10 @@ func fuzzyEmojis(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, m := range fuzzied {
+			if i == 10 {
+				break
+			}
+
 			autocomp.InsertItem(
 				i,
 				m.Str, "",
@@ -28,7 +32,7 @@ func fuzzyEmojis(last string) {
 			)
 		}
 
-		rightflex.ResizeItem(autocomp, 10, 1)
+		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
 			var (

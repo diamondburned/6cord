@@ -6,7 +6,7 @@ package main
 import (
 	"sync"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func relationshipAdd(s *discordgo.Session, ra *discordgo.RelationshipAdd) {
@@ -21,6 +21,8 @@ func relationshipAdd(s *discordgo.Session, ra *discordgo.RelationshipAdd) {
 		d.State.Relationships,
 		ra.Relationship,
 	)
+
+	loadChannel()
 }
 
 func relationshipRemove(s *discordgo.Session, rm *discordgo.RelationshipRemove) {
@@ -34,6 +36,8 @@ func relationshipRemove(s *discordgo.Session, rm *discordgo.RelationshipRemove) 
 	}
 
 	d.State.Relationships = rs
+
+	loadChannel()
 }
 
 // RStore contains Discord relationships

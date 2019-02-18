@@ -3,7 +3,7 @@ package main
 import (
 	"sort"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )

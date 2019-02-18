@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/RumbleFrog/discordgo"
+	"github.com/rumblefrog/discordgo"
 )
 
 func loadChannel() {
@@ -105,11 +105,7 @@ func loadChannel() {
 			}
 		}
 
-		if len(guild.Members) < 1 || us.GetGuildID() != ch.GuildID {
-			recurseMembers(members, ch.GuildID, 0)
-		} else {
-			members = &guild.Members
-		}
+		recurseMembers(members, ch.GuildID, 0)
 
 		roles := guild.Roles
 		sort.Slice(roles, func(i, j int) bool {
