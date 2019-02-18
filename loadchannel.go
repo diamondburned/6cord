@@ -39,10 +39,14 @@ func loadChannel() {
 		msgs[i], msgs[opp] = msgs[opp], msgs[i]
 	}
 
-	go func(c *discordgo.Channel, m *discordgo.Message) {
-		ackMe(c, m)
+	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
+		if len(msgs) < 1 {
+			return
+		}
+
+		ackMe(c, msgs[len(msgs)-1])
 		checkReadState()
-	}(ch, msgs[len(msgs)-1])
+	}(ch, msgs)
 
 	//var wg sync.WaitGroup
 	messageStore = []string{}
@@ -95,6 +99,10 @@ func loadChannel() {
 	app.SetFocus(input)
 
 	go func() {
+		if ch.GuildID == 0 {
+			return
+		}
+
 		members := &([]*discordgo.Member{})
 
 		guild, err := d.State.Guild(ch.GuildID)
