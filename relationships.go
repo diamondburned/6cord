@@ -71,6 +71,10 @@ func (rs *RStore) Check(u *discordgo.User, relationship Relationship) bool {
 	defer rs.lock.RUnlock()
 
 	for _, r := range rs.Relationships {
+		if r == nil {
+			continue
+		}
+
 		if r.Type == int(relationship) && r.User.ID == u.ID {
 			return true
 		}

@@ -66,9 +66,22 @@ func checkReadState() {
 		}
 
 		var (
-			chSettings = getChannelFromGuildSettings(c.ID, guildSettings)
-			name       = "[::d]" + c.Name + "[::-]"
+			chSettings   = getChannelFromGuildSettings(c.ID, guildSettings)
+			originalName = c.Name
+		)
 
+		if len(c.Recipients) > 0 && c.Name == "" {
+			var names = make([]string, len(c.Recipients))
+			for i, p := range c.Recipients {
+				names[i] = p.Username
+			}
+
+			originalName = HumanizeStrings(names)
+		}
+
+		name := "[::d]" + originalName + "[::-]"
+
+		var (
 			chMuted = settingChannelIsMuted(chSettings)
 			guMuted = settingGuildIsMuted(guildSettings)
 		)
@@ -76,7 +89,7 @@ func checkReadState() {
 		if isUnread(c) && !chMuted && !guMuted {
 			changed = true
 
-			name = "[::b]" + c.Name + "[::-]"
+			name = "[::b]" + originalName + "[::-]"
 
 			g, ok := parent.GetReference().(string)
 			if ok {
