@@ -33,6 +33,10 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 		} else {
 			if id, ok := reference.(int64); ok {
+				if id == 0 {
+					return
+				}
+
 				ChannelID = id
 				loadChannel()
 			}
@@ -108,39 +112,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this.SetReference(g.Name)
 		this.Collapse()
 
-		sort.Slice(g.Channels, func(i, j int) bool {
-			return g.Channels[i].Position < g.Channels[j].Position
-		})
+		sorted := SortChannels(g.Channels)
 
-		sort.SliceStable(g.Channels, func(i, j int) bool {
-			if g.Channels[i].ParentID == 0 {
-				if g.Channels[i].Type != discordgo.ChannelTypeGuildCategory {
-					return true
-				}
-			}
-
-			var aFound bool
-
-			for _, ch := range g.Channels {
-				if ch.Type == discordgo.ChannelTypeGuildCategory {
-					if g.Channels[i].ParentID != ch.ID {
-						continue
-					} else {
-						if aFound {
-							return g.Channels[j].ParentID == ch.ID
-						}
-
-						aFound = true
-					}
-				} else {
-					return true
-				}
-			}
-
-			return false
-		})
-
-		for _, ch := range g.Channels {
+		for _, ch := range sorted {
 			if !isValidCh(ch.Type) {
 				continue
 			}
@@ -160,8 +134,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			if ch.Type == discordgo.ChannelTypeGuildCategory {
 				chNode := tview.NewTreeNode("> " + ch.Name)
-				this.AddChild(chNode)
+				chNode.SetReference(0)
 
+				this.AddChild(chNode)
 			} else {
 				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
