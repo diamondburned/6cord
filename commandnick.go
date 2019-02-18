@@ -28,7 +28,15 @@ func changeSelfNick(text []string) {
 
 	if err != nil {
 		Message(err.Error())
-	} else {
-		Message("Changed successfully")
+		return
 	}
+
+	Message("Changed successfully")
+
+	go func() {
+		i, u := us.GetUser(d.State.User.ID)
+		if u != nil {
+			us.Data[i].Nick = nickname
+		}
+	}()
 }
