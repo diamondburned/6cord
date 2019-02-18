@@ -111,7 +111,7 @@ func main() {
 
 	d, err = discordgo.New(login...)
 	if err != nil {
-		log.Panicln(err)
+		panic(err)
 	}
 
 	d.UserAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3534.4 Safari/537.36`
@@ -124,10 +124,10 @@ func main() {
 	appflex.SetBackgroundColor(BackgroundColor)
 
 	{ // Left container
-		guildView.SetPrefixes([]string{"", "#"})
+		guildView.SetPrefixes([]string{"", ""})
 		guildView.SetTopLevel(1)
 		guildView.SetBorder(true)
-		guildView.SetTitle("Guilds")
+		guildView.SetTitle("[Guilds]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 		guildView.SetBackgroundColor(BackgroundColor)
 
@@ -151,24 +151,28 @@ func main() {
 
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
-			case tcell.KeyDown:
-				if autocomp.GetCurrentItem() == autocomp.GetItemCount()-1 {
-					app.SetFocus(input)
-					return nil
-				}
-
+			case tcell.KeyDown, tcell.KeyUp, tcell.KeyEnter:
 				return ev
 
-			case tcell.KeyUp:
-				if autocomp.GetCurrentItem() < 1 {
-					app.SetFocus(messagesView)
-					return nil
-				}
+				//case tcell.KeyDown:
+				//if autocomp.GetCurrentItem() == autocomp.GetItemCount()-1 {
+				//app.SetFocus(input)
+				//return nil
+				//}
 
-				return ev
+				//return ev
+
+				//case tcell.KeyUp:
+				//if autocomp.GetCurrentItem() < 1 {
+				//app.SetFocus(messagesView)
+				//return nil
+				//}
+
+				//return ev
 			}
 
-			return ev
+			app.SetFocus(input)
+			return nil
 		})
 
 		input.SetPlaceholder("Send a message or input a command")
@@ -378,7 +382,7 @@ func main() {
 	d.State.MaxMessageCount = 50
 
 	if err := d.Open(); err != nil {
-		log.Fatalln("Failed to connect to Discord", err.Error())
+		panic(err)
 	}
 
 	defer d.Close()

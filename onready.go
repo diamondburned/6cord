@@ -1,11 +1,12 @@
 package main
 
 import (
+	"log"
 	"sort"
 
-	"github.com/rumblefrog/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
+	"github.com/rumblefrog/discordgo"
 )
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
@@ -69,7 +70,11 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		for _, ch := range r.PrivateChannels {
 			var names = make([]string, len(ch.Recipients))
 			for i, p := range ch.Recipients {
-				names[i] = p.Username
+				if p.Username == "" {
+					continue
+				}
+
+				names[i] = p.Username + "#" + p.Discriminator
 			}
 
 			chNode := tview.NewTreeNode(HumanizeStrings(names))
@@ -108,12 +113,46 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return g.Channels[i].Position < g.Channels[j].Position
 		})
 
+		// map[category ID]category name
+		var categories = make(map[int64]string)
+
+		for _, ch := range g.Channels {
+			if ch.Type != discordgo.ChannelTypeGuildCategory {
+				continue
+			}
+
+			categories[ch.ID] = ch.Name
+		}
+
 		for _, ch := range g.Channels {
 			if !isValidCh(ch.Type) {
 				continue
 			}
 
-			chNode := tview.NewTreeNode("[::d]" + ch.Name + "[::-]")
+			perm, err := d.State.UserChannelPermissions(
+				d.State.User.ID,
+				ch.ID,
+			)
+
+			if err != nil {
+				continue
+			}
+
+			if g.Name == "r/unixporn" {
+				log.Println(ch.Name, perm)
+			}
+
+			if perm&discordgo.PermissionReadMessages == 0 {
+				continue
+			}
+
+			var chName = "#" + ch.Name
+			categoryName, ok := categories[ch.ParentID]
+			if ok {
+				chName = categoryName + " #" + ch.Name
+			}
+
+			chNode := tview.NewTreeNode("[::d]" + chName + "[::-]")
 			chNode.SetReference(ch.ID)
 
 			this.AddChild(chNode)

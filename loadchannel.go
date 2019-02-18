@@ -20,7 +20,13 @@ func loadChannel() {
 		}
 	}
 
-	wrapFrame.SetTitle("#" + ch.Name)
+	frameTitle := "[#" + ch.Name + "]"
+
+	if ch.Topic != "" {
+		frameTitle += " - [" + ch.Topic + "]"
+	}
+
+	wrapFrame.SetTitle(frameTitle)
 	typing.Reset()
 
 	if us.GetGuildID() != ch.GuildID {

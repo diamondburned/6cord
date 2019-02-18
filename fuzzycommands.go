@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	"github.com/rivo/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -46,7 +47,7 @@ func fuzzyCommands(last string) {
 		for i, u := range fuzzied {
 			autocomp.InsertItem(
 				i,
-				"[::b]"+u.Command+"[::-] - "+u.Description,
+				"[::b]"+u.Command+"[::-] - "+tview.Escape(u.Description),
 				"",
 				rune(0x31+i),
 				nil,

@@ -19,6 +19,18 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 	checkReadState()
 }
 
+// "[::b]actual string[::-]"
+func stripFormat(a string) string {
+	if len(a) <= 10 {
+		return a
+	}
+
+	a = a[5:]
+	a = a[:len(a)-5]
+
+	return a
+}
+
 func checkReadState() {
 	var guildSettings *discordgo.UserGuildSettings
 
@@ -67,17 +79,8 @@ func checkReadState() {
 
 		var (
 			chSettings   = getChannelFromGuildSettings(c.ID, guildSettings)
-			originalName = c.Name
+			originalName = stripFormat(node.GetText())
 		)
-
-		if len(c.Recipients) > 0 && c.Name == "" {
-			var names = make([]string, len(c.Recipients))
-			for i, p := range c.Recipients {
-				names[i] = p.Username
-			}
-
-			originalName = HumanizeStrings(names)
-		}
 
 		name := "[::d]" + originalName + "[::-]"
 
