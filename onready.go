@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"sort"
 
 	"github.com/gdamore/tcell"
@@ -113,16 +112,33 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return g.Channels[i].Position < g.Channels[j].Position
 		})
 
-		// map[category ID]category name
-		var categories = make(map[int64]string)
-
-		for _, ch := range g.Channels {
-			if ch.Type != discordgo.ChannelTypeGuildCategory {
-				continue
+		sort.SliceStable(g.Channels, func(i, j int) bool {
+			if g.Channels[i].ParentID == 0 {
+				if g.Channels[i].Type != discordgo.ChannelTypeGuildCategory {
+					return true
+				}
 			}
 
-			categories[ch.ID] = ch.Name
-		}
+			var aFound bool
+
+			for _, ch := range g.Channels {
+				if ch.Type == discordgo.ChannelTypeGuildCategory {
+					if g.Channels[i].ParentID != ch.ID {
+						continue
+					} else {
+						if aFound {
+							return g.Channels[j].ParentID == ch.ID
+						}
+
+						aFound = true
+					}
+				} else {
+					return true
+				}
+			}
+
+			return false
+		})
 
 		for _, ch := range g.Channels {
 			if !isValidCh(ch.Type) {
@@ -138,24 +154,20 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				continue
 			}
 
-			if g.Name == "r/unixporn" {
-				log.Println(ch.Name, perm)
-			}
-
 			if perm&discordgo.PermissionReadMessages == 0 {
 				continue
 			}
 
-			var chName = "#" + ch.Name
-			categoryName, ok := categories[ch.ParentID]
-			if ok {
-				chName = categoryName + " #" + ch.Name
+			if ch.Type == discordgo.ChannelTypeGuildCategory {
+				chNode := tview.NewTreeNode("> " + ch.Name)
+				this.AddChild(chNode)
+
+			} else {
+				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
+				chNode.SetReference(ch.ID)
+
+				this.AddChild(chNode)
 			}
-
-			chNode := tview.NewTreeNode("[::d]" + chName + "[::-]")
-			chNode.SetReference(ch.ID)
-
-			this.AddChild(chNode)
 		}
 
 		guildNode.AddChild(this)
@@ -169,5 +181,6 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 func isValidCh(t discordgo.ChannelType) bool {
 	/**/ return t == discordgo.ChannelTypeGuildText ||
 		/*****/ t == discordgo.ChannelTypeDM ||
-		/*****/ t == discordgo.ChannelTypeGroupDM
+		/*****/ t == discordgo.ChannelTypeGroupDM ||
+		/*****/ t == discordgo.ChannelTypeGuildCategory
 }

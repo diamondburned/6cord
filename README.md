@@ -16,12 +16,12 @@
 
 - [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
     - [ ] Better paste library with image support
-- [ ] Commands
-    - [ ] `/goto`
+- [x] Commands
+    - [x] `/goto`
     - [ ] `/edit`
     - [ ] `s//` with regexp
-    - [ ] `/exit`, `/shrug`
-    - [ ] Autocompletion for those commands
+    - [x] `/exit`, `/shrug`
+    - [x] Autocompletion for those commands
 - [ ] Fix onTyping events
 - [x] Use TextView instead of List for Messages
 	- [x] Consider tv.Write() bytes
@@ -45,6 +45,7 @@
 - [x] An actual channel browser
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky
+- [ ] Scrolling up gets more messages
 - [ ] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
 - [ ] Confirm Windows compatibility

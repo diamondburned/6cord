@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/csv"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -54,6 +55,15 @@ var commands = Commands{
 		Function:    changeSelfNick,
 		Description: "[nickname] - changes nickname for the current guild",
 	},
+	Command{
+		Command:     "/exit",
+		Function:    commandExit,
+		Description: "exits",
+	},
+}
+
+func commandExit(text []string) {
+	os.Exit(0)
 }
 
 // CommandHandler .

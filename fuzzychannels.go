@@ -36,7 +36,7 @@ func (ac allChannels) Len() int {
 
 func fuzzyChannels(last string) {
 	var (
-		channels allChannels
+		channels = make(allChannels, len(d.State.PrivateChannels))
 		fuzzied  []fuzzy.Match
 	)
 

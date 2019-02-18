@@ -127,7 +127,7 @@ func main() {
 		guildView.SetPrefixes([]string{"", ""})
 		guildView.SetTopLevel(1)
 		guildView.SetBorder(true)
-		guildView.SetTitle("[Guilds]")
+		guildView.SetTitle("[Guilds[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 		guildView.SetBackgroundColor(BackgroundColor)
 
