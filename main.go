@@ -364,6 +364,7 @@ func main() {
 	d.AddHandler(messageUpdate)
 	d.AddHandler(onTyping)
 	d.AddHandler(messageAck)
+	d.AddHandler(voiceStateUpdate)
 	d.AddHandler(relationshipAdd)
 	d.AddHandler(relationshipRemove)
 	d.AddHandler(guildMemberAdd)
@@ -390,6 +391,12 @@ func main() {
 
 	d.StateEnabled = true
 	d.State.MaxMessageCount = 50
+	d.State.TrackChannels = true
+	d.State.TrackEmojis = true
+	d.State.TrackMembers = true
+	d.State.TrackRoles = true
+	d.State.TrackVoice = true
+	d.State.TrackPresences = true
 
 	if err := d.Open(); err != nil {
 		panic(err)

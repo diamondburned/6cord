@@ -28,8 +28,12 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		if name, ok := reference.(string); ok {
 			node.SetText("[::d]" + name + "[::-]")
 
-			CollapseAll(guildNode)
-			node.SetExpanded(!node.IsExpanded())
+			if !node.IsExpanded() {
+				CollapseAll(guildNode)
+				node.SetExpanded(true)
+			} else {
+				node.SetExpanded(false)
+			}
 
 		} else {
 			if id, ok := reference.(int64); ok {
@@ -37,8 +41,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 					return
 				}
 
-				ChannelID = id
-				loadChannel()
+				loadChannel(id)
 			}
 		}
 	})
@@ -132,12 +135,32 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				continue
 			}
 
-			if ch.Type == discordgo.ChannelTypeGuildCategory {
+			switch ch.Type {
+			case discordgo.ChannelTypeGuildCategory:
 				chNode := tview.NewTreeNode("> " + ch.Name)
 				chNode.SetSelectable(false)
 
 				this.AddChild(chNode)
-			} else {
+
+				continue
+			case discordgo.ChannelTypeGuildVoice:
+				vcs := getVoiceChannel(ch.GuildID, ch.ID)
+				if len(vcs) > 0 {
+					chNode := tview.NewTreeNode("[::-][v[]" + ch.Name + "[::-]")
+					chNode.SetReference(ch.ID)
+
+					this.AddChild(chNode)
+
+					for _, vc := range vcs {
+						vcNode := generateVoiceNode(vc)
+						if vcNode == nil {
+							continue
+						}
+
+						chNode.AddChild(vcNode)
+					}
+				}
+			default:
 				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
 
@@ -157,5 +180,6 @@ func isValidCh(t discordgo.ChannelType) bool {
 	/**/ return t == discordgo.ChannelTypeGuildText ||
 		/*****/ t == discordgo.ChannelTypeDM ||
 		/*****/ t == discordgo.ChannelTypeGroupDM ||
-		/*****/ t == discordgo.ChannelTypeGuildCategory
+		/*****/ t == discordgo.ChannelTypeGuildCategory ||
+		/*****/ t == discordgo.ChannelTypeGuildVoice
 }

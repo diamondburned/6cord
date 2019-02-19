@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rumblefrog/discordgo"
 	"github.com/rivo/tview"
+	"github.com/rumblefrog/discordgo"
 )
 
 func fmtMessage(m *discordgo.Message) string {
@@ -195,17 +195,23 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 
 		c = append(
-			c, strings.Join(
+			c,
+			strings.Join(
 				embed, fmt.Sprintf("\n [#%06X]┃[-::] ", e.Color),
-			), "",
+			),
+			"", // newline between attacments
 		)
 	}
 
-	for _, a := range m.Attachments {
-		c = append(
-			c,
-			"\t[::d]"+tview.Escape(fmt.Sprintf("[%s]: %s", a.Filename, a.URL))+"[::-]",
-		)
+	if len(m.Attachments) > 0 {
+		for _, a := range m.Attachments {
+			c = append(
+				c,
+				"\t[::d]"+tview.Escape(fmt.Sprintf("[%s]: %s", a.Filename, a.URL))+"[::-]",
+			)
+		}
+
+		c = append(c, "")
 	}
 
 	return strings.Join(c, "\n")

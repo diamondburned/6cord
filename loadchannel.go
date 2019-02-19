@@ -10,8 +10,8 @@ import (
 	"github.com/rumblefrog/discordgo"
 )
 
-func loadChannel() {
-	ch, err := d.State.Channel(ChannelID)
+func loadChannel(channelID int64) {
+	ch, err := d.State.Channel(channelID)
 	if err != nil {
 		ch, err = d.Channel(ChannelID) // todo: state first
 		if err != nil {
@@ -19,6 +19,16 @@ func loadChannel() {
 			return
 		}
 	}
+
+	switch ch.Type {
+	case discordgo.ChannelTypeGuildVoice:
+		Message("Voice isn't supported yet :(")
+		return
+	case discordgo.ChannelTypeGuildCategory:
+		return
+	}
+
+	ChannelID = ch.ID
 
 	frameTitle := "[#" + ch.Name + "]"
 
@@ -126,6 +136,8 @@ func loadChannel() {
 
 		recurseMembers(members, ch.GuildID, 0)
 
+		guild.Members = *members
+
 		roles := guild.Roles
 		sort.Slice(roles, func(i, j int) bool {
 			return roles[i].Position > roles[j].Position
@@ -144,7 +156,7 @@ func loadChannel() {
 				}
 			}
 
-			us.AddUser(
+			us.UpdateUser(
 				m.User.ID,
 				m.User.Username,
 				m.Nick,

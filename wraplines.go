@@ -29,12 +29,12 @@ func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
 		ce += "[-::]"
 	}
 
-	_, _, _, col := messagesView.GetInnerRect()
+	_, _, col, _ := messagesView.GetInnerRect()
 
 	for _, l := range lines {
 		splwrap := strings.Split(
 			md.Parse(strings.Join(
-				tview.WordWrap(l, col-5),
+				tview.WordWrap(l, min(col-5, 100)),
 				"\n",
 			)),
 			"\n",

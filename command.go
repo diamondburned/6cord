@@ -56,13 +56,14 @@ var commands = Commands{
 		Description: "[nickname] - changes nickname for the current guild",
 	},
 	Command{
-		Command:     "/exit",
+		Command:     "/quit",
 		Function:    commandExit,
-		Description: "exits",
+		Description: "quits",
 	},
 }
 
 func commandExit(text []string) {
+	app.Stop()
 	os.Exit(0)
 }
 

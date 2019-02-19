@@ -68,6 +68,14 @@ func checkReadState() {
 			return true
 		}
 
+		// This is true when the current node is a voice state
+		// As the voice state is the channel's children, the channel (parent)
+		// will have an int64 reference
+		_, ok = parent.GetReference().(int64)
+		if ok {
+			return true
+		}
+
 		c, err := d.State.Channel(id)
 		if err != nil {
 			return true

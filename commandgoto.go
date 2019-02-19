@@ -23,6 +23,5 @@ func gotoChannel(text []string) {
 		return
 	}
 
-	ChannelID = id
-	loadChannel()
+	loadChannel(id)
 }

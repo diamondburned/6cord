@@ -3,8 +3,8 @@ package main
 import (
 	"html"
 
-	"github.com/rumblefrog/discordgo"
 	"github.com/gen2brain/beeep"
+	"github.com/rumblefrog/discordgo"
 )
 
 func mentionHandler(m *discordgo.MessageCreate) {
@@ -18,22 +18,31 @@ func mentionHandler(m *discordgo.MessageCreate) {
 		return
 	}
 
-	for _, mention := range m.Mentions {
-		if mention.ID == d.State.User.ID {
-			var channel string
-			if c, err := d.State.Channel(m.ChannelID); err == nil {
-				channel = " in #" + c.Name
+	if m.GuildID != 0 {
+		for _, mention := range m.Mentions {
+			if mention.ID == d.State.User.ID {
+				goto PingConfirmed
 			}
-
-			if err := beeep.Notify(
-				m.Author.Username+" mentioned you"+channel,
-				html.EscapeString(m.ContentWithMentionsReplaced()),
-				"",
-			); err != nil {
-				Warn(err.Error())
-			}
-
-			return
 		}
+	} else {
+		if m.Author.ID != d.State.User.ID {
+			goto PingConfirmed
+		}
+	}
+
+	return
+
+PingConfirmed:
+	var channel string
+	if c, err := d.State.Channel(m.ChannelID); err == nil {
+		channel = " in #" + c.Name
+	}
+
+	if err := beeep.Notify(
+		m.Author.Username+" mentioned you"+channel,
+		html.EscapeString(m.ContentWithMentionsReplaced()),
+		"",
+	); err != nil {
+		Warn(err.Error())
 	}
 }
