@@ -112,7 +112,7 @@ func CommandHandler() {
 		fallthrough
 	default:
 		// Trim literal backslash, in case "\/actual message"
-		text = strings.TrimPrefix(text, `/`)
+		text = strings.TrimPrefix(text, `\`)
 		text = senderRegex.Replace(text)
 
 		go func(text string) {
