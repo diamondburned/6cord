@@ -265,7 +265,9 @@ func main() {
 			case strings.HasPrefix(text, "/upload "):
 				fuzzyUpload(text)
 			case strings.HasPrefix(text, "/"):
-				fuzzyCommands(text)
+				if len(words) == 1 {
+					fuzzyCommands(text)
+				}
 			default:
 				clearList()
 			}
