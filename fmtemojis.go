@@ -31,8 +31,8 @@ func parseEmojis(content string) (fmtted string, emojiMap map[string][]string) {
 
 			fmtted = strings.Replace(
 				fmtted,
-				nameandID[0],
-				"["+nameandID[2]+"]",
+				strings.TrimSpace(nameandID[0]),
+				"["+nameandID[2]+"[]",
 				-1,
 			)
 

@@ -380,7 +380,7 @@ func main() {
 	// })
 
 	d.StateEnabled = true
-	d.State.MaxMessageCount = 50
+	d.State.MaxMessageCount = 35
 	d.State.TrackChannels = true
 	d.State.TrackEmojis = true
 	d.State.TrackMembers = true

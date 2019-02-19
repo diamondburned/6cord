@@ -57,6 +57,13 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return nil
 		}
 
+		if ev.Rune() == '/' {
+			app.SetFocus(input)
+			input.SetText("/")
+
+			return nil
+		}
+
 		return ev
 	})
 

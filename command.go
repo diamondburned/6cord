@@ -77,19 +77,6 @@ func CommandHandler() {
 	defer input.SetText("")
 
 	switch {
-	case strings.HasPrefix(text, "/"):
-		f := strings.Fields(text)
-		if len(f) < 0 {
-			return
-		}
-
-		for _, cmd := range commands {
-			if f[0] == cmd.Command && cmd.Function != nil {
-				cmd.Function(f)
-				return
-			}
-		}
-
 	case strings.HasPrefix(text, "s/"):
 		// var (
 		// 	ReplaceRegex string
@@ -109,7 +96,23 @@ func CommandHandler() {
 			log.Println("")
 		}
 
+	case strings.HasPrefix(text, "/"):
+		f := strings.Fields(text)
+		if len(f) < 0 {
+			return
+		}
+
+		for _, cmd := range commands {
+			if f[0] == cmd.Command && cmd.Function != nil {
+				cmd.Function(f)
+				return
+			}
+		}
+
+		fallthrough
 	default:
+		// Trim literal backslash, in case "\/actual message"
+		text = strings.TrimPrefix(text, `/`)
 		text = senderRegex.Replace(text)
 
 		go func(text string) {

@@ -1,6 +1,10 @@
 package main
 
-import "strconv"
+import (
+	"strconv"
+
+	"github.com/rivo/tview"
+)
 
 func parseChannelID(text []string) int64 {
 	chID := text[1]
@@ -22,6 +26,32 @@ func gotoChannel(text []string) {
 	if id == 0 {
 		return
 	}
+
+	root := guildView.GetRoot()
+	if root == nil {
+		return
+	}
+
+	root.Walk(func(node, parent *tview.TreeNode) bool {
+		if parent == nil {
+			return true
+		}
+
+		refr, ok := node.GetReference().(int64)
+		if !ok {
+			return true
+		}
+
+		if id != refr {
+			return true
+		}
+
+		node.Expand()
+		parent.Expand()
+		guildView.SetCurrentNode(node)
+
+		return false
+	})
 
 	loadChannel(id)
 }
