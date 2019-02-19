@@ -90,10 +90,12 @@ func refreshVoiceTreeNode(node *tview.TreeNode, guildID, channelID int64) {
 }
 
 func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {
-	var color = "-"
-	if canIhearthem(vc) || vc.SelfDeaf || vc.Deaf {
-		color = "d"
-	}
+	var color = "d"
+
+	// Reserved for onSpeak
+	//if !canIhearthem(vc) || vc.SelfDeaf || vc.Deaf {
+	//	color = "d"
+	//}
 
 	u, err := d.State.Member(vc.GuildID, vc.UserID)
 	if err != nil {
