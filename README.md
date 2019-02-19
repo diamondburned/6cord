@@ -47,6 +47,15 @@
 	- Isn't fully working yet, channel overrides are still janky
 - [ ] Scrolling up gets more messages
 - [ ] Port current user stores into only Discord state caches
+- [ ] Voice support (partially atm)
+	- [x] Show who's in, muted, deafened and ignored
+	- [ ] [Actual microphone handling](https://github.com/gordonklaus/portaudio/blob/master/examples/record.go)
+	- [ ] [Auto volume](https://dsp.stackexchange.com/questions/46147/how-to-get-the-volume-level-from-pcm-audio-data)
+		- Basically, I need to time so that an array of PCM int16s will contain data for 400ms
+		- Then, I'll need to either root-mean-square it or calculate decibels 
+		- Finally, I will compare the calculated value to the one in `config.go`
+		- If it's louder, send it over to the buffer
+	- ~~Keyboard event handling~~
 - [ ] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
 - [ ] Confirm Windows compatibility
