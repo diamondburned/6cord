@@ -52,19 +52,13 @@ func fuzzyUpload(text string) {
 		}
 
 		results := fuzzy.Find(inputfile, filenames)
+		fuzzied = make([][]string, len(results))
 
 		for i, r := range results {
-			if i == 10 {
-				break
+			fuzzied[i] = []string{
+				"[::u]" + path + "[::-]" + formatNeedle(r, filenames[r.Index]),
+				path + filenames[r.Index],
 			}
-
-			fuzzied = append(
-				fuzzied,
-				[]string{
-					"[::u]" + path + "[::-]" + formatNeedle(r, filenames[r.Index]),
-					path + filenames[r.Index],
-				},
-			)
 		}
 	}
 

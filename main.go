@@ -159,22 +159,10 @@ func main() {
 			switch ev.Key() {
 			case tcell.KeyDown, tcell.KeyUp, tcell.KeyEnter:
 				return ev
+			}
 
-				//case tcell.KeyDown:
-				//if autocomp.GetCurrentItem() == autocomp.GetItemCount()-1 {
-				//app.SetFocus(input)
-				//return nil
-				//}
-
-				//return ev
-
-				//case tcell.KeyUp:
-				//if autocomp.GetCurrentItem() < 1 {
-				//app.SetFocus(messagesView)
-				//return nil
-				//}
-
-				//return ev
+			if ev.Rune() >= 0x31 && ev.Rune() <= 0x122 {
+				return ev
 			}
 
 			app.SetFocus(input)

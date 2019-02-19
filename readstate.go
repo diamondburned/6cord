@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"strings"
 
 	"github.com/rivo/tview"
 	"github.com/rumblefrog/discordgo"
@@ -25,10 +26,11 @@ func stripFormat(a string) string {
 		return a
 	}
 
-	a = a[5:]
-	a = a[:len(a)-5]
+	if strings.HasPrefix(a, "[::") {
+		a = a[5:]
+	}
 
-	return a
+	return strings.TrimSuffix(a, "[::-]")
 }
 
 func checkReadState() {
