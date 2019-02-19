@@ -1,6 +1,6 @@
 # 6cord
 
-![](http://ix.io/1B64.png)
+![](https://0x0.st/ziSc.png)
 ![](http://ix.io/1B65.png)
 
 ## Behaviors
@@ -42,6 +42,8 @@
 	- Auto-completed items:
     	- Mentions `@`
     	- Stock emojis `:`
+		- Commands `/`
+		- Channels `#`
 - [x] An actual channel browser
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky
