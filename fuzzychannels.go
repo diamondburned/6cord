@@ -14,7 +14,7 @@ type allChannels []*discordgo.Channel
 func (ac allChannels) String(i int) string {
 	g, err := d.State.Guild(ac[i].GuildID)
 	if err != nil {
-		if len(ac[i].Recipients) > 0 {
+		if len(ac[i].Recipients) > 0 && ac[i].Name == "" {
 			recips := make([]string, len(ac[i].Recipients))
 			for i, r := range ac[i].Recipients {
 				recips[i] = r.Username

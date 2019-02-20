@@ -81,16 +81,24 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		})
 
 		for _, ch := range r.PrivateChannels {
-			var names = make([]string, len(ch.Recipients))
-			for i, p := range ch.Recipients {
-				if p.Username == "" {
-					continue
+			var display = ch.Name
+
+			if display == "" {
+				var names = make([]string, len(ch.Recipients))
+				if len(ch.Recipients) == 1 {
+					p := ch.Recipients[0]
+					names[0] = p.Username + "#" + p.Discriminator
+
+				} else {
+					for i, p := range ch.Recipients {
+						names[i] = p.Username
+					}
 				}
 
-				names[i] = p.Username + "#" + p.Discriminator
+				display = HumanizeStrings(names)
 			}
 
-			chNode := tview.NewTreeNode(HumanizeStrings(names))
+			chNode := tview.NewTreeNode(display)
 			chNode.SetReference(ch.ID)
 
 			this.AddChild(chNode)
