@@ -326,7 +326,7 @@ func main() {
 	app.SetRoot(appflex, true)
 
 	logFile, err := os.OpenFile(
-		"/tmp/6cord.log",
+		os.TempDir()+"/6cord.log",
 		os.O_RDWR|os.O_CREATE|os.O_APPEND|os.O_SYNC,
 		0664,
 	)
