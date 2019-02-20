@@ -17,6 +17,8 @@ compile:
       - time go get
       - time CGO_ENABLED=0 go build -ldflags "-w -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
       - time strip $CI_PROJECT_DIR/6cord
+      - time CGO_ENABLED=0 GOOS=windows go build -ldflags "-w -extldflags '-static'" -o $CI_PROJECT_DIR/6cord.exe
     artifacts:
       paths:
         - 6cord
+        - 6cord.exe
