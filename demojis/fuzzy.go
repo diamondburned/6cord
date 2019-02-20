@@ -1,13 +1,28 @@
 package demojis
 
-import "github.com/sahilm/fuzzy"
+import (
+	"github.com/rumblefrog/discordgo"
+	"github.com/sahilm/fuzzy"
+)
 
 // Emojis contains a list of emojis
-var Emojis = makeArray()
+// DiscordEmojis generate Discordgo emojis
+// with ID always being -2
+var Emojis, DiscordEmojis = makeArray()
 
-func makeArray() (a []string) {
+func makeArray() (a []string, d []*discordgo.Emoji) {
+	a = make([]string, len(emojiCodeMap))
+	d = make([]*discordgo.Emoji, len(emojiCodeMap))
+
+	i := 0
 	for e := range emojiCodeMap {
-		a = append(a, e)
+		a[i] = e
+		d[i] = &discordgo.Emoji{
+			ID:   -2,
+			Name: e,
+		}
+
+		i++
 	}
 
 	return

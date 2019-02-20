@@ -47,6 +47,9 @@
 - [x] An actual channel browser
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky
+- [ ] Message mentions
+	- Partially working (only counts future mentions)
+	- Todo: past mentions using the endpoint
 - [ ] Scrolling up gets more messages
 - [ ] Port current user stores into only Discord state caches
 - [ ] Voice support (partially atm)

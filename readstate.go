@@ -17,7 +17,7 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 	}
 
 	// update
-	checkReadState()
+	checkReadState(a.ChannelID)
 }
 
 // "[::b]actual string[::-]"
@@ -33,7 +33,7 @@ func stripFormat(a string) string {
 	return strings.TrimSuffix(a, "[::-]")
 }
 
-func checkReadState() {
+func checkReadState(chID ...int64) {
 	var guildSettings *discordgo.UserGuildSettings
 
 	if d.State == nil {
@@ -76,6 +76,12 @@ func checkReadState() {
 		_, ok = parent.GetReference().(int64)
 		if ok {
 			return true
+		}
+
+		for _, chid := range chID {
+			if chid == id {
+				node.ClearChildren()
+			}
 		}
 
 		c, err := d.State.Channel(id)

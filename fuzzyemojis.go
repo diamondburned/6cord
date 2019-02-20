@@ -1,18 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
+	"github.com/rumblefrog/discordgo"
 	"github.com/sahilm/fuzzy"
 	"gitlab.com/diamondburned/6cord/demojis"
 )
 
+// DiscordEmojis ..
+type DiscordEmojis []*discordgo.Emoji
+
+func (de DiscordEmojis) String(i int) string {
+	return de[i].Name
+}
+
+func (de DiscordEmojis) Len() int {
+	return len(de)
+}
+
 func fuzzyEmojis(last string) {
-	var fuzzied []fuzzy.Match
+	var (
+		fuzzied []fuzzy.Match
+		emojis  DiscordEmojis
+	)
 
 	if len(last) > 0 {
-		fuzzied = demojis.FuzzyEmojis(
+		c, err := d.State.Channel(ChannelID)
+		if err != nil {
+			return
+		}
+
+		g, err := d.State.Guild(c.GuildID)
+		if err != nil {
+			return
+		}
+
+		emojis = g.Emojis
+		emojis = append(emojis, demojis.DiscordEmojis...)
+
+		fuzzied = fuzzy.FindFrom(
 			strings.TrimPrefix(last, ":"),
+			emojis,
 		)
 	}
 
@@ -20,13 +50,13 @@ func fuzzyEmojis(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, m := range fuzzied {
-			if i == 10 {
+			if i == 26 {
 				break
 			}
 
 			autocomp.InsertItem(
 				i,
-				m.Str, "",
+				":"+m.Str+":", "",
 				rune(0x31+i),
 				nil,
 			)
@@ -36,14 +66,32 @@ func fuzzyEmojis(last string) {
 
 		autofillfunc = func(i int) {
 			var (
-				words = strings.Fields(input.GetText())
-				emoji = demojis.MatchEmoji(fuzzied[i])
+				words  = strings.Fields(input.GetText())
+				emoji  = emojis[fuzzied[i].Index]
+				insert string
 			)
+
+			if emoji.ID == -2 {
+				e, ok := demojis.GetEmojiFromKey(emoji.Name)
+				if ok {
+					insert = e
+				}
+			} else {
+				var a string
+				if emoji.Animated {
+					a = "a"
+				}
+
+				insert = fmt.Sprintf(
+					"<%s:%s:%d>",
+					a, emoji.Name, emoji.ID,
+				)
+			}
 
 			withoutlast := words[:len(words)-1]
 			withoutlast = append(
 				withoutlast,
-				emoji+" ",
+				insert+" ",
 			)
 
 			input.SetText(strings.Join(withoutlast, " "))
