@@ -12,6 +12,10 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
+	if d == nil {
+		return
+	}
+
 	m, err := d.State.Message(ChannelID, u.ID)
 	if err != nil {
 		Warn(err.Error())

@@ -75,6 +75,10 @@ func (rs *RStore) Check(u *discordgo.User, relationship Relationship) bool {
 			continue
 		}
 
+		if r.User == nil {
+			continue
+		}
+
 		if r.Type == int(relationship) && r.User.ID == u.ID {
 			return true
 		}

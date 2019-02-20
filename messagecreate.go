@@ -19,6 +19,10 @@ var (
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
+	if d == nil {
+		return
+	}
+
 	// Notify mentions
 	go mentionHandler(m)
 
