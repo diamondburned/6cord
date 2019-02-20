@@ -4,12 +4,19 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
-func formatNeedle(m fuzzy.Match, a string) (f string) {
-	for i := 0; i < len(a); i++ {
+func formatNeedle(m fuzzy.Match) (f string) {
+	isHL := false
+
+	for i := 0; i < len(m.Str); i++ {
 		if fuzzyHasNeedle(i, m.MatchedIndexes) {
-			f += "[::u]" + string(a[i]) + "[::-]"
+			f += "[::u]" + string(m.Str[i])
+			isHL = true
 		} else {
-			f += string(a[i])
+			if isHL {
+				f += "[::-]"
+			}
+
+			f += string(m.Str[i])
 		}
 	}
 

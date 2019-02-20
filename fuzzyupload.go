@@ -56,7 +56,7 @@ func fuzzyUpload(text string) {
 
 		for i, r := range results {
 			fuzzied[i] = []string{
-				"[::u]" + path + "[::-]" + formatNeedle(r, filenames[r.Index]),
+				"[::u]" + path + "[::-]\u200B" + formatNeedle(r),
 				path + filenames[r.Index],
 			}
 		}

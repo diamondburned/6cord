@@ -56,6 +56,10 @@ PingConfirmed:
 
 	// Walk the tree for the sake of a (1)
 
+	if m.ChannelID == ChannelID {
+		return
+	}
+
 	root := guildView.GetRoot()
 	if root == nil {
 		return
