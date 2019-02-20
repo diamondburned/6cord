@@ -352,7 +352,7 @@ func main() {
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
-	d.AddHandler(onTyping)
+	// d.AddHandler(onTyping) - broken
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
 	d.AddHandler(relationshipAdd)

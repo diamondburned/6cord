@@ -33,12 +33,12 @@ func fuzzyEmojis(last string) {
 		}
 
 		g, err := d.State.Guild(c.GuildID)
-		if err != nil {
-			return
+		if err == nil {
+			emojis = g.Emojis
+			emojis = append(emojis, demojis.DiscordEmojis...)
+		} else {
+			emojis = demojis.DiscordEmojis
 		}
-
-		emojis = g.Emojis
-		emojis = append(emojis, demojis.DiscordEmojis...)
 
 		fuzzied = fuzzy.FindFrom(
 			strings.TrimPrefix(last, ":"),
