@@ -63,7 +63,8 @@
 	- ~~Keyboard event handling~~
 - [ ] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
-- [ ] Confirm Windows compatibility
+- [x] Confirm Windows compatibility
+	- `/upload` fuzzy match doesn't work, wontfix
 
 ## Credits
 
