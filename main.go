@@ -21,6 +21,9 @@ import (
 const (
 	// AppName used for keyrings
 	AppName = "6cord"
+
+	// DefaultStatus is used as the default message in the status bar
+	DefaultStatus = "Send a message or input a command"
 )
 
 var (
@@ -169,7 +172,8 @@ func main() {
 			return nil
 		})
 
-		input.SetPlaceholder("Send a message or input a command")
+		input.SetLabel(CommandPrefix)
+		input.SetPlaceholder(DefaultStatus)
 		input.SetFieldBackgroundColor(BackgroundColor)
 		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 
@@ -277,7 +281,11 @@ func main() {
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyPgDn, tcell.KeyPgUp, tcell.KeyUp, tcell.KeyDown:
-			log.Println(messagesView.GetScrollOffset())
+			s, _ := messagesView.GetScrollOffset()
+			if s == 0 {
+				go loadMore()
+			}
+
 			return event
 		}
 

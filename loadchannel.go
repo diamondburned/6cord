@@ -54,34 +54,30 @@ func loadChannel(channelID int64) {
 		return
 	}
 
-	// reverse
-	for i := len(msgs)/2 - 1; i >= 0; i-- {
-		opp := len(msgs) - 1 - i
-		msgs[i], msgs[opp] = msgs[opp], msgs[i]
-	}
-
 	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-		var ackMsg *discordgo.Message
+		/*		var ackMsg *discordgo.Message
 
-		for i := len(msgs) - 1; i >= 0; i-- {
-			if msgs[i].Author.ID != d.State.User.ID {
-				ackMsg = msgs[i]
-				break
-			}
-		}
+				for i := len(msgs) - 1; i >= 0; i-- {
+					if msgs[i].Author.ID != d.State.User.ID {
+						ackMsg = msgs[i]
+						break
+					}
+				}
 
-		if ackMsg == nil {
-			return
-		}
-
-		ackMe(c, ackMsg)
+				if ackMsg == nil {
+					return
+				}
+		*/
+		ackMe(c, msgs[0])
 		checkReadState()
 	}(ch, msgs)
 
 	//var wg sync.WaitGroup
 	messageStore = []string{}
 
-	for i, m := range msgs {
+	for i := len(msgs) - 1; i >= 0; i-- {
+		m := msgs[i]
+
 		//wg.Add(1)
 		//go func(m *discordgo.Message, i int) {
 		//defer wg.Done()
@@ -99,7 +95,7 @@ func loadChannel(channelID int64) {
 			sentTime = time.Now()
 		}
 
-		if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
+		if i < len(msgs)-1 && msgs[i+1].Author.ID != m.Author.ID {
 			username, color := us.DiscordThis(m)
 
 			messageStore = append(messageStore, fmt.Sprintf(
@@ -126,7 +122,7 @@ func loadChannel(channelID int64) {
 
 	app.Draw()
 
-	setLastAuthor(msgs[len(msgs)-1].Author.ID)
+	setLastAuthor(msgs[0].Author.ID)
 
 	messagesView.ScrollToEnd()
 
