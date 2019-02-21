@@ -16,6 +16,8 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 		}
 	}
 
+	ackData[a.ChannelID] = a.MessageID
+
 	// update
 	checkReadState(a.ChannelID)
 }
@@ -137,9 +139,20 @@ func isUnread(ch *discordgo.Channel) bool {
 	return false
 }
 
-var lastAck string
+var (
+	lastAck string
+
+	// map[channelID]messageID
+	ackData = make(map[int64]int64)
+)
 
 func ackMe(c *discordgo.Channel, m *discordgo.Message) {
+	if mID, ok := ackData[m.ChannelID]; ok {
+		if mID == m.ID {
+			return
+		}
+	}
+
 	// triggers messageAck
 	ack, err := d.ChannelMessageAck(c.ID, m.ID, lastAck)
 
