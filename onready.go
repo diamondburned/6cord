@@ -35,6 +35,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				node.SetExpanded(false)
 			}
 
+			go checkReadState()
+
 		} else {
 			if id, ok := reference.(int64); ok {
 				if id == 0 {

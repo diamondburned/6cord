@@ -31,7 +31,7 @@ func isRegularMessage(m *discordgo.Message) bool {
 		setLastAuthor(0)
 
 		msg := fmt.Sprintf(
-			"\n\n[::d]%s %s[::-]\n",
+			"\n\n[::d]%s %s[::-]",
 			m.Author.Username, messageText,
 		)
 

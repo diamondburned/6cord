@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rumblefrog/discordgo"
 	"github.com/rivo/tview"
+	"github.com/rumblefrog/discordgo"
 	"gitlab.com/diamondburned/6cord/md"
 )
 
@@ -28,7 +28,7 @@ func ParseMentionsFallback(m *discordgo.Message) (content string) {
 			"[::b]@"+username+"[::-]",
 			// <@!ID>
 			fmt.Sprintf("<@!%d>", user.ID),
-			"[::b]@"+username+"[::-]",
+			"[::b][@"+username+"[][::-]",
 		).Replace(content)
 	}
 
