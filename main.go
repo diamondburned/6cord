@@ -44,6 +44,11 @@ var (
 )
 
 func init() {
+	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
+		s.Clear()
+		return false
+	})
+
 	commands = append(commands, CustomCommands...)
 }
 

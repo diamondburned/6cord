@@ -1,7 +1,5 @@
 package main
 
-import "github.com/gdamore/tcell"
-
 const (
 	// HideBlocked when true, ignores all blocked users
 	HideBlocked = true
@@ -9,7 +7,7 @@ const (
 	// BackgroundColor self explanatory
 	// Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)
 	// Check https://jonasjacek.github.io/colors/ for reference
-	BackgroundColor = tcell.ColorBlack
+	BackgroundColor = -1
 
 	// CommandPrefix is prefix, like $PS1
 	CommandPrefix = "[white]> "
