@@ -31,9 +31,19 @@ var commands = Commands{
 		Description: "[channel name] - jumps to a channel",
 	},
 	Command{
+		Command:     "/nick",
+		Function:    changeSelfNick,
+		Description: "[nickname] - changes nickname for the current guild",
+	},
+	Command{
 		Command:     "/status",
 		Function:    setStatus,
 		Description: "[online|busy|away|invisible] - sets your status",
+	},
+	Command{
+		Command:     "/presence",
+		Function:    setGame,
+		Description: "[string] - sets your \"Playing\" or \"Listening to\" presence, empty to reset",
 	},
 	Command{
 		Command:     "/upload",
@@ -49,11 +59,6 @@ var commands = Commands{
 		Command:     "/unblock",
 		Function:    unblockUser,
 		Description: "[@mention] - unblocks someone",
-	},
-	Command{
-		Command:     "/nick",
-		Function:    changeSelfNick,
-		Description: "[nickname] - changes nickname for the current guild",
 	},
 	Command{
 		Command:     "/quit",

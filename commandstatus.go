@@ -59,3 +59,51 @@ func setStatus(input []string) {
 
 	Message("Set status to " + string(s))
 }
+
+func setListen(text []string) {
+	if len(text) < 2 {
+		Message("Missing string!")
+		return
+	}
+
+	s := strings.Join(text[1:], " ")
+
+	if err := d.UpdateListeningStatus(s); err != nil {
+		Message(err.Error())
+	} else {
+		Message("Set listening status to " + s)
+	}
+}
+
+func setGame(text []string) {
+	var s string
+	if len(text) > 2 {
+		s = strings.Join(text[1:], " ")
+	}
+
+	var (
+		msg string
+		err error
+	)
+
+	if strings.HasPrefix(strings.ToLower(s), "listening to ") {
+		s = s[13:]
+
+		err = d.UpdateListeningStatus(s)
+		msg = "Set listening to "
+	} else {
+		err = d.UpdateStatus(0, s)
+		msg = "Set game to "
+	}
+
+	if err != nil {
+		Message(err.Error())
+		return
+	}
+
+	if s != "" {
+		Message(msg + s + ".")
+	} else {
+		Message("Reset presence successfully.")
+	}
+}
