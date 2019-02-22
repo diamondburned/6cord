@@ -58,6 +58,18 @@ func SortChannels(cs []*discordgo.Channel) (out []*discordgo.Channel) {
 			sort.Slice(v.Children, func(i, j int) bool {
 				return v.Children[i].Position < v.Children[j].Position
 			})
+
+			sort.SliceStable(v.Children, func(i, j int) bool {
+				if v.Children[i].Type == discordgo.ChannelTypeGuildVoice {
+					return true
+				}
+
+				if v.Children[j].Type == discordgo.ChannelTypeGuildVoice {
+					return true
+				}
+
+				return false
+			})
 		}
 
 		a = append(a, v)
