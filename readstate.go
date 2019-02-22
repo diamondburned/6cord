@@ -107,14 +107,18 @@ func checkReadState(chID ...int64) {
 			guMuted = settingGuildIsMuted(guildSettings)
 		)
 
-		if isUnread(c) && !chMuted && !guMuted {
+		if isUnread(c) && !chMuted {
 			changed = true
 
 			name = "[::b]" + originalName + "[::-]"
 
-			g, ok := parent.GetReference().(string)
-			if ok {
-				parent.SetText("[::b]" + g + "[::-]")
+			if !guMuted {
+				g, ok := parent.GetReference().(string)
+				if ok {
+					if !strings.HasPrefix(g, "[::b]") {
+						parent.SetText("[::b]" + g + "[::-]")
+					}
+				}
 			}
 		}
 

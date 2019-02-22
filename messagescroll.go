@@ -91,7 +91,7 @@ func loadMore() {
 			sentTime = time.Now()
 		}
 
-		if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
+		if i < len(msgs)-1 && msgs[i+1].Author.ID != m.Author.ID {
 			username, color := us.DiscordThis(m)
 
 			reversed = append(reversed, fmt.Sprintf(
@@ -120,7 +120,6 @@ func loadMore() {
 
 	messagesView.Highlight(strconv.FormatInt(beforeID, 10))
 	messagesView.ScrollToHighlight()
-	messagesView.Highlight()
 
 	time.Sleep(time.Second * 5)
 
