@@ -29,6 +29,13 @@ func canIhearthem(vc *discordgo.VoiceState) bool {
 }
 
 func refreshVoiceStates(vc *discordgo.VoiceState) {
+	defer func() {
+		if r := recover(); r != nil {
+			app.Stop()
+			panic(r)
+		}
+	}()
+
 	root := guildView.GetRoot()
 	if root == nil {
 		return

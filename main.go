@@ -6,10 +6,6 @@ import (
 	"os"
 	"strings"
 
-	_ "image/gif"
-	_ "image/jpeg"
-	_ "image/png"
-
 	"github.com/atotto/clipboard"
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
