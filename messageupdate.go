@@ -22,7 +22,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		return
 	}
 
-	if rstore.Check(m.Author, RelationshipBlocked) {
+	if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
 		return
 	}
 

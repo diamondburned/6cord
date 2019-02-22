@@ -12,29 +12,31 @@ func messageGetTopID() int64 {
 		return 0
 	}
 
-	var msg string
-
 	for i := 0; i < len(messageStore); i++ {
-		if len(messageStore[i]) < 23 {
-			continue
+		if index := getIDfromindex(i); index != 0 {
+			return index
 		}
-
-		switch {
-		case messageStore[i][1] != '[':
-			continue
-		case messageStore[i][2] != '"':
-			continue
-		}
-
-		msg = messageStore[i]
-		break
 	}
 
-	if msg == "" {
+	return 0
+}
+
+func getIDfromindex(i int) int64 {
+	if len(messageStore[i]) < 23 {
 		return 0
 	}
 
-	var idRune string
+	switch {
+	case messageStore[i][1] != '[':
+		return 0
+	case messageStore[i][2] != '"':
+		return 0
+	}
+
+	var (
+		idRune string
+		msg    = messageStore[i]
+	)
 
 	for i := 3; i < len(msg); i++ {
 		if msg[i] == '"' {
@@ -44,8 +46,8 @@ func messageGetTopID() int64 {
 		idRune += string(msg[i])
 	}
 
-	i, _ := strconv.ParseInt(idRune, 10, 64)
-	return i
+	r, _ := strconv.ParseInt(idRune, 10, 64)
+	return r
 }
 
 var loading bool
@@ -78,7 +80,7 @@ func loadMore() {
 		//go func(m *discordgo.Message, i int) {
 		//defer wg.Done()
 
-		if rstore.Check(m.Author, RelationshipBlocked) {
+		if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
 			continue
 		}
 

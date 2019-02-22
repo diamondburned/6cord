@@ -19,7 +19,7 @@
 - [x] Commands
     - [x] `/goto`
     - [ ] `/edit`
-    - [ ] `s//` with regexp
+    - [x] `s//` with regexp
     - [x] `/exit`, `/shrug`
     - [x] Autocompletion for those commands
 - [ ] Fix onTyping events

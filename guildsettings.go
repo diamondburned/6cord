@@ -38,10 +38,26 @@ func getChannelFromGuildSettings(chID int64, s *discordgo.UserGuildSettings,
 	return nil
 }
 
-func settingChannelIsMuted(cho *discordgo.UserGuildSettingsChannelOverride) bool {
+func settingChannelIsMuted(
+	cho *discordgo.UserGuildSettingsChannelOverride,
+	s *discordgo.UserGuildSettings) (m bool) {
+
 	if cho == nil {
 		return false
 	}
 
-	return cho.Muted
+	m = cho.Muted
+
+	c, err := d.State.Channel(cho.ChannelID)
+	if err != nil {
+		return
+	}
+
+	if c.ParentID != 0 {
+		if cs := getChannelFromGuildSettings(c.ParentID, s); cs != nil {
+			return cs.Muted
+		}
+	}
+
+	return
 }

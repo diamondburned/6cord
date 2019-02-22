@@ -103,7 +103,7 @@ func checkReadState(chID ...int64) {
 		name := "[::d]" + originalName + "[::-]"
 
 		var (
-			chMuted = settingChannelIsMuted(chSettings)
+			chMuted = settingChannelIsMuted(chSettings, guildSettings)
 			guMuted = settingGuildIsMuted(guildSettings)
 		)
 

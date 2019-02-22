@@ -2,9 +2,13 @@ package main
 
 import (
 	"encoding/csv"
-	"log"
+	"fmt"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
+
+	"github.com/rumblefrog/discordgo"
 )
 
 var (
@@ -93,12 +97,70 @@ func CommandHandler() {
 		input.Comma = '/' // delimiter
 		args, err := input.Read()
 		if err != nil {
-			log.Println(err)
+			Warn(err.Error())
 			return
 		}
 
-		if len(args) < 3 {
-			log.Println("")
+		if len(args) != 3 && len(args) != 4 {
+			Message(fmt.Sprintf("Invalid arguments! %d", len(args)))
+			return
+		}
+
+		var (
+			regexArg = args[1]
+			withArg  = args[2]
+			messageN int
+
+			lastMsg *discordgo.Message
+		)
+
+		if len(args) == 4 {
+			order := args[3]
+
+			if order != "" && order != "g" {
+				messageN, _ = strconv.Atoi(order)
+			}
+		}
+
+		regex, err := regexp.Compile(regexArg)
+		if err != nil {
+			Message(err.Error())
+			return
+		}
+
+		for i := len(messageStore) - 1; i >= 0; i-- {
+			if ID := getIDfromindex(i); ID != 0 {
+				m, err := d.State.Message(ChannelID, ID)
+				if err != nil {
+					continue
+				}
+
+				if m.Author.ID == d.State.User.ID {
+					if messageN == 0 {
+						lastMsg = m
+						break
+					}
+
+					messageN--
+				}
+			}
+		}
+
+		if lastMsg == nil {
+			Message("Can't find your last message :(")
+			return
+		}
+
+		repl := regex.ReplaceAllString(lastMsg.Content, withArg)
+
+		_, err = d.ChannelMessageEdit(
+			lastMsg.ChannelID,
+			lastMsg.ID,
+			repl,
+		)
+
+		if err != nil {
+			Warn(err.Error())
 		}
 
 	case strings.HasPrefix(text, "/"):

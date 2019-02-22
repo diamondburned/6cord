@@ -163,7 +163,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			case discordgo.ChannelTypeGuildVoice:
 				vcs := getVoiceChannel(ch.GuildID, ch.ID)
 				if len(vcs) > 0 {
-					chNode := tview.NewTreeNode("[::-][v[]" + ch.Name + "[::-]")
+					chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
 					chNode.SetReference(ch.ID)
 
 					this.AddChild(chNode)
