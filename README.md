@@ -3,6 +3,12 @@
 ![](https://0x0.st/ziSc.png)
 ![](http://ix.io/1B65.png)
 
+## Installation
+
+### 1. [From CI (only when the tick-mark is green)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=compile)
+
+### 2. `go get -u gitlab.com/diamondburned/6cord`
+
 ## Behaviors
 
 - From input, hit arrow up to go to autocompletion. Arrow up again to go to the message box.

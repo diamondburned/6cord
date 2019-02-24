@@ -11,6 +11,9 @@ const (
 
 	// CommandPrefix is prefix, like $PS1
 	CommandPrefix = "[white]> "
+
+	// SyntaxHighlightColorscheme is the color scheme for syntax highlighting
+	SyntaxHighlightColorscheme = "solarized-dark"
 )
 
 // CustomCommands is for user-made commands

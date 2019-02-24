@@ -3,10 +3,17 @@ package md
 import (
 	"strings"
 
+	"github.com/alecthomas/chroma/formatters"
+	"github.com/alecthomas/chroma/lexers"
+	"github.com/alecthomas/chroma/styles"
 	md "github.com/gomarkdown/markdown"
 	ast "github.com/gomarkdown/markdown/ast"
 	"github.com/rivo/tview"
 )
+
+// HighlightStyle determines the syntax highlighting colorstyle:
+// https://xyproto.github.io/splash/docs/all.html
+var HighlightStyle = "monokai"
 
 // Parse parses md into tview string
 func Parse(s string) string {
@@ -53,13 +60,33 @@ func ParseNoEscape(s string) string {
 
 			b.Write(node.Literal)
 		case *ast.CodeBlock:
-			if entering {
-				b.WriteString("[:black:]")
-			} else {
-				b.WriteString("[:-:]")
+			var lexer = lexers.Fallback
+			if lang := string(node.Info); lang != "" {
+				lexer = lexers.Get(lang)
 			}
 
-			b.Write(node.Literal)
+			var fmtter = formatters.Get("tview-8bit")
+			if fmtter == nil {
+				fmtter = formatters.Fallback
+			}
+
+			var style = styles.Get(HighlightStyle)
+			if style == nil {
+				style = styles.Fallback
+			}
+
+			iterator, err := lexer.Tokenise(nil, string(node.Literal))
+			if err != nil {
+				b.Write(node.Literal)
+			}
+
+			code := strings.Builder{}
+
+			if err := fmtter.Format(&code, style, iterator); err != nil {
+				b.Write(node.Literal)
+			}
+
+			b.WriteString(code.String())
 		case *ast.Aside:
 			b.Write(node.Literal)
 		case *ast.CrossReference:

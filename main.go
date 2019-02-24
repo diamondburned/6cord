@@ -14,6 +14,7 @@ import (
 	"github.com/rivo/tview"
 	"github.com/rumblefrog/discordgo"
 	keyring "github.com/zalando/go-keyring"
+	"gitlab.com/diamondburned/6cord/md"
 )
 
 const (
@@ -46,6 +47,8 @@ var (
 )
 
 func init() {
+	md.HighlightStyle = SyntaxHighlightColorscheme
+
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
 		s.Clear()
 		return false

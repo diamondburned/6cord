@@ -25,10 +25,10 @@ func ParseMentionsFallback(m *discordgo.Message) (content string) {
 		content = strings.NewReplacer(
 			// <@ID>
 			fmt.Sprintf("<@%d>", user.ID),
-			"[::b]@"+username+"[::-]",
+			"[:blue:]@"+username+"[:-:]",
 			// <@!ID>
 			fmt.Sprintf("<@!%d>", user.ID),
-			"[::b][@"+username+"[][::-]",
+			"[:blue:]@"+username+"[:-:]",
 		).Replace(content)
 	}
 
@@ -56,10 +56,10 @@ func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]strin
 		content = strings.NewReplacer(
 			// <@ID>
 			fmt.Sprintf("<@%d>", user.ID),
-			"[::b]@"+username+"[::-]",
+			"[:blue:]@"+username+"[:-:]",
 			// <@!ID>
 			fmt.Sprintf("<@!%d>", user.ID),
-			"[::b]@"+username+"[::-]",
+			"[:blue:]@"+username+"[:-:]",
 		).Replace(content)
 	}
 
@@ -69,15 +69,10 @@ func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]strin
 			continue
 		}
 
-		var prf = "[::b]"
-		if !role.Mentionable {
-			prf = "[::d]"
-		}
-
 		content = strings.Replace(
 			content,
 			fmt.Sprintf("<@&%d>", role.ID),
-			prf+"@"+role.Name+"[::-]",
+			"[:blue:]@"+role.Name+"[:-:]",
 			1,
 		)
 	}
@@ -93,7 +88,7 @@ func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]strin
 			return mention
 		}
 
-		return "[::b]#" + channel.Name + "[::-]"
+		return "[:blue:]#" + channel.Name + "[:-:]"
 	})
 
 	return
