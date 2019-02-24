@@ -8,7 +8,6 @@ import (
 
 	"github.com/bwmarrin/dgvoice"
 	"github.com/bwmarrin/discordgo"
-	"github.com/davecgh/go-spew/spew"
 	"layeh.com/gopus"
 )
 
@@ -35,9 +34,9 @@ func main() {
 		panic(err)
 	}
 
-	dgv.AddHandler(func(vc *discordgo.VoiceConnection, vs *discordgo.VoiceSpeakingUpdate) {
-		spew.Dump(vc, vs)
-	})
+	//dgv.AddHandler(func(vc *discordgo.VoiceConnection, vs *discordgo.VoiceSpeakingUpdate) {
+	//spew.Dump(vc, vs)
+	//})
 
 	recv := make(chan *discordgo.Packet, 2)
 	go ReceivePCM(dgv, recv)
@@ -117,6 +116,7 @@ func ReceivePCM(v *discordgo.VoiceConnection, c chan *discordgo.Packet) {
 
 		p, ok := <-v.OpusRecv
 		if !ok {
+			log.Println("Closed ch")
 			return
 		}
 

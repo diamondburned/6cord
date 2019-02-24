@@ -149,6 +149,9 @@ func main() {
 		guildView.SetTitle("[Guilds[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 		guildView.SetBackgroundColor(BackgroundColor)
+		guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+			return nil
+		})
 
 		appflex.AddItem(guildView, 0, 1, true)
 	}
@@ -170,7 +173,22 @@ func main() {
 
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
-			case tcell.KeyDown, tcell.KeyUp, tcell.KeyEnter:
+			case tcell.KeyDown:
+				if autocomp.GetCurrentItem()+1 == autocomp.GetItemCount() {
+					app.SetFocus(input)
+					return nil
+				}
+
+				return ev
+
+			case tcell.KeyUp:
+				if autocomp.GetCurrentItem() == 0 {
+					app.SetFocus(input)
+					return nil
+				}
+
+				return ev
+			case tcell.KeyEnter:
 				return ev
 			}
 
@@ -246,8 +264,22 @@ func main() {
 				if autocomp.GetItemCount() < 1 {
 					app.SetFocus(messagesView)
 				} else {
+					if autocomp.GetCurrentItem() == 0 {
+						newitem := autocomp.GetItemCount() - 1
+						autocomp.SetCurrentItem(newitem)
+					}
+
 					app.SetFocus(autocomp)
 				}
+
+			case tcell.KeyDown:
+				var newitem = autocomp.GetCurrentItem() + 1
+				if newitem > autocomp.GetItemCount()-1 {
+					newitem = 0
+				}
+
+				autocomp.SetCurrentItem(newitem)
+				app.SetFocus(autocomp)
 
 			case tcell.KeyEnter:
 				if autocomp.GetItemCount() > 0 {

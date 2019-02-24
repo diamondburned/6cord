@@ -197,7 +197,7 @@ func fmtMessage(m *discordgo.Message) string {
 		c = append(
 			c,
 			strings.Join(
-				embed, fmt.Sprintf("\n [#%06X]┃[-::] ", e.Color),
+				embed, fmt.Sprintf("\n  [#%06X]┃[-::] ", e.Color),
 			),
 			"", // newline between attacments
 		)
