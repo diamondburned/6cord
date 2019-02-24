@@ -178,6 +178,7 @@ func main() {
 		input.SetLabel(CommandPrefix)
 		input.SetPlaceholder(DefaultStatus)
 		input.SetLabelColor(BackgroundColor)
+		input.SetBackgroundColor(BackgroundColor)
 		input.SetFieldBackgroundColor(BackgroundColor)
 		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 
