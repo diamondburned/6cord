@@ -98,6 +98,10 @@ func main() {
 			default:
 				log.Panicln(err)
 			}
+
+		default:
+			println("Unknown command")
+			os.Exit(1)
 		}
 	}
 

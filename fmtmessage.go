@@ -11,6 +11,10 @@ import (
 func fmtMessage(m *discordgo.Message) string {
 	ct, emojiMap := ParseAll(m)
 
+	if m.Content == "¯\\_(ツ)_/¯" {
+		ct = "¯\\_(ツ)_/¯"
+	}
+
 	if m.EditedTimestamp != "" {
 		ct += " [::d](edited)[::-]"
 
@@ -23,10 +27,6 @@ func fmtMessage(m *discordgo.Message) string {
 		c []string
 		l = strings.Split(ct, "\n")
 	)
-
-	if m.Content == "¯\\_(ツ)_/¯" {
-		ct = "¯\\_(ツ)_/¯"
-	}
 
 	if ct != "" {
 		for i := 0; i < len(l); i++ {

@@ -15,9 +15,9 @@ compile:
     stage: build
     script:
       - time go get
-      - time GOOS=windows go get
       - time CGO_ENABLED=0 go build -ldflags "-w -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
       - touch "No Windows for you :D"
     artifacts:
       paths:
         - 6cord
+        - No Windows for you :D

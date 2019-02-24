@@ -44,7 +44,7 @@ func ParseNoEscape(s string) string {
 			if entering {
 				b.WriteString("[green]>")
 			} else {
-				b.WriteString("[-]")
+				b.WriteString("[-]\n")
 			}
 
 			b.Write(node.Content)

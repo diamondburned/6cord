@@ -22,7 +22,8 @@ func loadChannel(channelID int64) {
 
 	switch ch.Type {
 	case discordgo.ChannelTypeGuildVoice:
-		Message("Voice isn't supported yet :(")
+		Message("Voice is currently not working D:")
+		//go toggleVoiceJoin(ch.ID)
 		return
 	case discordgo.ChannelTypeGuildCategory:
 		return
