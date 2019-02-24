@@ -10,23 +10,36 @@ import (
 
 type allChannels []*discordgo.Channel
 
+var channelFuzzyStore = make(map[int64]string)
+
 // String returns the fuzzy search part of the struct
 func (ac allChannels) String(i int) string {
-	g, err := d.State.Guild(ac[i].GuildID)
-	if err != nil {
-		if len(ac[i].Recipients) > 0 && ac[i].Name == "" {
-			recips := make([]string, len(ac[i].Recipients))
-			for i, r := range ac[i].Recipients {
-				recips[i] = r.Username
+	name, ok := channelFuzzyStore[ac[i].ID]
+	if !ok {
+		g, err := d.State.Guild(ac[i].GuildID)
+		if err != nil {
+			if len(ac[i].Recipients) > 0 && ac[i].Name == "" {
+				recips := make([]string, len(ac[i].Recipients))
+				for i, r := range ac[i].Recipients {
+					recips[i] = r.Username
+				}
+
+				r := HumanizeStrings(recips)
+				channelFuzzyStore[ac[i].ID] = r
+				return r
 			}
 
-			return HumanizeStrings(recips)
+			r := ac[i].Name
+			channelFuzzyStore[ac[i].ID] = r
+			return r
 		}
 
-		return ac[i].Name
+		r := ac[i].Name + " (" + g.Name + ")"
+		channelFuzzyStore[ac[i].ID] = r
+		return r
 	}
 
-	return ac[i].Name + " (" + g.Name + ")"
+	return name
 }
 
 // Len returns the length

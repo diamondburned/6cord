@@ -21,7 +21,8 @@
 ## Todo
 
 - [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
-    - [ ] Better paste library with image support
+    - [x] Better paste library with image support (Linux only)
+- [x] Syntax highlighting, better markdown parsing
 - [x] Commands
     - [x] `/goto`
     - [ ] `/edit`
@@ -56,7 +57,7 @@
 - [ ] Message mentions
 	- Partially working (only counts future mentions)
 	- Todo: past mentions using the endpoint
-- [ ] Scrolling up gets more messages
+- [x] Scrolling up gets more messages
 - [ ] Port current user stores into only Discord state caches
 - [ ] Voice support (partially atm)
 	- [x] Show who's in, muted, deafened and ignored
@@ -67,7 +68,7 @@
 		- Finally, I will compare the calculated value to the one in `config.go`
 		- If it's louder, send it over to the buffer
 	- ~~Keyboard event handling~~
-- [ ] Fix `discordgo` spasming out when a goroutine panics
+- [x] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
 - [x] Confirm Windows compatibility
 	- `/upload` fuzzy match doesn't work, wontfix
