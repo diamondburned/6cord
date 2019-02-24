@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"flag"
 	"log"
 	"os"
 	"strings"
+	"syscall"
 
 	"github.com/atotto/clipboard"
 	"github.com/davecgh/go-spew/spew"
@@ -188,7 +190,41 @@ func main() {
 					return nil
 				}
 
-				input.SetText(input.GetText() + cb)
+				b := []byte(cb)
+
+				if IsFile(b) {
+					modal := tview.NewModal()
+					modal.AddButtons([]string{"Cancel", "Yes"})
+					modal.SetText("Upload file in clipboard?")
+					modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
+						switch buttonLabel {
+						case "Yes":
+							go func() {
+								input.SetPlaceholder("Uploading file...")
+
+								br := bytes.NewReader(b)
+								_, err = d.ChannelFileSend(
+									ChannelID,
+									"clipboard.png",
+									br,
+								)
+
+								input.SetPlaceholder(DefaultStatus)
+
+								if err != nil {
+									Warn(err.Error())
+								}
+							}()
+						}
+
+						app.SetRoot(appflex, true).SetFocus(input)
+					})
+
+					app.SetRoot(modal, false).SetFocus(modal)
+
+				} else {
+					input.SetText(input.GetText() + cb)
+				}
 
 			case tcell.KeyLeft:
 				if input.GetText() != "" {
@@ -346,6 +382,10 @@ func main() {
 	}
 
 	defer logFile.Close()
+
+	if err := syscall.Dup2(int(logFile.Fd()), 2); err != nil {
+		panic(err)
+	}
 
 	log.SetOutput(logFile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)

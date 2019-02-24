@@ -211,7 +211,9 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 		}
 
-		c = append(c, "")
+		if m.Content != "" {
+			c = append(c, "")
+		}
 	}
 
 	return strings.Join(c, "\n")
