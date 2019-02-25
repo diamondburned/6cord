@@ -53,13 +53,18 @@ func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]strin
 			username = tview.Escape(member.Nick)
 		}
 
+		var color = "[:blue:]"
+		if user.ID == d.State.User.ID {
+			color = "[:#17AC86:]"
+		}
+
 		content = strings.NewReplacer(
 			// <@ID>
 			fmt.Sprintf("<@%d>", user.ID),
-			"[:blue:]@"+username+"[:-:]",
+			color+"@"+username+"[:-:]",
 			// <@!ID>
 			fmt.Sprintf("<@!%d>", user.ID),
-			"[:blue:]@"+username+"[:-:]",
+			color+"@"+username+"[:-:]",
 		).Replace(content)
 	}
 

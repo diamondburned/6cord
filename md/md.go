@@ -29,8 +29,10 @@ func ParseNoEscape(s string) string {
 		switch node := node.(type) {
 		case *ast.Text:
 			b.Write(node.Literal)
-		case *ast.Softbreak, *ast.Hardbreak:
+		case *ast.Softbreak:
 			b.WriteRune('\n')
+		case *ast.Hardbreak:
+			b.WriteString("\n\n")
 		case *ast.Emph:
 			b.WriteString(isFormatEnter(entering, "b"))
 			b.Write(node.Content)
@@ -41,13 +43,11 @@ func ParseNoEscape(s string) string {
 			b.WriteString(isFormatEnter(entering, "d"))
 			b.Write(node.Content)
 		case *ast.BlockQuote:
-			if entering {
-				b.WriteString("[green]")
-			} else {
-				b.WriteString("[-]\n")
+			for _, l := range strings.Split(string(node.Literal), "\n") {
+				if l != "" {
+					b.WriteString("[green]>" + l + "[-]\n")
+				}
 			}
-
-			b.Write(node.Literal)
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
@@ -61,7 +61,7 @@ func ParseNoEscape(s string) string {
 				lexer = lexers.Get(lang)
 			}
 
-			var fmtter = formatters.Get("tview-8bit")
+			var fmtter = formatters.Get("tview-256bit")
 			if fmtter == nil {
 				fmtter = formatters.Fallback
 			}
