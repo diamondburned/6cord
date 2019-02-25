@@ -42,23 +42,19 @@ func ParseNoEscape(s string) string {
 			b.Write(node.Content)
 		case *ast.BlockQuote:
 			if entering {
-				b.WriteString("[green]>")
+				b.WriteString("[green]")
 			} else {
 				b.WriteString("[-]\n")
 			}
 
-			b.Write(node.Content)
+			b.Write(node.Literal)
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
 		case *ast.Code:
-			if entering {
-				b.WriteString("[:black:]")
-			} else {
-				b.WriteString("[:-:]")
-			}
-
+			b.WriteString("[:black:]")
 			b.Write(node.Literal)
+			b.WriteString("[:-:]")
 		case *ast.CodeBlock:
 			var lexer = lexers.Fallback
 			if lang := string(node.Info); lang != "" {
