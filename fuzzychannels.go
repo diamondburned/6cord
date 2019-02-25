@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/rumblefrog/discordgo"
@@ -62,6 +63,17 @@ func fuzzyChannels(last string) {
 		fuzzied = fuzzy.FindFrom(
 			strings.TrimPrefix(last, "#"), channels,
 		)
+
+		var guildID int64
+
+		c, err := d.State.Channel(ChannelID)
+		if err == nil {
+			guildID = c.GuildID
+		}
+
+		sort.SliceStable(fuzzied, func(i, j int) bool {
+			return channels[fuzzied[i].Index].GuildID == guildID
+		})
 	}
 
 	clearList()
