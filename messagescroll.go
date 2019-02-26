@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/rivo/tview"
 )
 
 func messageGetTopID() int64 {
@@ -98,7 +100,7 @@ func loadMore() {
 
 			reversed = append(reversed, fmt.Sprintf(
 				authorFormat,
-				color, username,
+				color, tview.Escape(username),
 				sentTime.Format(time.Stamp),
 			))
 		}

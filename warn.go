@@ -57,7 +57,7 @@ func Message(m string) {
 	)
 
 	for i := 0; i < len(l); i++ {
-		c = append(c, "\t"+l[i])
+		c = append(c, chatPadding+l[i])
 	}
 
 	msg += fmt.Sprintf(
