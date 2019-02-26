@@ -62,7 +62,13 @@ func ParseNoEscape(s string) string {
 			b.WriteString(isFormatEnter(entering, "d"))
 			b.Write(node.Content)
 		case *ast.BlockQuote:
-			for _, l := range strings.Split(string(node.Literal), "\n") {
+			if entering {
+				b.WriteString("[green]>")
+			} else {
+				b.WriteString("[-]")
+			}
+
+			for _, l := range strings.Split(string(node.Content), "\n") {
 				if l != "" {
 					b.WriteString("[green]>" + l + "[-]\n")
 				}
