@@ -58,7 +58,7 @@ func loadChannel(channelID int64) {
 
 	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
 		ackMe(c, msgs[0])
-		checkReadState()
+		checkReadState(msgs[0].ChannelID)
 	}(ch, msgs)
 
 	//var wg sync.WaitGroup

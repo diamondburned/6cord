@@ -73,17 +73,27 @@ func checkReadState(chID ...int64) {
 		}
 
 		// This is true when the current node is a voice state
-		// As the voice state is the channel's children, the channel (parent)
+		// AsÜ the voice state is the channel's children, the channel (parent)
 		// will have an int64 reference
 		_, ok = parent.GetReference().(int64)
 		if ok {
 			return true
 		}
 
-		for _, chid := range chID {
-			if chid == id {
-				node.ClearChildren()
+		if len(chID) > 0 {
+			for _, chid := range chID {
+				if chid == id {
+					node.ClearChildren()
+					g, ok := parent.GetReference().(string)
+					if ok {
+						if !strings.HasPrefix(g, "[::d]") {
+							parent.SetText("[::d]" + g + "[::-]")
+						}
+					}
+				}
 			}
+
+			return true
 		}
 
 		c, err := d.State.Channel(id)

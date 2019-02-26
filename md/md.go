@@ -48,10 +48,8 @@ func ParseNoEscape(s string) string {
 		switch node := node.(type) {
 		case *ast.Text:
 			b.Write(node.Literal)
-		case *ast.Softbreak:
+		case *ast.Softbreak, *ast.Hardbreak:
 			b.WriteRune('\n')
-		case *ast.Hardbreak:
-			b.WriteString("\n\n")
 		case *ast.Emph:
 			b.WriteString(isFormatEnter(entering, "b"))
 			b.Write(node.Content)
@@ -64,13 +62,14 @@ func ParseNoEscape(s string) string {
 		case *ast.BlockQuote:
 			if entering {
 				b.WriteString("[green]>")
-			} else {
+			} /*else {
 				b.WriteString("[-]")
-			}
-
-			for _, l := range strings.Split(string(node.Content), "\n") {
+			}*/
+			for _, l := range strings.Split(
+				string(node.Content)+string(node.Literal), "\n",
+			) {
 				if l != "" {
-					b.WriteString("[green]>" + l + "[-]\n")
+					b.WriteString("[green]>" + l + "[-]")
 				}
 			}
 		case *ast.Link:
@@ -111,7 +110,7 @@ func ParseNoEscape(s string) string {
 				break
 			}
 
-			b.WriteString(code.String())
+			b.WriteString("\n" + code.String())
 		case *ast.Aside:
 			b.Write(node.Literal)
 		case *ast.CrossReference:
