@@ -1,19 +1,30 @@
 package md
 
 import (
+	"regexp"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
-	md "github.com/gomarkdown/markdown"
 	ast "github.com/gomarkdown/markdown/ast"
+	ps "github.com/gomarkdown/markdown/parser"
 	"github.com/rivo/tview"
 )
 
 // HighlightStyle determines the syntax highlighting colorstyle:
 // https://xyproto.github.io/splash/docs/all.html
-var HighlightStyle = "monokai"
+var HighlightStyle = "vs"
+
+// ExtensionFlags is the flags used for markdown parsing
+var ExtensionFlags = ps.NoExtensions |
+	ps.NoIntraEmphasis |
+	ps.FencedCode |
+	ps.Autolink |
+	ps.Strikethrough |
+	ps.NoEmptyLineBeforeBlock
+
+var trashyCodeBlockMatching = regexp.MustCompile("(.)```")
 
 // Parse parses md into tview string
 func Parse(s string) string {
@@ -24,7 +35,14 @@ func Parse(s string) string {
 func ParseNoEscape(s string) string {
 	b := strings.Builder{}
 
-	doc := md.Parse([]byte(s), nil)
+	parser := ps.NewWithExtensions(ExtensionFlags)
+	if parser == nil {
+		return s
+	}
+
+	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
+
+	doc := parser.Parse([]byte(s))
 	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
 		switch node := node.(type) {
 		case *ast.Text:
@@ -58,7 +76,9 @@ func ParseNoEscape(s string) string {
 		case *ast.CodeBlock:
 			var lexer = lexers.Fallback
 			if lang := string(node.Info); lang != "" {
-				lexer = lexers.Get(lang)
+				if l := lexers.Get(lang); l != nil {
+					lexer = l
+				}
 			}
 
 			var fmtter = formatters.Get("tview-256bit")
@@ -74,12 +94,14 @@ func ParseNoEscape(s string) string {
 			iterator, err := lexer.Tokenise(nil, string(node.Literal))
 			if err != nil {
 				b.Write(node.Literal)
+				break
 			}
 
 			code := strings.Builder{}
 
 			if err := fmtter.Format(&code, style, iterator); err != nil {
 				b.Write(node.Literal)
+				break
 			}
 
 			b.WriteString(code.String())

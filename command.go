@@ -45,6 +45,11 @@ var commands = Commands{
 		Description: "[online|busy|away|invisible] - sets your status",
 	},
 	Command{
+		Command:     "/edit",
+		Function:    editMessage,
+		Description: "[n:int optional] - edits the latest n message",
+	},
+	Command{
 		Command:     "/presence",
 		Function:    setGame,
 		Description: "[string] - sets your \"Playing\" or \"Listening to\" presence, empty to reset",

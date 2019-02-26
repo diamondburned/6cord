@@ -1,6 +1,9 @@
 package main
 
 const (
+	// ChatPadding determines the width the message is from the border
+	ChatPadding = 2
+
 	// HideBlocked when true, ignores all blocked users
 	HideBlocked = true
 
@@ -13,7 +16,11 @@ const (
 	CommandPrefix = "[white]> "
 
 	// SyntaxHighlightColorscheme is the color scheme for syntax highlighting
-	SyntaxHighlightColorscheme = "solarized-dark"
+	// https://xyproto.github.io/splash/docs/all.html
+	SyntaxHighlightColorscheme = "vs"
+
+	// ShowEmojiURLs converts emojis into clickable URLs if true
+	ShowEmojiURLs = true
 )
 
 // CustomCommands is for user-made commands

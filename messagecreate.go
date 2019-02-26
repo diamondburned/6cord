@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/rivo/tview"
 	"github.com/rumblefrog/discordgo"
 )
 
@@ -67,7 +68,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 			msg := fmt.Sprintf(
 				authorFormat,
-				color, username,
+				color, tview.Escape(username),
 				sentTime.Format(time.Stamp),
 			)
 

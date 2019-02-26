@@ -8,6 +8,14 @@ import (
 	"github.com/rumblefrog/discordgo"
 )
 
+var chatPadding = func() (s string) {
+	for i := 0; i < ChatPadding; i++ {
+		s += " "
+	}
+
+	return
+}()
+
 func fmtMessage(m *discordgo.Message) string {
 	ct, emojiMap := ParseAll(m)
 
@@ -30,7 +38,7 @@ func fmtMessage(m *discordgo.Message) string {
 
 	if ct != "" {
 		for i := 0; i < len(l); i++ {
-			c = append(c, "\t"+l[i])
+			c = append(c, chatPadding+l[i])
 		}
 	}
 
@@ -164,15 +172,15 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 		}
 
-		if e.Thumbnail != nil {
-			m.Attachments = append(
-				m.Attachments,
-				&discordgo.MessageAttachment{
-					Filename: "Thumbnail",
-					URL:      e.Thumbnail.URL,
-				},
-			)
-		}
+		//if e.Thumbnail != nil {
+		//m.Attachments = append(
+		//m.Attachments,
+		//&discordgo.MessageAttachment{
+		//Filename: "Thumbnail",
+		//URL:      e.Thumbnail.URL,
+		//},
+		//)
+		//}
 
 		if e.Image != nil {
 			m.Attachments = append(
@@ -194,10 +202,15 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 		}
 
+		var embedPadding = chatPadding
+		if len(embedPadding) > 2 {
+			embedPadding = chatPadding[:len(chatPadding)-2]
+		}
+
 		c = append(
 			c,
 			strings.Join(
-				embed, fmt.Sprintf("\n  [#%06X]┃[-::] ", e.Color),
+				embed, fmt.Sprintf("\n"+embedPadding+"[#%06X]┃[-::] ", e.Color),
 			),
 			"", // newline between attacments
 		)
@@ -207,7 +220,9 @@ func fmtMessage(m *discordgo.Message) string {
 		for _, a := range m.Attachments {
 			c = append(
 				c,
-				"\t[::d]"+tview.Escape(fmt.Sprintf("[%s]: %s", a.Filename, a.URL))+"[::-]",
+				chatPadding+"[::d]"+tview.Escape(
+					fmt.Sprintf("[%s]: %s", a.Filename, a.URL),
+				)+"[::-]",
 			)
 		}
 

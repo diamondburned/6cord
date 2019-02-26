@@ -36,12 +36,14 @@ func parseEmojis(content string) (fmtted string, emojiMap map[string][]string) {
 				-1,
 			)
 
-			emojiMap[nameandID[3]] = []string{
-				nameandID[2],
-				fmt.Sprintf(
-					`https://cdn.discordapp.com/emojis/%s.%s`,
-					nameandID[3], format,
-				),
+			if ShowEmojiURLs {
+				emojiMap[nameandID[3]] = []string{
+					nameandID[2],
+					fmt.Sprintf(
+						`https://cdn.discordapp.com/emojis/%s.%s`,
+						nameandID[3], format,
+					),
+				}
 			}
 		}
 	}

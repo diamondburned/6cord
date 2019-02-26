@@ -282,6 +282,11 @@ func main() {
 				app.SetFocus(autocomp)
 
 			case tcell.KeyEnter:
+				if ev.Modifiers() == tcell.ModAlt {
+					input.SetText(input.GetText() + "\n")
+					return nil
+				}
+
 				if autocomp.GetItemCount() > 0 {
 					autofillfunc(0)
 					return nil
@@ -362,6 +367,18 @@ func main() {
 			s, _ := messagesView.GetScrollOffset()
 			if s == 0 {
 				go loadMore()
+				return nil
+			}
+
+			return event
+		}
+
+		switch event.Rune() {
+		case 'j', 'k':
+			s, _ := messagesView.GetScrollOffset()
+			if s == 0 {
+				go loadMore()
+				return nil
 			}
 
 			return event

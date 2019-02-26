@@ -53,17 +53,19 @@ func (c *indexedTTYFormatter) Format(w io.Writer, style *chroma.Style, it chroma
 
 	theme := styleToEscapeSequence(c.table, style)
 	for token := it(); token != chroma.EOF; token = it() {
-		clr, ok := theme[token.Type]
+		color, ok := theme[token.Type]
 		if !ok {
-			clr, ok = theme[token.Type.SubCategory()]
+			color, ok = theme[token.Type.SubCategory()]
 			if !ok {
-				clr = theme[token.Type.Category()]
+				color = theme[token.Type.Category()]
 			}
 		}
-		if clr != "" {
-			fmt.Fprint(w, clr)
+
+		if color != "" {
+			fmt.Fprint(w, color)
 		}
-		fmt.Fprint(w, token.Value)
+
+		fmt.Fprint(w, token.Value+"[-]")
 	}
 
 	return nil
