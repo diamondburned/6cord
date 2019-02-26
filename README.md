@@ -26,7 +26,7 @@
 - [x] Syntax highlighting, better markdown parsing
 - [x] Commands
     - [x] `/goto`
-    - [ ] `/edit`
+    - [x] `/edit`
     - [x] `s//` with regexp
     - [x] `/exit`, `/shrug`
     - [x] Autocompletion for those commands

@@ -57,19 +57,6 @@ func loadChannel(channelID int64) {
 	}
 
 	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-		/*		var ackMsg *discordgo.Message
-
-				for i := len(msgs) - 1; i >= 0; i-- {
-					if msgs[i].Author.ID != d.State.User.ID {
-						ackMsg = msgs[i]
-						break
-					}
-				}
-
-				if ackMsg == nil {
-					return
-				}
-		*/
 		ackMe(c, msgs[0])
 		checkReadState()
 	}(ch, msgs)
