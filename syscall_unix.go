@@ -1,5 +1,4 @@
-// +build linux
-// +build amd64,386
+// +build unix
 
 package main
 
