@@ -279,6 +279,9 @@ func main() {
 			}
 
 			return event
+
+		case 'g', 'G':
+			return event
 		}
 
 		app.SetFocus(input)
