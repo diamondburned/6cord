@@ -265,6 +265,10 @@ func main() {
 			}
 
 			return event
+
+		case tcell.KeyLeft:
+			app.SetFocus(guildView)
+			return nil
 		}
 
 		switch event.Rune() {

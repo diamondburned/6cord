@@ -102,7 +102,15 @@ func fuzzyChannels(last string) {
 				"<#%d> ", channels[fuzzied[i].Index].ID,
 			))
 
-			input.SetText(strings.Join(withoutlast, " "))
+			switch {
+			case strings.HasPrefix(input.GetText(), "/goto "):
+				input.SetText("")
+				gotoChannel(withoutlast)
+				return
+
+			default:
+				input.SetText(strings.Join(withoutlast, " "))
+			}
 
 			clearList()
 
