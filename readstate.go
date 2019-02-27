@@ -145,8 +145,12 @@ func checkReadState(chID ...int64) {
 // true if channelID has unread msgs
 func isUnread(ch *discordgo.Channel) bool {
 	for _, c := range d.State.ReadState {
-		if c.ID == ch.ID && c.LastMessageID != ch.LastMessageID {
-			return true
+		if c.ID == ch.ID {
+			if c.LastMessageID != ch.LastMessageID {
+				return true
+			}
+
+			return false
 		}
 	}
 

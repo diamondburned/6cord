@@ -4,7 +4,6 @@ import (
 	"flag"
 	"log"
 	"os"
-	"strings"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
@@ -197,11 +196,14 @@ func main() {
 			return nil
 		})
 
+		buffer := make(chan string, 5)
+		go fuzzyBuffer(buffer)
+
 		resetInputBehavior()
 		input.SetInputCapture(inputKeyHandler)
-
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {
+				stateResetter()
 				clearList()
 				return
 			}
@@ -212,33 +214,12 @@ func main() {
 			}
 
 			if string(text[len(text)-1]) == " " {
+				stateResetter()
 				clearList()
 				return
 			}
 
-			words := strings.Fields(text)
-
-			if len(words) < 1 {
-				clearList()
-				return
-			}
-
-			switch last := words[len(words)-1]; {
-			case strings.HasPrefix(last, "@"):
-				fuzzyMentions(last)
-			case strings.HasPrefix(last, "#"):
-				fuzzyChannels(last)
-			case strings.HasPrefix(last, ":"):
-				fuzzyEmojis(last)
-			case strings.HasPrefix(text, "/upload "):
-				fuzzyUpload(text)
-			case strings.HasPrefix(text, "/"):
-				if len(words) == 1 {
-					fuzzyCommands(text)
-				}
-			default:
-				clearList()
-			}
+			buffer <- text
 		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)

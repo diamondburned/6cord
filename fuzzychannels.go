@@ -12,9 +12,29 @@ import (
 type allChannels []*discordgo.Channel
 
 var channelFuzzyStore = make(map[int64]string)
+var channelFuzzyReadstateStore = make(map[int64]bool)
+
+func isUnreadFuzzy(ch *discordgo.Channel) bool {
+	bl, ok := channelFuzzyReadstateStore[ch.ID]
+	if !ok {
+		bl = isUnread(ch)
+		channelFuzzyReadstateStore[ch.ID] = bl
+	}
+
+	return bl
+}
+
+func isUnreadFuzzyReset() {
+	channelFuzzyReadstateStore = make(map[int64]bool)
+}
 
 // String returns the fuzzy search part of the struct
-func (ac allChannels) String(i int) string {
+func (ac allChannels) String(i int) (name string) {
+	var color = "d"
+	if isUnreadFuzzy(ac[i]) {
+		color = "b"
+	}
+
 	name, ok := channelFuzzyStore[ac[i].ID]
 	if !ok {
 		g, err := d.State.Guild(ac[i].GuildID)
@@ -27,20 +47,19 @@ func (ac allChannels) String(i int) string {
 
 				r := HumanizeStrings(recips)
 				channelFuzzyStore[ac[i].ID] = r
-				return r
+
+			} else {
+				name = ac[i].Name
+				channelFuzzyStore[ac[i].ID] = name
 			}
 
-			r := ac[i].Name
-			channelFuzzyStore[ac[i].ID] = r
-			return r
+		} else {
+			name = ac[i].Name + " (" + g.Name + ")"
+			channelFuzzyStore[ac[i].ID] = name
 		}
-
-		r := ac[i].Name + " (" + g.Name + ")"
-		channelFuzzyStore[ac[i].ID] = r
-		return r
 	}
 
-	return name
+	return "[::" + color + "]" + name + "[::-]"
 }
 
 // Len returns the length
