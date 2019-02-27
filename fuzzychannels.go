@@ -9,9 +9,16 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
-type allChannels []*discordgo.Channel
+type allChannels []fuzzyReadState
 
 var channelFuzzyStore = make(map[int64]string)
+
+type fuzzyReadState struct {
+	*discordgo.Channel
+	Unread bool
+}
+
+var channelFuzzyCache = allChannels([]fuzzyReadState{})
 
 // String returns the fuzzy search part of the struct
 func (ac allChannels) String(i int) string {
@@ -25,22 +32,25 @@ func (ac allChannels) String(i int) string {
 					recips[i] = r.Username
 				}
 
-				r := HumanizeStrings(recips)
-				channelFuzzyStore[ac[i].ID] = r
-				return r
+				name = HumanizeStrings(recips)
+				channelFuzzyStore[ac[i].ID] = name
+
+			} else {
+				name = ac[i].Name
+				channelFuzzyStore[ac[i].ID] = name
 			}
 
-			r := ac[i].Name
-			channelFuzzyStore[ac[i].ID] = r
-			return r
+		} else {
+			name = ac[i].Name + " (" + g.Name + ")"
+			channelFuzzyStore[ac[i].ID] = name
 		}
-
-		r := ac[i].Name + " (" + g.Name + ")"
-		channelFuzzyStore[ac[i].ID] = r
-		return r
 	}
 
-	return name
+	if ac[i].Unread {
+		return "[::b]" + name + "[::-]"
+	}
+
+	return "[::d]" + name + "[::-]"
 }
 
 // Len returns the length
@@ -49,19 +59,32 @@ func (ac allChannels) Len() int {
 }
 
 func fuzzyChannels(last string) {
-	var (
-		channels = make(allChannels, len(d.State.PrivateChannels))
-		fuzzied  []fuzzy.Match
-	)
+	var fuzzied []fuzzy.Match
 
 	if len(last) > 0 {
-		copy(channels, d.State.PrivateChannels)
-		for _, g := range d.State.Guilds {
-			channels = append(channels, g.Channels...)
+		if len(channelFuzzyCache) == 0 {
+			for _, c := range d.State.PrivateChannels {
+				channelFuzzyCache = append(
+					channelFuzzyCache,
+					fuzzyReadState{c, isUnread(c)},
+				)
+			}
+
+			for _, g := range d.State.Guilds {
+				for _, c := range g.Channels {
+					if isSendCh(c.Type) {
+						channelFuzzyCache = append(
+							channelFuzzyCache,
+							fuzzyReadState{c, isUnread(c)},
+						)
+					}
+				}
+			}
 		}
 
 		fuzzied = fuzzy.FindFrom(
-			strings.TrimPrefix(last, "#"), channels,
+			strings.TrimPrefix(last, "#"),
+			channelFuzzyCache,
 		)
 
 		var guildID int64
@@ -72,7 +95,7 @@ func fuzzyChannels(last string) {
 		}
 
 		sort.SliceStable(fuzzied, func(i, j int) bool {
-			return channels[fuzzied[i].Index].GuildID == guildID
+			return channelFuzzyCache[fuzzied[i].Index].GuildID == guildID
 		})
 	}
 
@@ -95,11 +118,13 @@ func fuzzyChannels(last string) {
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
+			defer stateResetter()
+
 			words := strings.Fields(input.GetText())
 
 			withoutlast := words[:len(words)-1]
 			withoutlast = append(withoutlast, fmt.Sprintf(
-				"<#%d> ", channels[fuzzied[i].Index].ID,
+				"<#%d> ", channelFuzzyCache[fuzzied[i].Index].ID,
 			))
 
 			switch {

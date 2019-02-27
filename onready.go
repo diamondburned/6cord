@@ -200,3 +200,9 @@ func isValidCh(t discordgo.ChannelType) bool {
 		/*****/ t == discordgo.ChannelTypeGuildCategory ||
 		/*****/ t == discordgo.ChannelTypeGuildVoice
 }
+
+func isSendCh(t discordgo.ChannelType) bool {
+	/**/ return t == discordgo.ChannelTypeGuildText ||
+		/*****/ t == discordgo.ChannelTypeDM ||
+		/*****/ t == discordgo.ChannelTypeGroupDM
+}

@@ -4,6 +4,10 @@ import (
 	"github.com/sahilm/fuzzy"
 )
 
+func stateResetter() {
+	channelFuzzyCache = allChannels([]fuzzyReadState{})
+}
+
 func formatNeedle(m fuzzy.Match) (f string) {
 	isHL := false
 

@@ -203,6 +203,7 @@ func main() {
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {
 				clearList()
+				stateResetter()
 				return
 			}
 
@@ -213,6 +214,7 @@ func main() {
 
 			if string(text[len(text)-1]) == " " {
 				clearList()
+				stateResetter()
 				return
 			}
 
@@ -220,6 +222,7 @@ func main() {
 
 			if len(words) < 1 {
 				clearList()
+				stateResetter()
 				return
 			}
 
@@ -238,6 +241,7 @@ func main() {
 				}
 			default:
 				clearList()
+				stateResetter()
 			}
 		})
 

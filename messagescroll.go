@@ -59,9 +59,18 @@ func loadMore() {
 		return
 	}
 
+	beforeID := messageGetTopID()
+	if beforeID == 0 {
+		return
+	}
+
 	loading = true
 	input.SetPlaceholder("Loading more...")
-	beforeID := messageGetTopID()
+
+	defer func() {
+		input.SetPlaceholder(DefaultStatus)
+		loading = false
+	}()
 
 	msgs, err := d.ChannelMessages(ChannelID, 35, beforeID, 0, 0)
 	if err != nil {
@@ -126,7 +135,4 @@ func loadMore() {
 	messagesView.ScrollToHighlight()
 
 	time.Sleep(time.Second * 5)
-
-	input.SetPlaceholder(DefaultStatus)
-	loading = false
 }

@@ -1,12 +1,14 @@
 package md
 
 import (
+	"log"
 	"regexp"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
+	"github.com/davecgh/go-spew/spew"
 	ast "github.com/gomarkdown/markdown/ast"
 	ps "github.com/gomarkdown/markdown/parser"
 	"github.com/rivo/tview"
@@ -46,10 +48,10 @@ func ParseNoEscape(s string) string {
 	doc := parser.Parse([]byte(s))
 	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
 		switch node := node.(type) {
-		case *ast.Text:
-			b.Write(node.Literal)
-		case *ast.Softbreak, *ast.Hardbreak:
+		case *ast.Softbreak:
 			b.WriteRune('\n')
+		case *ast.Hardbreak:
+			b.WriteString("\n\n")
 		case *ast.Emph:
 			b.WriteString(isFormatEnter(entering, "b"))
 			b.Write(node.Content)
@@ -65,11 +67,13 @@ func ParseNoEscape(s string) string {
 			} /*else {
 				b.WriteString("[-]")
 			}*/
+
+			log.Println(spew.Sdump(node.Content, node.Literal))
 			for _, l := range strings.Split(
 				string(node.Content)+string(node.Literal), "\n",
 			) {
 				if l != "" {
-					b.WriteString("[green]>" + l + "[-]")
+					b.WriteString("[green]>" + l + "[-]\n")
 				}
 			}
 		case *ast.Link:
@@ -166,6 +170,8 @@ func ParseNoEscape(s string) string {
 		case *ast.Superscript:
 			b.Write(node.Literal)
 		case *ast.Footnotes:
+			b.Write(node.Literal)
+		case *ast.Text:
 			b.Write(node.Literal)
 		default:
 
