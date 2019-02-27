@@ -57,7 +57,7 @@ func loadChannel(channelID int64) {
 	}
 
 	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-		ackMe(c, msgs[0])
+		ackMe(msgs[0])
 		checkReadState(msgs[0].ChannelID)
 	}(ch, msgs)
 
