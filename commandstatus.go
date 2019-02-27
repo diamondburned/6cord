@@ -77,7 +77,7 @@ func setListen(text []string) {
 
 func setGame(text []string) {
 	var s string
-	if len(text) > 2 {
+	if len(text) > 1 {
 		s = strings.Join(text[1:], " ")
 	}
 
