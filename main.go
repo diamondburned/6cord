@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"strings"
-	"syscall"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/gdamore/tcell"
@@ -338,10 +337,6 @@ func main() {
 
 	defer logFile.Close()
 
-	if err := syscall.Dup2(int(logFile.Fd()), 2); err != nil {
-		panic(err)
-	}
-
 	log.SetOutput(logFile)
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
@@ -404,6 +399,9 @@ func main() {
 	if err := keyring.Set(AppName, "token", d.Token); err != nil {
 		log.Println("Failed to set keyring! Continuing anyway...", err.Error())
 	}
+
+	// Stored in syscall.go, only does something when target OS is Linux
+	syscallSilenceStderr(logFile)
 
 	if err := app.Run(); err != nil {
 		log.Panicln(err)
