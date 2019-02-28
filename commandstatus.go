@@ -82,21 +82,32 @@ func setGame(text []string) {
 	}
 
 	var (
-		msg string
-		err error
+		msg      string
+		gametype = discordgo.GameTypeGame
 	)
 
-	if strings.HasPrefix(strings.ToLower(s), "listening to ") {
+	switch {
+	case strings.HasPrefix(strings.ToLower(s), "listening to "):
 		s = s[13:]
-
-		err = d.UpdateListeningStatus(s)
+		gametype = discordgo.GameTypeListening
 		msg = "Set listening to "
-	} else {
-		err = d.UpdateStatus(0, s)
+	case strings.HasPrefix(strings.ToLower(s), "watching "):
+		s = s[8:]
+		gametype = discordgo.GameTypeWatching
+		msg = "Set watching "
+	default:
 		msg = "Set game to "
 	}
 
-	if err != nil {
+	usd := discordgo.UpdateStatusData{
+		Status: string(d.State.Settings.Status),
+		Game: &discordgo.Game{
+			Name: s,
+			Type: gametype,
+		},
+	}
+
+	if err := d.UpdateStatusComplex(usd); err != nil {
 		Message(err.Error())
 		return
 	}
