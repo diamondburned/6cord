@@ -4,6 +4,7 @@ variables:
   REPO_NAME: gitlab.com/diamondburned/6cord
 
 before_script:
+  - apt install upx-ucl
   - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
   - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
   - cd $GOPATH/src/$REPO_NAME
@@ -18,6 +19,8 @@ compile:
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance
       - time CGO_ENABLED=0 go build -ldflags "-w -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
+      - strip $CI_PROJECT_DIR/6cord
+      - upx $CI_PROJECT_DIR/6cord
       - time GOOS=windows go get
       - time GOOS=windows CGO_ENABLED=0 go build -o $CI_PROJECT_DIR/6cord.exe
     artifacts:
