@@ -17,8 +17,7 @@ import (
 var HighlightStyle = "vs"
 
 // ExtensionFlags is the flags used for markdown parsing
-var ExtensionFlags = ps.NoExtensions |
-	ps.FencedCode |
+var ExtensionFlags = ps.FencedCode |
 	ps.Autolink |
 	ps.HardLineBreak |
 	ps.BackslashLineBreak |

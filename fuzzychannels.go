@@ -103,16 +103,16 @@ func fuzzyChannels(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, fz := range fuzzied {
-			if i == 10 {
-				break
-			}
-
 			autocomp.InsertItem(
 				i,
 				fz.Str, "",
 				rune(0x31+i),
 				nil,
 			)
+
+			if i == 25 {
+				break
+			}
 		}
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)

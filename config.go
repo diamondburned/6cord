@@ -17,7 +17,7 @@ const (
 
 	// SyntaxHighlightColorscheme is the color scheme for syntax highlighting
 	// https://xyproto.github.io/splash/docs/all.html
-	SyntaxHighlightColorscheme = "vs"
+	SyntaxHighlightColorscheme = "emacs"
 
 	// ShowEmojiURLs converts emojis into clickable URLs if true
 	ShowEmojiURLs = true
