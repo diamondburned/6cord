@@ -112,7 +112,7 @@ func ParseNoEscape(s string) string {
 
 			s := code.String()
 			b.WriteString("\n" + s)
-			if !strings.HasSuffix(s, "\n") {
+			if !strings.HasPrefix(s, "\n") {
 				b.WriteRune('\n')
 			}
 		case *ast.Aside:

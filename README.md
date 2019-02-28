@@ -24,6 +24,7 @@
 - [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
     - [x] Better paste library with image support (Linux only)
 - [x] Syntax highlighting, better markdown parsing
+- [x] Message Delete and Edit
 - [x] Commands
     - [x] `/goto`
     - [x] `/edit`

@@ -24,6 +24,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
+	if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
+		return
+	}
+
 	// Notify mentions
 	go mentionHandler(m)
 
@@ -38,10 +42,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		checkReadState()
 
-		return
-	}
-
-	if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
 		return
 	}
 

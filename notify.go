@@ -3,6 +3,7 @@ package main
 import (
 	"html"
 
+
 	"github.com/gen2brain/beeep"
 	"github.com/rivo/tview"
 	"github.com/rumblefrog/discordgo"
@@ -33,13 +34,30 @@ PingConfirmed:
 	var name = m.Author.Username
 
 	if c, err := d.State.Channel(m.ChannelID); err == nil {
-		channel = " in #" + c.Name
+		if c.Name != "" {
+			channel = " in #" + c.Name
 
-		m, err := d.State.Member(c.GuildID, m.Author.ID)
-		if err == nil {
-			if m.Nick != "" {
-				name = m.Nick
+			m, err := d.State.Member(c.GuildID, m.Author.ID)
+			if err == nil {
+				if m.Nick != "" {
+					name = m.Nick
+				}
 			}
+
+		} else {
+			var names = make([]string, len(c.Recipients))
+
+			if len(c.Recipients) == 1 {
+				p := c.Recipients[0]
+				names[0] = p.Username + "#" + p.Discriminator
+
+			} else {
+				for i, p := range c.Recipients {
+					names[i] = p.Username
+				}
+			}
+
+			channel = HumanizeStrings(names)
 		}
 	}
 
@@ -85,13 +103,17 @@ PingConfirmed:
 		}
 
 		pingNode := tview.NewTreeNode(
-			"[red]" + name + "[-] mentioned you",
+			"[red]" + tview.Escape(name) + "[-] mentioned you",
 		)
 
 		pingNode.SetSelectable(false)
 
 		node.AddChild(pingNode)
 		node.Expand()
+
+		if g, ok := parent.GetReference().(string); ok {
+			parent.SetText("[::b]" + g + " [red](!)[-::-]")
+		}
 
 		return false
 	})

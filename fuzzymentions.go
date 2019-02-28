@@ -17,7 +17,7 @@ func (gm UserStoreArray) String(i int) string {
 		s += gm[i].Nick
 	}
 
-	return tview.Escape(s)
+	return s
 }
 
 // Len returns the length
@@ -55,7 +55,7 @@ func fuzzyMentions(last string) {
 
 			autocomp.InsertItem(
 				i,
-				username, "",
+				tview.Escape(username), "",
 				rune(0x31+i),
 				nil,
 			)

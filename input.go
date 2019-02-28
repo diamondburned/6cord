@@ -113,7 +113,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		switch input.GetLabel() {
 		case EditMessageLabel:
-			editHandler()
+			go editHandler()
 
 		default:
 			CommandHandler()

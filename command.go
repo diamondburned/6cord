@@ -86,7 +86,7 @@ func CommandHandler() {
 
 	switch {
 	case strings.HasPrefix(text, "s/"):
-		editMessageRegex(text)
+		go editMessageRegex(text)
 
 	case strings.HasPrefix(text, "/"):
 		f := strings.Fields(text)

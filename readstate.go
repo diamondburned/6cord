@@ -123,7 +123,7 @@ func checkReadState(chID ...int64) {
 			if !guMuted {
 				g, ok := parent.GetReference().(string)
 				if ok {
-					if !strings.HasPrefix(g, "[::b]") {
+					if !strings.HasSuffix(parent.GetText(), " [red](!)[-::-]") {
 						parent.SetText("[::b]" + g + "[::-]")
 					}
 				}

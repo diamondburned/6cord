@@ -41,9 +41,7 @@ func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
 		}
 	}
 
-	messagesView.Clear()
 	messagesView.SetText(strings.Join(messageStore, ""))
-
 	app.Draw()
 
 	scrollChat()
