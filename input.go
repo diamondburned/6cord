@@ -113,19 +113,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		switch input.GetLabel() {
 		case EditMessageLabel:
-			_, err := d.ChannelMessageEdit(
-				ChannelID,
-				toEditMessage,
-				input.GetText(),
-			)
-
-			toEditMessage = 0
-
-			if err != nil {
-				Warn(err.Error())
-			}
-
-			resetInputBehavior()
+			editHandler()
 
 		default:
 			CommandHandler()

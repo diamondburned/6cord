@@ -47,6 +47,31 @@ func editMessage(text []string) {
 	input.SetText(lastMsg.Content)
 }
 
+func editHandler() {
+	var (
+		i   = input.GetText()
+		err error
+	)
+
+	if i != "" {
+		_, err = d.ChannelMessageEdit(
+			ChannelID, toEditMessage, i,
+		)
+	} else {
+		err = d.ChannelMessageDelete(
+			ChannelID, toEditMessage,
+		)
+	}
+
+	toEditMessage = 0
+
+	if err != nil {
+		Warn(err.Error())
+	}
+
+	resetInputBehavior()
+}
+
 func editMessageRegex(text string) {
 	input := csv.NewReader(strings.NewReader(text))
 	input.Comma = '/' // delimiter

@@ -1,14 +1,12 @@
 package md
 
 import (
-	"log"
 	"regexp"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
-	"github.com/davecgh/go-spew/spew"
 	ast "github.com/gomarkdown/markdown/ast"
 	ps "github.com/gomarkdown/markdown/parser"
 	"github.com/rivo/tview"
@@ -34,6 +32,15 @@ func Parse(s string) string {
 	return ParseNoEscape(tview.Escape(s))
 }
 
+func getTextNodeContainer(t *ast.Text) *ast.Container {
+	parent := t.Parent
+	if parent != nil {
+		return parent.AsContainer()
+	}
+
+	return nil
+}
+
 // ParseNoEscape parses md into tview string without escaping it
 func ParseNoEscape(s string) string {
 	b := strings.Builder{}
@@ -44,6 +51,7 @@ func ParseNoEscape(s string) string {
 	}
 
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
+	s = fixQuotes(s)
 
 	doc := parser.Parse([]byte(s))
 	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
@@ -51,7 +59,7 @@ func ParseNoEscape(s string) string {
 		case *ast.Softbreak:
 			b.WriteRune('\n')
 		case *ast.Hardbreak:
-			b.WriteString("\n\n")
+			b.WriteRune('\n')
 		case *ast.Emph:
 			b.WriteString(isFormatEnter(entering, "b"))
 			b.Write(node.Content)
@@ -62,20 +70,9 @@ func ParseNoEscape(s string) string {
 			b.WriteString(isFormatEnter(entering, "d"))
 			b.Write(node.Content)
 		case *ast.BlockQuote:
-			if entering {
-				b.WriteString("[green]>")
-			} /*else {
-				b.WriteString("[-]")
-			}*/
-
-			log.Println(spew.Sdump(node.Content, node.Literal))
-			for _, l := range strings.Split(
-				string(node.Content)+string(node.Literal), "\n",
-			) {
-				if l != "" {
-					b.WriteString("[green]>" + l + "[-]\n")
-				}
-			}
+			if !entering {
+			b.WriteString("\n")
+		}
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
@@ -114,7 +111,11 @@ func ParseNoEscape(s string) string {
 				break
 			}
 
-			b.WriteString("\n" + code.String())
+			s := code.String()
+			b.WriteString("\n" + s)
+			if !strings.HasSuffix(s, "\n") {
+				b.WriteRune('\n')
+			}
 		case *ast.Aside:
 			b.Write(node.Literal)
 		case *ast.CrossReference:
@@ -172,7 +173,18 @@ func ParseNoEscape(s string) string {
 		case *ast.Footnotes:
 			b.Write(node.Literal)
 		case *ast.Text:
-			b.Write(node.Literal)
+			if ct := getTextNodeContainer(node); ct != nil {
+				switch ct.Parent.(type) {
+				case *ast.BlockQuote:
+					b.WriteString("[green]>")
+					b.Write(node.Literal)
+					b.WriteString("[-]")
+				default:
+					b.Write(node.Literal)
+				}
+			} else {
+				b.Write(node.Literal)
+			}
 		default:
 
 		}

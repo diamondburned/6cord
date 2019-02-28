@@ -8,7 +8,7 @@ import (
 )
 
 func parseChannelID(text []string) int64 {
-	chID := strings.TrimSpace(text[1])
+										chID := strings.TrimSpace(text[1])
 
 	chID = chID[2:]
 	chID = chID[:len(chID)-1]
