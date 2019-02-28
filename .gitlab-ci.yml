@@ -1,10 +1,10 @@
-image: alpine:latest
+image: golang:alpine
 
 variables:
   REPO_NAME: gitlab.com/diamondburned/6cord
 
 before_script:
-  - apk add upx go git
+  - apk add upx
   - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
   - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
   - cd $GOPATH/src/$REPO_NAME
