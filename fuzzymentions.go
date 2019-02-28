@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/rivo/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -16,7 +17,7 @@ func (gm UserStoreArray) String(i int) string {
 		s += gm[i].Nick
 	}
 
-	return s
+	return tview.Escape(s)
 }
 
 // Len returns the length
