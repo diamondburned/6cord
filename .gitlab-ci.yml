@@ -9,10 +9,6 @@ before_script:
   - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
   - cd $GOPATH/src/$REPO_NAME
 
-cache:
-  paths:
-    - $GOPATH/src
-
 stages:
     - build
 
