@@ -15,7 +15,7 @@ stages:
 compile:
     stage: build
     script:
-      - time go get -d -f u -v
+      - time go get -d -f -u -v
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance
       - export CG_ENABLED=0
