@@ -15,14 +15,14 @@ stages:
 compile:
     stage: build
     script:
-      - time go get -d -f -u -v
+      - time go get -d -u -v
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance
       - export CG_ENABLED=0
       - time go build -ldflags "-s -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
       - upx $CI_PROJECT_DIR/6cord
       - export GOOS=windows
-      - time go get -d -f -u -v
+      - time go get -d -u -v
       - time go build -o $CI_PROJECT_DIR/6cord.exe
     artifacts:
       paths:
