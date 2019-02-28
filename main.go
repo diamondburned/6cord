@@ -360,6 +360,7 @@ func main() {
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
 	d.AddHandler(messageDelete)
+	d.AddHandler(messageDeleteBulk)
 	// d.AddHandler(onTyping) - broken
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)

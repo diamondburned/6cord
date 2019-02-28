@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/rumblefrog/discordgo"
@@ -26,10 +27,14 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 				}
 			}
 
+			if i+1 == len(messageStore) {
+				messageStore = messageStore[:i-prev]
+			} else {
 			messageStore = append(
 				messageStore[:i-prev],
 				messageStore[i+1:]...,
 			)
+		}
 
 			messagesView.SetText(strings.Join(messageStore, ""))
 			app.Draw()
@@ -40,5 +45,20 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 		}
 	}
 
-	Message("Can't delete message with content: " + rm.Content)
+	if rm.Content != "" {
+		Message("Can't delete message with content: " + rm.Content)
+	} else {
+		Message(fmt.Sprintf("Can't delete message with ID: %d", rm.ID))
+	}
+}
+
+func messageDeleteBulk(s *discordgo.Session, rmb *discordgo.MessageDeleteBulk) {
+	for _, m := range rmb.Messages {
+		messageDelete(s, &discordgo.MessageDelete{
+			Message: &discordgo.Message{
+				ChannelID: rmb.ChannelID,
+				ID:        m,
+			},
+		})
+	}
 }
