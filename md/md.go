@@ -71,8 +71,8 @@ func ParseNoEscape(s string) string {
 			b.Write(node.Content)
 		case *ast.BlockQuote:
 			if !entering {
-			b.WriteString("\n")
-		}
+				b.WriteString("\n")
+			}
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
