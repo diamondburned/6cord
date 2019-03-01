@@ -94,11 +94,8 @@ func main() {
 		case *token != "":
 			login = append(login, *token)
 
-			switch err := keyring.Delete(AppName, "token"); err {
-			case nil:
+			if err := keyring.Delete(AppName, "token"); err == nil {
 				log.Println("Keyring deleted.")
-			default:
-				log.Panicln(err)
 			}
 
 		case *username != "", *password != "":
