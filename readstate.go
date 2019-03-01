@@ -168,12 +168,12 @@ func ackMe(m *discordgo.Message) {
 	ackData[m.ChannelID] = m.ID
 
 	// triggers messageAck
-	ack, err := d.ChannelMessageAck(m.ChannelID, m.ID, lastAck)
+	_, err := d.ChannelMessageAck(m.ChannelID, m.ID, lastAck)
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	lastAck = ack.Token
+	// lastAck = ack.Token
 }

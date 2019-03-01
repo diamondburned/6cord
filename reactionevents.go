@@ -77,3 +77,22 @@ func reactionRemove(s *discordgo.Session, rm *discordgo.MessageReactionRemove) {
 	d.State.Unlock()
 	handleReactionEvent(m)
 }
+
+func reactionRemoveAll(s *discordgo.Session, rm *discordgo.MessageReactionRemoveAll) {
+	if rm.ChannelID != ChannelID {
+		return
+	}
+
+	m, err := d.State.Message(ChannelID, rm.MessageID)
+	if err != nil {
+		return
+	}
+
+	d.State.Lock()
+
+	m.Reactions = []*discordgo.MessageReactions{}
+
+	d.State.Unlock()
+
+	handleReactionEvent(m)
+}

@@ -42,7 +42,7 @@ var commands = Commands{
 	Command{
 		Command:     "/edit",
 		Function:    editMessage,
-		Description: "[n:int optional] - edits the latest n message",
+		Description: "[n:int optional] - edits the latest n message of yours",
 	},
 	Command{
 		Command:     "/presence",
@@ -53,6 +53,16 @@ var commands = Commands{
 		Command:     "/upload",
 		Function:    uploadFile,
 		Description: "[file path] - uploads file",
+	},
+	Command{
+		Command:     "/copy",
+		Function:    matchCopyMessage,
+		Description: "[n:int] - copies the entire last n message",
+	},
+	Command{
+		Command:     "/highlight",
+		Function:    highlightMessage,
+		Description: "[ID:int64] - highlights the message ID if possible",
 	},
 	Command{
 		Command:     "/block",

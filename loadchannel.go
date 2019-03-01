@@ -56,14 +56,14 @@ func loadChannel(channelID int64) {
 		return
 	}
 
+	sort.Slice(msgs, func(i, j int) bool {
+		return msgs[i].ID < msgs[j].ID
+	})
+
 	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-		ackMe(msgs[0])
+		ackMe(msgs[len(msgs)-1])
 		checkReadState(msgs[0].ChannelID)
 	}(ch, msgs)
-
-	for i, j := 0, len(msgs)-1; i < j; i, j = i+1, j-1 {
-		msgs[i], msgs[j] = msgs[j], msgs[i]
-	}
 
 	//var wg sync.WaitGroup
 	messageStore = []string{}

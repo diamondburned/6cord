@@ -11,46 +11,21 @@ import (
 
 type allChannels []fuzzyReadState
 
-var channelFuzzyStore = make(map[int64]string)
-
 type fuzzyReadState struct {
 	*discordgo.Channel
 	Unread bool
+	Format string
 }
 
 var channelFuzzyCache = allChannels([]fuzzyReadState{})
 
 // String returns the fuzzy search part of the struct
 func (ac allChannels) String(i int) string {
-	name, ok := channelFuzzyStore[ac[i].ID]
-	if !ok {
-		g, err := d.State.Guild(ac[i].GuildID)
-		if err != nil {
-			if len(ac[i].Recipients) > 0 && ac[i].Name == "" {
-				recips := make([]string, len(ac[i].Recipients))
-				for i, r := range ac[i].Recipients {
-					recips[i] = r.Username
-				}
-
-				name = HumanizeStrings(recips)
-				channelFuzzyStore[ac[i].ID] = name
-
-			} else {
-				name = ac[i].Name
-				channelFuzzyStore[ac[i].ID] = name
-			}
-
-		} else {
-			name = ac[i].Name + " (" + g.Name + ")"
-			channelFuzzyStore[ac[i].ID] = name
-		}
-	}
-
 	if ac[i].Unread {
-		return "[::b]" + name + "[::-]"
+		return "[::b]" + ac[i].Format + "[::-]"
 	}
 
-	return "[::d]" + name + "[::-]"
+	return "[::d]" + ac[i].Format + "[::-]"
 }
 
 // Len returns the length
@@ -64,20 +39,37 @@ func fuzzyChannels(last string) {
 	if len(last) > 0 {
 		if len(channelFuzzyCache) == 0 {
 			for _, c := range d.State.PrivateChannels {
+				var name = c.Name
+
+				if c.Name == "" {
+					recips := make([]string, len(c.Recipients))
+					for i, r := range c.Recipients {
+						recips[i] = r.Username
+					}
+
+					name = HumanizeStrings(recips)
+				}
+
 				channelFuzzyCache = append(
 					channelFuzzyCache,
-					fuzzyReadState{c, isUnread(c)},
+					fuzzyReadState{c, isUnread(c), name},
 				)
 			}
 
 			for _, g := range d.State.Guilds {
 				for _, c := range g.Channels {
-					if isSendCh(c.Type) {
-						channelFuzzyCache = append(
-							channelFuzzyCache,
-							fuzzyReadState{c, isUnread(c)},
-						)
+					if !isSendCh(c.Type) {
+						continue
 					}
+
+					channelFuzzyCache = append(
+						channelFuzzyCache,
+						fuzzyReadState{
+							c,
+							isUnread(c),
+							c.Name + " (" + g.Name + ")",
+						},
+					)
 				}
 			}
 		}

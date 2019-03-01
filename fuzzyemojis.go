@@ -107,13 +107,3 @@ func fuzzyEmojis(last string) {
 
 	app.Draw()
 }
-
-// fuck you you fucking tview dev
-// you could just fucking globalize the goddamn selection
-// function, but no. you didn't. why the fuck didn't you?
-// are you fucking retarded in the head? stop trying to
-// handle everything by you yourself and your shitty shoddy
-// little functions, you fucking stupid asshat
-// bloody fucking jesus i fucking hate doing this, but
-// this is literally my only fucking choice
-var autofillfunc func(i int)

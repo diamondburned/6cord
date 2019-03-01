@@ -119,7 +119,7 @@ func ParseNoEscape(s string) string {
 
 			var s string
 			for _, l := range strings.Split(code.String(), "\n") {
-				s += "[grey]┃[-] " + l + "\n"
+				s += "\n[grey]┃[-] " + l
 			}
 
 			b.WriteString(s)

@@ -126,6 +126,11 @@ func editMessageRegex(text string) {
 }
 
 func matchMyMessage(residue int) *discordgo.Message {
+	m, err := d.State.Message(ChannelID, int64(residue))
+	if err == nil && m.Author.ID == d.State.User.ID {
+		return m
+	}
+
 	for i := len(messageStore) - 1; i >= 0; i-- {
 		if ID := getIDfromindex(i); ID != 0 {
 			m, err := d.State.Message(ChannelID, ID)

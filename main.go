@@ -172,6 +172,7 @@ func main() {
 				}
 
 				return ev
+
 			case tcell.KeyEnter:
 				return ev
 			}
@@ -220,6 +221,8 @@ func main() {
 				fuzzyChannels(last)
 			case strings.HasPrefix(last, ":"):
 				fuzzyEmojis(last)
+			case strings.HasPrefix(last, "~"):
+				fuzzyMessages(last)
 			case strings.HasPrefix(text, "/upload "):
 				fuzzyUpload(text)
 			case strings.HasPrefix(text, "/"):
@@ -350,6 +353,7 @@ func main() {
 	d.AddHandler(messageDeleteBulk)
 	d.AddHandler(reactionAdd)
 	d.AddHandler(reactionRemove)
+	d.AddHandler(reactionRemoveAll)
 	// d.AddHandler(onTyping) - broken
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
