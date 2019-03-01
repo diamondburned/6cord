@@ -8,7 +8,7 @@ import (
 )
 
 func parseChannelID(text []string) int64 {
-										chID := strings.TrimSpace(text[1])
+	chID := strings.TrimSpace(text[1])
 
 	chID = chID[2:]
 	chID = chID[:len(chID)-1]
@@ -35,6 +35,7 @@ func gotoChannel(text []string) {
 
 	root.Walk(func(node, parent *tview.TreeNode) bool {
 		if parent == nil {
+			CollapseAll(node)
 			return true
 		}
 

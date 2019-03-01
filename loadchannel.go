@@ -61,10 +61,14 @@ func loadChannel(channelID int64) {
 		checkReadState(msgs[0].ChannelID)
 	}(ch, msgs)
 
+	for i, j := 0, len(msgs)-1; i < j; i, j = i+1, j-1 {
+		msgs[i], msgs[j] = msgs[j], msgs[i]
+	}
+
 	//var wg sync.WaitGroup
 	messageStore = []string{}
 
-	for i := len(msgs) - 1; i >= 0; i-- {
+	for i := 0; i < len(msgs); i++ {
 		m := msgs[i]
 
 		//wg.Add(1)
@@ -84,7 +88,7 @@ func loadChannel(channelID int64) {
 			sentTime = time.Now()
 		}
 
-		if i < len(msgs)-1 && msgs[i+1].Author.ID != m.Author.ID {
+		if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
 			username, color := us.DiscordThis(m)
 
 			messageStore = append(messageStore, fmt.Sprintf(
@@ -99,6 +103,8 @@ func loadChannel(channelID int64) {
 			m.ID, fmtMessage(m),
 		))
 
+		d.State.MessageAdd(m)
+
 		//}(m, i)
 	}
 
@@ -111,7 +117,7 @@ func loadChannel(channelID int64) {
 
 	app.Draw()
 
-	setLastAuthor(msgs[0].Author.ID)
+	setLastAuthor(msgs[len(msgs)-1].Author.ID)
 
 	messagesView.ScrollToEnd()
 

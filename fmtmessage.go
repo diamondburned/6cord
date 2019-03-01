@@ -34,6 +34,9 @@ func fmtMessage(m *discordgo.Message) string {
 	var (
 		c []string
 		l = strings.Split(ct, "\n")
+
+		attachments         = m.Attachments
+		reactions, reactMap = formatReactions(m.Reactions)
 	)
 
 	if ct != "" {
@@ -42,9 +45,13 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 	}
 
+	for k, v := range reactMap {
+		emojiMap[k] = v
+	}
+
 	for _, arr := range emojiMap {
-		m.Attachments = append(
-			m.Attachments,
+		attachments = append(
+			attachments,
 			&discordgo.MessageAttachment{
 				Filename: arr[0],
 				URL:      arr[1],
@@ -56,8 +63,8 @@ func fmtMessage(m *discordgo.Message) string {
 		var embed = []string{""}
 
 		if e.URL != "" {
-			m.Attachments = append(
-				m.Attachments,
+			attachments = append(
+				attachments,
 				&discordgo.MessageAttachment{
 					Filename: "EmbedURL",
 					URL:      e.URL,
@@ -72,7 +79,7 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 
 			if e.Author.IconURL != "" {
-				m.Attachments = append(
+				attachments = append(
 					m.Attachments,
 					&discordgo.MessageAttachment{
 						Filename: "AuthorIcon",
@@ -82,7 +89,7 @@ func fmtMessage(m *discordgo.Message) string {
 			}
 
 			if e.Author.URL != "" {
-				m.Attachments = append(
+				attachments = append(
 					m.Attachments,
 					&discordgo.MessageAttachment{
 						Filename: "AuthorURL",
@@ -118,7 +125,7 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 
 			for _, arr := range emojis {
-				m.Attachments = append(
+				attachments = append(
 					m.Attachments,
 					&discordgo.MessageAttachment{
 						Filename: arr[0],
@@ -148,7 +155,7 @@ func fmtMessage(m *discordgo.Message) string {
 			)
 
 			if e.Footer.IconURL != "" {
-				m.Attachments = append(
+				attachments = append(
 					m.Attachments,
 					&discordgo.MessageAttachment{
 						Filename: "FooterIcon",
@@ -173,7 +180,7 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 
 		//if e.Thumbnail != nil {
-		//m.Attachments = append(
+		//attachments = append(
 		//m.Attachments,
 		//&discordgo.MessageAttachment{
 		//Filename: "Thumbnail",
@@ -183,7 +190,7 @@ func fmtMessage(m *discordgo.Message) string {
 		//}
 
 		if e.Image != nil {
-			m.Attachments = append(
+			attachments = append(
 				m.Attachments,
 				&discordgo.MessageAttachment{
 					Filename: "Image",
@@ -193,7 +200,7 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 
 		if e.Video != nil {
-			m.Attachments = append(
+			attachments = append(
 				m.Attachments,
 				&discordgo.MessageAttachment{
 					Filename: "Video",
@@ -216,8 +223,8 @@ func fmtMessage(m *discordgo.Message) string {
 		)
 	}
 
-	if len(m.Attachments) > 0 {
-		for _, a := range m.Attachments {
+	if len(attachments) > 0 {
+		for _, a := range attachments {
 			c = append(
 				c,
 				chatPadding+"[::d]"+tview.Escape(
@@ -225,6 +232,12 @@ func fmtMessage(m *discordgo.Message) string {
 				)+"[::-]",
 			)
 		}
+	}
+
+	if len(m.Reactions) > 0 { // Reactions
+		c = append(c,
+			chatPadding+chatPadding+reactions, "",
+		)
 	}
 
 	return strings.Join(c, "\n")

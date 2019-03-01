@@ -76,6 +76,12 @@ func loadMore() {
 		loading = false
 	}()
 
+	c, err := d.State.Channel(ChannelID)
+	if err != nil {
+		Warn(err.Error())
+		return
+	}
+
 	msgs, err := d.ChannelMessages(ChannelID, 35, beforeID, 0, 0)
 	if err != nil {
 		return
@@ -134,6 +140,14 @@ func loadMore() {
 
 	input.SetPlaceholder("Done.")
 	app.Draw()
+
+	for i, j := 0, len(msgs)-1; i < j; i, j = i+1, j-1 {
+		msgs[i], msgs[j] = msgs[j], msgs[i]
+	}
+
+	d.State.Lock()
+	c.Messages = append(msgs, c.Messages...)
+	d.State.Unlock()
 
 	messagesView.Highlight(strconv.FormatInt(beforeID, 10))
 	messagesView.ScrollToHighlight()

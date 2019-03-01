@@ -86,7 +86,11 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 	case tcell.KeyDown:
 		var newitem = autocomp.GetCurrentItem() + 1
-		if newitem > autocomp.GetItemCount()-1 {
+
+		switch {
+		case autocomp.GetItemCount() == 0:
+			return ev
+		case newitem > autocomp.GetItemCount()-1:
 			newitem = 0
 		}
 

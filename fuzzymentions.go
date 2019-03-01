@@ -50,12 +50,12 @@ func fuzzyMentions(last string) {
 		for i, u := range fuzzied {
 			var username = u.Name + "[::d]#" + u.Discrim + "[::-]"
 			if u.Nick != "" {
-				username += " (" + u.Nick + ")"
+				username += " (" + tview.Escape(u.Nick) + ")"
 			}
 
 			autocomp.InsertItem(
 				i,
-				tview.Escape(username), "",
+				username, "",
 				rune(0x31+i),
 				nil,
 			)
