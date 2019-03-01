@@ -30,11 +30,11 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 			if i+1 == len(messageStore) {
 				messageStore = messageStore[:i-prev]
 			} else {
-			messageStore = append(
-				messageStore[:i-prev],
-				messageStore[i+1:]...,
-			)
-		}
+				messageStore = append(
+					messageStore[:i-prev],
+					messageStore[i+1:]...,
+				)
+			}
 
 			messagesView.SetText(strings.Join(messageStore, ""))
 			app.Draw()

@@ -70,7 +70,7 @@ func ParseNoEscape(s string) string {
 			b.Write(node.Content)
 		case *ast.BlockQuote:
 			if !entering {
-				b.WriteString("\n")
+				b.WriteRune('\n')
 			}
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
@@ -97,7 +97,14 @@ func ParseNoEscape(s string) string {
 				style = styles.Fallback
 			}
 
-			iterator, err := lexer.Tokenise(nil, string(node.Literal))
+			content := strings.TrimFunc(
+				string(node.Literal),
+				func(r rune) bool {
+					return r == '\n'
+				},
+			)
+
+			iterator, err := lexer.Tokenise(nil, content)
 			if err != nil {
 				b.Write(node.Literal)
 				break
@@ -110,11 +117,12 @@ func ParseNoEscape(s string) string {
 				break
 			}
 
-			s := code.String()
-			b.WriteString("\n" + s)
-			if !strings.HasPrefix(s, "\n") {
-				b.WriteRune('\n')
+			var s string
+			for _, l := range strings.Split(code.String(), "\n") {
+				s += "[grey]┃[-] " + l + "\n"
 			}
+
+			b.WriteString(s)
 		case *ast.Aside:
 			b.Write(node.Literal)
 		case *ast.CrossReference:

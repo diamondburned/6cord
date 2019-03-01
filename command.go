@@ -8,7 +8,8 @@ import (
 var (
 	senderRegex = strings.NewReplacer(
 		`\n`, "\n",
-		`\t`, "\t",
+		`\t`, "    ",
+		"\t", "    ",
 	)
 )
 
