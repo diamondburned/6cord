@@ -84,24 +84,6 @@ func main() {
 
 	var login []interface{}
 
-	args := flag.Args()
-	if len(args) > 0 {
-		switch args[0] {
-		case "rmkeyring":
-			switch err := keyring.Delete(AppName, "token"); err {
-			case nil:
-				log.Println("Keyring deleted.")
-				return
-			default:
-				log.Panicln(err)
-			}
-
-		default:
-			println("Unknown command")
-			os.Exit(1)
-		}
-	}
-
 	k, err := keyring.Get(AppName, "token")
 	if err != nil {
 		if err != keyring.ErrNotFound {
@@ -111,6 +93,14 @@ func main() {
 		switch {
 		case *token != "":
 			login = append(login, *token)
+
+			switch err := keyring.Delete(AppName, "token"); err {
+			case nil:
+				log.Println("Keyring deleted.")
+			default:
+				log.Panicln(err)
+			}
+
 		case *username != "", *password != "":
 			login = append(login, *username)
 			login = append(login, *password)
