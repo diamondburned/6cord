@@ -1,6 +1,7 @@
 package md
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -69,9 +70,7 @@ func ParseNoEscape(s string) string {
 			b.WriteString(isFormatEnter(entering, "d"))
 			b.Write(node.Content)
 		case *ast.BlockQuote:
-			if !entering {
-				b.WriteRune('\n')
-			}
+			// skipped, check ast.Text
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
@@ -122,7 +121,34 @@ func ParseNoEscape(s string) string {
 				s += "\n[grey]┃[-] " + l
 			}
 
+			if !strings.HasSuffix(s, "\n") {
+				s += "\n"
+			}
+
 			b.WriteString(s)
+		case *ast.ListItem:
+			if entering {
+				// if it's an ordered list and not bullets
+				if (node.ListFlags & ast.ListTypeOrdered) != 0 {
+					if p, ok := node.Parent.(*ast.List); ok {
+						for i, c := range p.Children {
+							if c != node {
+								continue
+							}
+
+							b.WriteString(
+								fmt.Sprintf(
+									"%d%s %s", p.Start+i,
+									string(node.Delimiter), string(node.Literal),
+								),
+							)
+						}
+					}
+				} else {
+					b.WriteRune(rune(node.BulletChar))
+					b.WriteRune(' ')
+				}
+			}
 		case *ast.Aside:
 			b.Write(node.Literal)
 		case *ast.CrossReference:
@@ -148,8 +174,6 @@ func ParseNoEscape(s string) string {
 		case *ast.HorizontalRule:
 			b.Write(node.Literal)
 		case *ast.List:
-			b.Write(node.Literal)
-		case *ast.ListItem:
 			b.Write(node.Literal)
 		case *ast.Table:
 			b.Write(node.Literal)

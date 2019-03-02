@@ -7,8 +7,8 @@ import (
 	"github.com/rivo/tview"
 )
 
-func parseChannelID(text []string) int64 {
-	chID := strings.TrimSpace(text[1])
+func parseChannelID(input string) int64 {
+	chID := strings.TrimSpace(input)
 
 	chID = chID[2:]
 	chID = chID[:len(chID)-1]
@@ -23,7 +23,12 @@ func parseChannelID(text []string) int64 {
 }
 
 func gotoChannel(text []string) {
-	id := parseChannelID(text)
+	if len(text) != 2 {
+		Message("No channels given!")
+		return
+	}
+
+	id := parseChannelID(text[1])
 	if id == 0 {
 		return
 	}

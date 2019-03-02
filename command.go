@@ -50,6 +50,11 @@ var commands = Commands{
 		Description: "[string] - sets your \"Playing\" or \"Listening to\" presence, empty to reset",
 	},
 	Command{
+		Command:     "/react",
+		Function:    reactMessage,
+		Description: "[messageID:int] [emoji:string] - toggle reaction on a message",
+	},
+	Command{
 		Command:     "/upload",
 		Function:    uploadFile,
 		Description: "[file path] - uploads file",

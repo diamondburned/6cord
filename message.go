@@ -2,9 +2,32 @@ package main
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/rumblefrog/discordgo"
 )
+
+// hopefully avoids messagesView going out of range after a
+// while
+func cleanupBuffer() {
+	if len(messageStore) > 512 && !messagesView.HasFocus() {
+		messageStore = messageStore[:512]
+
+		messagesView.SetText(
+			strings.Join(messageStore, ""),
+		)
+
+		messagesView.ScrollToEnd()
+		app.Draw()
+	}
+}
+
+func scrollChat() {
+	if !messagesView.HasFocus() {
+		messagesView.ScrollToEnd()
+		cleanupBuffer()
+	}
+}
 
 func isRegularMessage(m *discordgo.Message) bool {
 	var messageText string

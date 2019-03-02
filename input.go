@@ -17,10 +17,16 @@ func resetInputBehavior() {
 	input.SetFieldBackgroundColor(BackgroundColor)
 	input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 	input.SetText("")
+
+	stateResetter()
+	toEditMessage = 0
 }
 
 func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 	switch ev.Key() {
+	case tcell.KeyEscape:
+		resetInputBehavior()
+
 	case tcell.KeyCtrlV:
 		cb, err := clipboard.ReadAll()
 		if err != nil {

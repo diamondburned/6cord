@@ -191,8 +191,3 @@ func recurseMembers(memstore *[]*discordgo.Member, guildID, after int64) {
 	return
 }
 
-func scrollChat() {
-	if !messagesView.HasFocus() {
-		messagesView.ScrollToEnd()
-	}
-}

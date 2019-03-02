@@ -288,9 +288,6 @@ func main() {
 
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
-		case tcell.KeyEscape:
-			app.Stop()
-
 		case tcell.KeyF5:
 			go func() {
 				app.Stop()

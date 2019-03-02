@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/rivo/tview"
 	"github.com/rumblefrog/discordgo"
 )
@@ -31,8 +33,8 @@ func canIhearthem(vc *discordgo.VoiceState) bool {
 func refreshVoiceStates(vc *discordgo.VoiceState) {
 	defer func() {
 		if r := recover(); r != nil {
-			app.Stop()
-			panic(r)
+			Warn(fmt.Sprintln(r))
+			return
 		}
 	}()
 
@@ -46,7 +48,7 @@ func refreshVoiceStates(vc *discordgo.VoiceState) {
 	}
 
 	root.Walk(func(node, parent *tview.TreeNode) bool {
-		if parent == nil {
+		if parent == nil || node == nil {
 			return true
 		}
 
@@ -60,40 +62,61 @@ func refreshVoiceStates(vc *discordgo.VoiceState) {
 			return true
 		}
 
+		// user left voice chat
 		if vc.ChannelID == 0 {
+			// checks for ID should match the userID instead,
+			// as the user left voice chat
 			if id == vc.UserID {
-				refreshVoiceTreeNode(parent, vc.GuildID, vc.ChannelID)
+				// parent node at this point should be the voice
+				// channel
+				var nodes []*tview.TreeNode
+				for _, ch := range parent.GetChildren() {
+					if node != ch {
+						// we add everything except for the user
+						// that left by adding everything else back
+						nodes = append(nodes, ch)
+					}
+				}
+
+				parent.SetChildren(nodes)
 				return false
 			}
+
+			return true
 		}
+
+		// user joined a voice channel
 
 		if id != vc.ChannelID {
 			return true
 		}
 
-		// Checks should all pass to confirm this is
-		// a voice channel
+		// checks should all pass to confirm this is
+		// the right voice channel
 
 		refreshVoiceTreeNode(node, vc.GuildID, vc.ChannelID)
 		return false
-
 	})
 
 	app.Draw()
 }
 
 func refreshVoiceTreeNode(node *tview.TreeNode, guildID, channelID int64) {
-	node.ClearChildren()
+	var (
+		nodes []*tview.TreeNode
+		vcs   = getVoiceChannel(guildID, channelID)
+	)
 
-	vcs := getVoiceChannel(guildID, channelID)
 	for _, vc := range vcs {
 		vcNode := generateVoiceNode(vc)
 		if vcNode == nil {
 			continue
 		}
 
-		node.AddChild(vcNode)
+		nodes = append(nodes, vcNode)
 	}
+
+	node.SetChildren(nodes)
 }
 
 func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {
