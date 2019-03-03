@@ -1,7 +1,22 @@
 # 6cord
 
-![](https://0x0.st/ziSc.png)
-![](http://ix.io/1B65.png)
+## Screenshots
+
+#### With the channel browser
+
+![](http://u.cubeupload.com/diamondburned/C4L6St.png)
+
+#### Hidden channel browser
+
+![](http://u.cubeupload.com/diamondburned/1jGJNU.png)
+
+#### Fuzzy commands
+
+![](http://u.cubeupload.com/diamondburned/H86qdB.png)
+
+#### Fuzzzy emojis
+
+![](http://u.cubeupload.com/diamondburned/dX90YD.png)
 
 ## Installation
 
@@ -25,13 +40,17 @@
     - [x] Better paste library with image support (Linux only)
 - [x] Syntax highlighting, better markdown parsing
 - [x] Message Delete and Edit
+- [x] Full reaction support
+- [ ] Typing events
+	- [x] The client sends the typing event
+	- [ ] The client receives and indicates typing events
 - [x] Commands
     - [x] `/goto`
     - [x] `/edit`
     - [x] `s//` with regexp
     - [x] `/exit`, `/shrug`
     - [x] Autocompletion for those commands
-- [ ] Fix onTyping events
+	- (refer to the screenshot)
 - [x] Use TextView instead of List for Messages
 	- [x] Consider tv.Write() bytes
 	- [x] Proper inline message edit renders
@@ -53,6 +72,7 @@
     	- Stock emojis `:`
 		- Commands `/`
 		- Channels `#`
+		- Messages `~`
 - [x] An actual channel browser
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky

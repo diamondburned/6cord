@@ -3,10 +3,10 @@ package md
 import (
 	"strings"
 
-	"github.com/diamondburned/mark"
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
+	"github.com/diamondburned/mark"
 )
 
 // RenderCodeBlock renders the node to a syntax
@@ -50,7 +50,9 @@ func RenderCodeBlock(n mark.Node) (s string) {
 	}
 
 	for _, l := range strings.Split(code.String(), "\n") {
-		s += "\n[grey]┃[-] " + l
+		if l != "[-]" {
+			s += "\n[grey]┃[-] " + l
+		}
 	}
 
 	if !strings.HasSuffix(s, "\n") {
