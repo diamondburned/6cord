@@ -33,32 +33,36 @@ func gotoChannel(text []string) {
 		return
 	}
 
-	root := guildView.GetRoot()
-	if root == nil {
-		return
-	}
-
-	root.Walk(func(node, parent *tview.TreeNode) bool {
-		if parent == nil {
-			CollapseAll(node)
-			return true
+	go func() {
+		root := guildView.GetRoot()
+		if root == nil {
+			return
 		}
 
-		refr, ok := node.GetReference().(int64)
-		if !ok {
-			return true
-		}
+		root.Walk(func(node, parent *tview.TreeNode) bool {
+			if parent == nil {
+				CollapseAll(node)
+				return true
+			}
 
-		if id != refr {
-			return true
-		}
+			refr, ok := node.GetReference().(int64)
+			if !ok {
+				return true
+			}
 
-		node.Expand()
-		parent.Expand()
-		guildView.SetCurrentNode(node)
+			if id != refr {
+				return true
+			}
 
-		return false
-	})
+			node.Expand()
+			parent.Expand()
+			guildView.SetCurrentNode(node)
+
+			return false
+		})
+	}()
+
+	resetInputBehavior()
 
 	loadChannel(id)
 }

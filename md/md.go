@@ -2,12 +2,14 @@ package md
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
+	"github.com/davecgh/go-spew/spew"
 	ast "github.com/gomarkdown/markdown/ast"
 	ps "github.com/gomarkdown/markdown/parser"
 	"github.com/rivo/tview"
@@ -20,7 +22,6 @@ var HighlightStyle = "vs"
 // ExtensionFlags is the flags used for markdown parsing
 var ExtensionFlags = ps.FencedCode |
 	ps.Autolink |
-	ps.HardLineBreak |
 	ps.BackslashLineBreak |
 	ps.Strikethrough |
 	ps.NoEmptyLineBeforeBlock
@@ -53,13 +54,23 @@ func ParseNoEscape(s string) string {
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
 	s = fixQuotes(s)
 
+	// Here's why this is a thing:
+	// When you exit a quoteblock, if you exit a newline always,
+	// that fixes things up until you have a quoteblock only.
+	// In that scenario, you will have one excess newline. The
+	// solution to that is to just toggle the bool, then
+	// if there's texts afterwards, insert a new line when the
+	// bool is true. If there's no texts after it, no new lines
+	// are inserted, so no excess new lines.
+	var quoteBlockExit bool
+
 	doc := parser.Parse([]byte(s))
 	ast.WalkFunc(doc, func(node ast.Node, entering bool) ast.WalkStatus {
 		switch node := node.(type) {
 		case *ast.Softbreak:
 			b.WriteRune('\n')
 		case *ast.Hardbreak:
-			b.WriteRune('\n')
+			b.WriteString("\n\n")
 		case *ast.Emph:
 			b.WriteString(isFormatEnter(entering, "b"))
 			b.Write(node.Content)
@@ -70,7 +81,9 @@ func ParseNoEscape(s string) string {
 			b.WriteString(isFormatEnter(entering, "d"))
 			b.Write(node.Content)
 		case *ast.BlockQuote:
-			// skipped, check ast.Text
+			if !entering {
+				quoteBlockExit = true
+			}
 		case *ast.Link:
 			b.WriteString(isFormatEnter(entering, "u"))
 			b.Write(node.Title)
@@ -149,75 +162,86 @@ func ParseNoEscape(s string) string {
 					b.WriteRune(' ')
 				}
 			}
-		case *ast.Aside:
-			b.Write(node.Literal)
-		case *ast.CrossReference:
-			b.Write(node.Literal)
-		case *ast.Citation:
-			b.Write(node.Literal)
-		case *ast.Image:
-			b.Write(node.Literal)
-		case *ast.Caption:
-			b.Write(node.Literal)
-		case *ast.CaptionFigure:
-			b.Write(node.Literal)
-		case *ast.Document:
-			b.Write(node.Literal)
-		case *ast.Paragraph:
-			b.Write(node.Literal)
-		case *ast.HTMLSpan:
-			b.Write(node.Literal)
-		case *ast.HTMLBlock:
-			b.Write(node.Literal)
-		case *ast.Heading:
-			b.Write(node.Literal)
-		case *ast.HorizontalRule:
-			b.Write(node.Literal)
-		case *ast.List:
-			b.Write(node.Literal)
-		case *ast.Table:
-			b.Write(node.Literal)
-		case *ast.TableCell:
-			b.Write(node.Literal)
-		case *ast.TableHeader:
-			b.Write(node.Literal)
-		case *ast.TableBody:
-			b.Write(node.Literal)
-		case *ast.TableRow:
-			b.Write(node.Literal)
-		case *ast.TableFooter:
-			b.Write(node.Literal)
-		case *ast.Math:
-			b.Write(node.Literal)
-		case *ast.MathBlock:
-			b.Write(node.Literal)
-		case *ast.DocumentMatter:
-			b.Write(node.Literal)
-		case *ast.Callout:
-			b.Write(node.Literal)
-		case *ast.Index:
-			b.Write(node.Literal)
-		case *ast.Subscript:
-			b.Write(node.Literal)
-		case *ast.Superscript:
-			b.Write(node.Literal)
-		case *ast.Footnotes:
-			b.Write(node.Literal)
+		//case *ast.Aside:
+		//b.Write(node.Literal)
+		//case *ast.CrossReference:
+		//b.Write(node.Literal)
+		//case *ast.Citation:
+		//b.Write(node.Literal)
+		//case *ast.Image:
+		//b.Write(node.Literal)
+		//case *ast.Caption:
+		//b.Write(node.Literal)
+		//case *ast.CaptionFigure:
+		//b.Write(node.Literal)
+		//case *ast.Document:
+		//b.Write(node.Literal)
+		//case *ast.Paragraph:
+		//b.Write(node.Literal)
+		//case *ast.HTMLSpan:
+		//b.Write(node.Literal)
+		//case *ast.HTMLBlock:
+		//b.Write(node.Literal)
+		//case *ast.Heading:
+		//b.Write(node.Literal)
+		//case *ast.HorizontalRule:
+		//b.Write(node.Literal)
+		//case *ast.List:
+		//b.Write(node.Literal)
+		//case *ast.Table:
+		//b.Write(node.Literal)
+		//case *ast.TableCell:
+		//b.Write(node.Literal)
+		//case *ast.TableHeader:
+		//b.Write(node.Literal)
+		//case *ast.TableBody:
+		//b.Write(node.Literal)
+		//case *ast.TableRow:
+		//b.Write(node.Literal)
+		//case *ast.TableFooter:
+		//b.Write(node.Literal)
+		//case *ast.Math:
+		//b.Write(node.Literal)
+		//case *ast.MathBlock:
+		//b.Write(node.Literal)
+		//case *ast.DocumentMatter:
+		//b.Write(node.Literal)
+		//case *ast.Callout:
+		//b.Write(node.Literal)
+		//case *ast.Index:
+		//b.Write(node.Literal)
+		//case *ast.Subscript:
+		//b.Write(node.Literal)
+		//case *ast.Superscript:
+		//b.Write(node.Literal)
+		//case *ast.Footnotes:
+		//b.Write(node.Literal)
 		case *ast.Text:
 			if ct := getTextNodeContainer(node); ct != nil {
-				switch ct.Parent.(type) {
+				switch p := ct.Parent.(type) {
 				case *ast.BlockQuote:
 					b.WriteString("[green]>")
 					b.Write(node.Literal)
 					b.WriteString("[-]")
+				case *ast.Document:
+					if len(p.Children) > 1 {
+						b.WriteString("\n\n")
+					}
+
+					b.Write(node.Literal)
 				default:
+					if quoteBlockExit {
+						b.WriteRune('\n')
+						quoteBlockExit = false
+					}
+
 					b.Write(node.Literal)
 				}
 			} else {
 				b.Write(node.Literal)
 			}
 		default:
-
+			log.Println(spew.Sdump(node))
 		}
 
 		return ast.GoToNext

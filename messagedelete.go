@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/rumblefrog/discordgo"
@@ -44,12 +43,13 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 			return
 		}
 	}
-
-	if rm.Content != "" {
-		Message("Can't delete message with content: " + rm.Content)
-	} else {
-		Message(fmt.Sprintf("Can't delete message with ID: %d", rm.ID))
-	}
+	/*
+		if rm.Content != "" {
+			Message("Can't delete message with content: " + rm.Content)
+		} else {
+			Message(fmt.Sprintf("Can't delete message with ID: %d", rm.ID))
+		}
+	*/
 }
 
 func messageDeleteBulk(s *discordgo.Session, rmb *discordgo.MessageDeleteBulk) {

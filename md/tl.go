@@ -27,7 +27,8 @@ func fixQuotes(s string) string {
 
 	for i := 1; i < len(lines); i++ {
 		if (len(lines[i-1]) > 0 && len(lines[i]) > 0) &&
-			lines[i-1][0] == '>' && lines[i][0] != '>' {
+			lines[i-1][0] == '>' && lines[i][0] != '>' &&
+			lines[i][0] != '\n' {
 
 			lines[i] = "\n" + lines[i]
 		}

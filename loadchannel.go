@@ -12,6 +12,8 @@ import (
 )
 
 func loadChannel(channelID int64) {
+	wrapFrame.SetTitle("[Loading...]")
+
 	ch, err := d.State.Channel(channelID)
 	if err != nil {
 		ch, err = d.Channel(ChannelID) // todo: state first

@@ -18,6 +18,8 @@ func resetInputBehavior() {
 	input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 	input.SetText("")
 
+	clearList()
+
 	stateResetter()
 	toEditMessage = 0
 }

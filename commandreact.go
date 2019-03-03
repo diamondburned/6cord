@@ -1,6 +1,14 @@
 package main
 
-import "strconv"
+import (
+	"fmt"
+	"log"
+	"strconv"
+	"strings"
+
+	"github.com/bwmarrin/discordgo"
+	"github.com/davecgh/go-spew/spew"
+)
 
 func reactMessage(text []string) {
 	if len(text) != 3 {
@@ -40,7 +48,7 @@ func reactMessage(text []string) {
 			}
 		}
 	} else {
-		emoji = text[2]
+		emoji = strings.TrimSpace(text[2])
 
 		for _, r := range message.Reactions {
 			if r.Emoji == nil {
@@ -68,7 +76,23 @@ func reactMessage(text []string) {
 		)
 	}
 
+	defer log.Println(spew.Sdump(emoji))
+
 	if err != nil {
+		if err, ok := err.(discordgo.RESTError); ok {
+			if err.Message != nil {
+				Message(fmt.Sprintf(
+					"Error sending emoji %s:\n%s",
+					emoji, err.Message.Message,
+				))
+
+				return
+			}
+
+			Warn(err.Error())
+			return
+		}
+
 		Warn(err.Error())
 	}
 

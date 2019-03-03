@@ -130,6 +130,8 @@ func main() {
 		guildView.SetPrefixes([]string{"", ""})
 		guildView.SetTopLevel(1)
 		guildView.SetBorder(true)
+		guildView.SetBorderAttributes(tcell.AttrDim)
+		guildView.SetBorderPadding(0, 0, 1, 1)
 		guildView.SetTitle("[Guilds[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 		guildView.SetBackgroundColor(BackgroundColor)
@@ -146,6 +148,7 @@ func main() {
 
 		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
+		wrapFrame.SetBorderAttributes(tcell.AttrDim)
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
@@ -230,6 +233,7 @@ func main() {
 					fuzzyCommands(text)
 				}
 			default:
+				typingTrigger()
 				clearList()
 				stateResetter()
 			}
@@ -245,8 +249,6 @@ func main() {
 
 		appflex.AddItem(wrapFrame, 0, 3, true)
 	}
-
-	var showChannels = true
 
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
@@ -295,22 +297,7 @@ func main() {
 			}()
 
 		case tcell.KeyTab:
-			showChannels = !showChannels
-			if showChannels {
-				wrapFrame.SetBorder(true)
-				appflex.RemoveItem(wrapFrame)
-
-				appflex.AddItem(guildView, 0, 1, true)
-				appflex.AddItem(wrapFrame, 0, 3, true)
-
-				app.SetFocus(guildView)
-			} else {
-				wrapFrame.SetBorder(false)
-				appflex.RemoveItem(guildView)
-
-				app.SetFocus(input)
-			}
-
+			toggleChannels()
 			app.ForceDraw()
 		}
 
@@ -318,6 +305,8 @@ func main() {
 	})
 
 	app.SetRoot(appflex, true)
+
+	toggleChannels()
 
 	logFile, err := os.OpenFile(
 		os.TempDir()+"/6cord.log",
@@ -351,7 +340,7 @@ func main() {
 	d.AddHandler(reactionAdd)
 	d.AddHandler(reactionRemove)
 	d.AddHandler(reactionRemoveAll)
-	// d.AddHandler(onTyping) - broken
+	d.AddHandler(onTyping)
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
 	d.AddHandler(relationshipAdd)

@@ -75,7 +75,7 @@ func fmtMessage(m *discordgo.Message) string {
 		if e.Author != nil {
 			embed = append(
 				embed,
-				"[::u]"+e.Author.Name+"[::-]",
+				"[::du]"+e.Author.Name+"[::-]",
 			)
 
 			if e.Author.IconURL != "" {
@@ -102,16 +102,6 @@ func fmtMessage(m *discordgo.Message) string {
 		if e.Title != "" {
 			embed = append(
 				embed,
-
-				/*
-					Sure, there's a bug here, but
-					it'll rarely happen anyway lul
-
-					if you don't know what it is,
-					if L1 > 45 chars, it will line
-					break and L2 will have 50 chars,
-					which that looks inconsistent
-				*/
 				splitEmbedLine(e.Title, "[::b]", "[#0096cf]")...,
 			)
 		}

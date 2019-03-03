@@ -5,7 +5,7 @@ go 1.12
 require (
 	github.com/alecthomas/chroma v0.6.2
 	github.com/atotto/clipboard v0.1.1
-	github.com/bwmarrin/discordgo v0.19.0 // indirect
+	github.com/bwmarrin/discordgo v0.19.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/gdamore/tcell v1.1.1
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe

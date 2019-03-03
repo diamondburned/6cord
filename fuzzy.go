@@ -11,6 +11,14 @@ func stateResetter() {
 	messagesView.Highlight()
 }
 
+func clearList() {
+	rightflex.ResizeItem(autocomp, 1, 1)
+
+	if autocomp.GetItemCount() != 0 {
+		autocomp.Clear()
+	}
+}
+
 func formatNeedle(m fuzzy.Match) (f string) {
 	isHL := false
 
