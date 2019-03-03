@@ -29,12 +29,16 @@ func mentionHandler(m *discordgo.MessageCreate) {
 	return
 
 PingConfirmed:
-	var channel string
+	var submessage = "mentioned you"
 	var name = m.Author.Username
 
 	if c, err := d.State.Channel(m.ChannelID); err == nil {
+		if len(c.Recipients) > 0 {
+			submessage = "messaged you"
+		}
+
 		if c.Name != "" {
-			channel = " in #" + c.Name
+			submessage += " in #" + c.Name
 
 			m, err := d.State.Member(c.GuildID, m.Author.ID)
 			if err == nil {
@@ -44,26 +48,22 @@ PingConfirmed:
 			}
 
 		} else {
-			var names = make([]string, len(c.Recipients))
+			if len(c.Recipients) > 1 {
+				var names = make([]string, len(c.Recipients))
 
-			if len(c.Recipients) == 1 {
-				p := c.Recipients[0]
-				names[0] = p.Username + "#" + p.Discriminator
-
-			} else {
 				for i, p := range c.Recipients {
 					names[i] = p.Username
 				}
-			}
 
-			channel = HumanizeStrings(names)
+				submessage += " in " + HumanizeStrings(names)
+			}
 		}
 	}
 
 	// Skip if user is busy
 	if d.State.Settings.Status != discordgo.StatusDoNotDisturb {
 		if err := beeep.Notify(
-			name+" mentioned you"+channel,
+			name+" "+submessage,
 			html.EscapeString(m.ContentWithMentionsReplaced()),
 			"",
 		); err != nil {

@@ -21,7 +21,7 @@ const (
 	BackgroundColor = -1
 
 	// CommandPrefix is the prefix of the input box, like $PS1
-	CommandPrefix = "[white]> "
+	CommandPrefix = "[-]> "
 
 	// SyntaxHighlightColorscheme is the color scheme for syntax highlighting
 	// https://xyproto.github.io/splash/docs/all.html

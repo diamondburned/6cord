@@ -40,6 +40,8 @@ var (
 	// TODO: migrate to table + lastRow
 	LastAuthor int64
 
+	foregroundColor int
+
 	d *discordgo.Session
 )
 
@@ -55,6 +57,18 @@ func init() {
 }
 
 func main() {
+	token := flag.String("t", "", "Discord token (1)")
+
+	username := flag.String("u", "", "Username/Email (2)")
+	password := flag.String("p", "", "Password (2)")
+
+	debug := flag.Bool("d", false, "Logs extra events")
+	fgColor := flag.Int("fgc", 15, "Default foreground color, 0-255, 0 is black, 15 is white")
+
+	flag.Parse()
+
+	foregroundColor = *fgColor
+
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 		// workaround to prevent crash when no root in tree
 		return nil
@@ -65,6 +79,7 @@ func main() {
 	messagesView.SetWordWrap(false)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
+	messagesView.SetTextColor(tcell.Color(foregroundColor))
 	messagesView.SetBackgroundColor(BackgroundColor)
 	messagesView.SetText(`    [::b]Quick Start[::-]
         - Right arrow from guild list to focus to input
@@ -72,15 +87,6 @@ func main() {
 		- Up arrow from input to go to autocomplete/message scrollback
 		- Tab to show/hide channels
 		- /goto [#channel] jumps to that channel`)
-
-	token := flag.String("t", "", "Discord token (1)")
-
-	username := flag.String("u", "", "Username/Email (2)")
-	password := flag.String("p", "", "Password (2)")
-
-	debug := flag.Bool("d", false, "Logs extra events")
-
-	flag.Parse()
 
 	var login []interface{}
 
@@ -134,7 +140,11 @@ func main() {
 		guildView.SetBorderPadding(0, 0, 1, 1)
 		guildView.SetTitle("[Guilds[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
+
 		guildView.SetBackgroundColor(BackgroundColor)
+		guildView.SetGraphicsColor(tcell.Color(foregroundColor))
+		guildView.SetTitleColor(tcell.Color(foregroundColor))
+
 		guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			return nil
 		})
@@ -152,11 +162,15 @@ func main() {
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
-		wrapFrame.SetTitleColor(tcell.ColorWhite)
+		wrapFrame.SetTitleColor(tcell.Color(foregroundColor))
 		wrapFrame.SetBackgroundColor(BackgroundColor)
 
 		autocomp.ShowSecondaryText(false)
 		autocomp.SetBackgroundColor(BackgroundColor)
+		autocomp.SetMainTextColor(tcell.Color(foregroundColor))
+		autocomp.SetSelectedTextColor(tcell.Color(15 - foregroundColor))
+		autocomp.SetSelectedBackgroundColor(tcell.Color(foregroundColor))
+		autocomp.SetShortcutColor(tcell.Color(foregroundColor))
 
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
@@ -190,6 +204,7 @@ func main() {
 
 		resetInputBehavior()
 		input.SetInputCapture(inputKeyHandler)
+		input.SetFieldTextColor(tcell.Color(foregroundColor))
 
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {

@@ -13,7 +13,7 @@ func tagReflect(t string) string {
 	case "del":
 		return "[::d]"
 	case "code":
-		return "[:black:]"
+		return "[:#4f4f4f:]"
 	}
 
 	return ""

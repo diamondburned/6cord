@@ -14,6 +14,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	// loadChannel()
 
 	guildNode := tview.NewTreeNode("Guilds")
+	guildNode.SetColor(tcell.Color(foregroundColor))
 
 	guildView.SetRoot(guildNode)
 	guildView.SetCurrentNode(guildNode)
@@ -73,6 +74,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this := tview.NewTreeNode("Direct Messages")
 		this.SetReference("Direct Messages")
 		this.Collapse()
+		this.SetColor(tcell.Color(foregroundColor))
 
 		// https://github.com/Bios-Marcel/cordless
 		sort.Slice(r.PrivateChannels, func(a, b int) bool {
@@ -102,6 +104,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			chNode := tview.NewTreeNode(display)
 			chNode.SetReference(ch.ID)
+			chNode.SetColor(tcell.Color(foregroundColor))
 
 			this.AddChild(chNode)
 		}
@@ -131,6 +134,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this := tview.NewTreeNode("[::d]" + g.Name + "[::-]")
 		this.SetReference(g.Name)
 		this.Collapse()
+		this.SetColor(tcell.Color(foregroundColor))
 
 		sorted := SortChannels(g.Channels)
 
@@ -156,6 +160,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			case discordgo.ChannelTypeGuildCategory:
 				chNode := tview.NewTreeNode("> " + ch.Name)
 				chNode.SetSelectable(false)
+				chNode.SetColor(tcell.Color(foregroundColor))
 
 				this.AddChild(chNode)
 
@@ -165,6 +170,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				if len(vcs) > 0 {
 					chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
 					chNode.SetReference(ch.ID)
+					chNode.SetColor(tcell.Color(foregroundColor))
 
 					this.AddChild(chNode)
 
@@ -180,6 +186,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			default:
 				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
+				chNode.SetColor(tcell.Color(foregroundColor))
 
 				this.AddChild(chNode)
 			}

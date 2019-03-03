@@ -6,9 +6,8 @@ import (
 )
 
 /*
-	TAKEN FROM https://github.com/alecthomas/chroma/blob/master/formatters/tty_indexed.go
+	TAKEN FROM https://github.com/Bios-Marcel/cordless/blob/master/internal/syntax/formatter.go
 */
-
 
 type ttyTable struct {
 	foreground map[chroma.Colour]string
