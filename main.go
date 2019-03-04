@@ -279,7 +279,7 @@ func main() {
 		rightflex.AddItem(input, 1, 1, true)
 		rightflex.SetBackgroundColor(BackgroundColor)
 
-		appflex.AddItem(wrapFrame, 0, 3, true)
+		appflex.AddItem(wrapFrame, 0, 2, true)
 	}
 
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

@@ -151,9 +151,7 @@ func isUnread(ch *discordgo.Channel) bool {
 	return false
 }
 
-var (
-	lastAck string
-)
+var lastAck string
 
 func ackMe(m *discordgo.Message) {
 	c, err := d.State.Channel(m.ChannelID)
