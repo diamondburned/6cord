@@ -4,7 +4,7 @@ variables:
   REPO_NAME: gitlab.com/diamondburned/6cord
 
 before_script:
-  - apk add upx git
+  - apk add git upx
   - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
   - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
   - cd $GOPATH/src/$REPO_NAME
@@ -18,9 +18,9 @@ compile:
       - time go get 
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance
-      - export CG_ENABLED=0
+      - export CGO_ENABLED=0
       - time go build -ldflags "-s -extldflags '-static'" -o $CI_PROJECT_DIR/6cord
-      - upx $CI_PROJECT_DIR/6cord
+      - upx -q --8086 -9 $CI_PROJECT_DIR/6cord
       - export GOOS=windows
       - time go get 
       - time go build -o $CI_PROJECT_DIR/6cord.exe
