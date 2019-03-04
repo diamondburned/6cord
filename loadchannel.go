@@ -40,7 +40,8 @@ func loadChannel(channelID int64) {
 		frameTitle = "[#" + ch.Name + "]"
 
 		if ch.Topic != "" {
-			frameTitle += " - [" + ch.Topic + "]"
+			topic, _ := parseEmojis(ch.Topic)
+			frameTitle += " - [" + topic + "]"
 		}
 	} else {
 		if len(ch.Recipients) == 1 {

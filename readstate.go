@@ -153,27 +153,25 @@ func isUnread(ch *discordgo.Channel) bool {
 
 var (
 	lastAck string
-
-	// map[channelID]messageID
-	ackData = make(map[int64]int64)
 )
 
 func ackMe(m *discordgo.Message) {
-	if mID, ok := ackData[m.ChannelID]; ok {
-		if mID == m.ID {
-			return
-		}
+	c, err := d.State.Channel(m.ChannelID)
+	if err != nil {
+		return
 	}
 
-	ackData[m.ChannelID] = m.ID
+	if !isUnread(c) {
+		return
+	}
 
 	// triggers messageAck
-	_, err := d.ChannelMessageAck(m.ChannelID, m.ID, lastAck)
+	a, err := d.ChannelMessageAck(m.ChannelID, m.ID, lastAck)
 
 	if err != nil {
 		log.Println(err)
 		return
 	}
 
-	// lastAck = ack.Token
+	lastAck = a.Token
 }

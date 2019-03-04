@@ -158,35 +158,40 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			switch ch.Type {
 			case discordgo.ChannelTypeGuildCategory:
-				chNode := tview.NewTreeNode("> " + ch.Name)
+				chNode := tview.NewTreeNode(ch.Name)
 				chNode.SetSelectable(false)
 				chNode.SetColor(tcell.Color(foregroundColor))
 
 				this.AddChild(chNode)
 
-				continue
 			case discordgo.ChannelTypeGuildVoice:
-				vcs := getVoiceChannel(ch.GuildID, ch.ID)
-				if len(vcs) > 0 {
-					chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
-					chNode.SetReference(ch.ID)
-					chNode.SetColor(tcell.Color(foregroundColor))
+				chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
+				chNode.SetReference(ch.ID)
+				chNode.SetColor(tcell.Color(foregroundColor))
 
-					this.AddChild(chNode)
-
-					for _, vc := range vcs {
-						vcNode := generateVoiceNode(vc)
-						if vcNode == nil {
-							continue
-						}
-
-						chNode.AddChild(vcNode)
-					}
+				if ch.ParentID != 0 {
+					chNode.SetIndent(4)
 				}
+
+				this.AddChild(chNode)
+
+				for _, vc := range getVoiceChannel(ch.GuildID, ch.ID) {
+					vcNode := generateVoiceNode(vc)
+					if vcNode == nil {
+						continue
+					}
+
+					chNode.AddChild(vcNode)
+				}
+
 			default:
 				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
 				chNode.SetColor(tcell.Color(foregroundColor))
+
+				if ch.ParentID != 0 {
+					chNode.SetIndent(4)
+				}
 
 				this.AddChild(chNode)
 			}

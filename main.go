@@ -151,6 +151,7 @@ func main() {
 	{ // Left container
 		guildView.SetPrefixes([]string{"", ""})
 		guildView.SetTopLevel(1)
+		guildView.SetAlign(false)
 		guildView.SetBorder(true)
 		guildView.SetBorderAttributes(tcell.AttrDim)
 		guildView.SetBorderPadding(0, 0, 1, 1)
