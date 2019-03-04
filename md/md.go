@@ -2,6 +2,7 @@ package md
 
 import (
 	"fmt"
+	"log"
 	"regexp"
 	"strings"
 
@@ -21,7 +22,14 @@ func Parse(s string) string {
 }
 
 // ParseNoEscape parses md into tview string without escaping it
-func ParseNoEscape(s string) string {
+func ParseNoEscape(s string) (results string) {
+	results = s
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println(r)
+		}
+	}()
+
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
 	s = fixQuotes(s)
 

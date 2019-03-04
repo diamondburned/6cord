@@ -56,7 +56,7 @@ func loadChannel(channelID int64) {
 		}
 	}
 
-	wrapFrame.SetTitle(frameTitle)
+	wrapFrame.SetTitle(tview.Escape(frameTitle))
 	typing.Reset()
 
 	if us.GetGuildID() != ch.GuildID {
@@ -128,14 +128,13 @@ func loadChannel(channelID int64) {
 
 	//wg.Wait()
 
-	messagesView.Clear()
-	messagesView.Write([]byte(
-		strings.Join(messageStore, ""),
-	))
-
-	app.Draw()
-
 	setLastAuthor(msgs[len(msgs)-1].Author.ID)
+
+	app.QueueUpdateDraw(func() {
+		messagesView.SetText(
+			strings.Join(messageStore, ""),
+		)
+	})
 
 	messagesView.ScrollToEnd()
 

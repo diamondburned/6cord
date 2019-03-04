@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"github.com/rivo/tview"
 )
 
 var (
@@ -32,13 +34,13 @@ func parseEmojis(content string) (fmtted string, emojiMap map[string][]string) {
 			fmtted = strings.Replace(
 				fmtted,
 				strings.TrimSpace(nameandID[0]),
-				"["+nameandID[2]+"[]",
+				"["+nameandID[2]+"]",
 				-1,
 			)
 
 			if ShowEmojiURLs {
 				emojiMap[nameandID[3]] = []string{
-					nameandID[2],
+					tview.Escape(nameandID[2]),
 					fmt.Sprintf(
 						`https://cdn.discordapp.com/emojis/%s.%s`,
 						nameandID[3], format,

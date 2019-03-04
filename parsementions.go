@@ -43,7 +43,8 @@ func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]strin
 		return
 	}
 
-	content, emojiMap = parseEmojis(md.Parse(m.Content))
+	_c, emojiMap := parseEmojis(m.Content)
+	content = md.Parse(_c)
 
 	for _, user := range m.Mentions {
 		var username = tview.Escape(user.Username)

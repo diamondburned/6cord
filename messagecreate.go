@@ -63,6 +63,8 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	if getLastAuthor() != m.Author.ID {
+		setLastAuthor(m.Author.ID)
+
 		username, color := us.DiscordThis(m.Message)
 
 		msg := fmt.Sprintf(
@@ -71,7 +73,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			sentTime.Format(time.Stamp),
 		)
 
-		app.QueueUpdateDraw(func() {
+		app.QueueUpdate(func() {
 			messagesView.Write([]byte(msg))
 		})
 
@@ -90,7 +92,4 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	messageStore = append(messageStore, msg)
 
 	scrollChat()
-
-	setLastAuthor(m.Author.ID)
-
 }
