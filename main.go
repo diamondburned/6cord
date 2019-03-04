@@ -69,6 +69,22 @@ func main() {
 
 	foregroundColor = *fgColor
 
+	tview.Borders.HorizontalFocus = tview.Borders.Horizontal
+	tview.Borders.VerticalFocus = tview.Borders.Vertical
+
+	tview.Borders.TopLeftFocus = tview.Borders.TopLeft
+	tview.Borders.TopRightFocus = tview.Borders.TopRight
+	tview.Borders.BottomLeftFocus = tview.Borders.BottomLeft
+	tview.Borders.BottomRightFocus = tview.Borders.BottomRight
+
+	tview.Borders.Horizontal = ' '
+	tview.Borders.Vertical = ' '
+
+	tview.Borders.TopLeft = ' '
+	tview.Borders.TopRight = ' '
+	tview.Borders.BottomLeft = ' '
+	tview.Borders.BottomRight = ' '
+
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 		// workaround to prevent crash when no root in tree
 		return nil

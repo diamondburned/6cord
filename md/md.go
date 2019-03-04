@@ -44,28 +44,7 @@ func ParseNoEscape(s string) string {
 		return
 	})
 
-	m.AddRenderFn(mark.NodeBlockQuote, func(n mark.Node) (s string) {
-		q, _ := n.(*mark.BlockQuoteNode)
-
-		for _, c := range q.Nodes {
-			if p, ok := c.(*mark.ParagraphNode); ok {
-				for _, t := range p.Nodes {
-					if t, ok := t.(*mark.TextNode); ok {
-						for _, l := range strings.Split(t.Text, "\n") {
-							s += "[green]>" + l + "[-]\n"
-						}
-					} else {
-						s += c.Render()
-					}
-				}
-			} else {
-				s += c.Render()
-			}
-		}
-
-		return
-	})
-
+	m.AddRenderFn(mark.NodeBlockQuote, RenderBlockQuote)
 	m.AddRenderFn(mark.NodeCode, RenderCodeBlock)
 
 	m.AddRenderFn(mark.NodeParagraph, func(n mark.Node) (s string) {
