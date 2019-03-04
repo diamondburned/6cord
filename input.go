@@ -10,18 +10,20 @@ import (
 )
 
 func resetInputBehavior() {
-	input.SetLabel(CommandPrefix)
-	input.SetPlaceholder(DefaultStatus)
-	input.SetLabelColor(BackgroundColor)
-	input.SetBackgroundColor(BackgroundColor)
-	input.SetFieldBackgroundColor(BackgroundColor)
-	input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
-	input.SetText("")
+	app.QueueUpdate(func() {
+		input.SetLabel(CommandPrefix)
+		input.SetPlaceholder(DefaultStatus)
+		input.SetLabelColor(BackgroundColor)
+		input.SetBackgroundColor(BackgroundColor)
+		input.SetFieldBackgroundColor(BackgroundColor)
+		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
+		input.SetText("")
 
-	clearList()
+		clearList()
 
-	stateResetter()
-	toEditMessage = 0
+		stateResetter()
+		toEditMessage = 0
+	})
 }
 
 func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {

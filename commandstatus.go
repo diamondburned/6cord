@@ -92,7 +92,7 @@ func setGame(text []string) {
 		gametype = discordgo.GameTypeListening
 		msg = "Set listening to "
 	case strings.HasPrefix(strings.ToLower(s), "watching "):
-		s = s[8:]
+		s = s[9:]
 		gametype = discordgo.GameTypeWatching
 		msg = "Set watching "
 	default:

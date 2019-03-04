@@ -13,12 +13,13 @@ func cleanupBuffer() {
 	if len(messageStore) > 512 && !messagesView.HasFocus() {
 		messageStore = messageStore[:512]
 
-		messagesView.SetText(
-			strings.Join(messageStore, ""),
-		)
+		app.QueueUpdateDraw(func() {
+			messagesView.SetText(
+				strings.Join(messageStore, ""),
+			)
+		})
 
 		messagesView.ScrollToEnd()
-		app.Draw()
 	}
 }
 
@@ -59,7 +60,10 @@ func isRegularMessage(m *discordgo.Message) bool {
 		)
 
 		// Writing it directly for performance
-		messagesView.Write([]byte(msg))
+		app.QueueUpdateDraw(func() {
+			messagesView.Write([]byte(msg))
+		})
+
 		messageStore = append(messageStore, msg)
 
 		return false

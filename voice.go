@@ -78,7 +78,10 @@ func refreshVoiceStates(vc *discordgo.VoiceState) {
 					}
 				}
 
-				parent.SetChildren(nodes)
+				app.QueueUpdateDraw(func() {
+					parent.SetChildren(nodes)
+				})
+
 				return false
 			}
 
@@ -97,8 +100,6 @@ func refreshVoiceStates(vc *discordgo.VoiceState) {
 		refreshVoiceTreeNode(node, vc.GuildID, vc.ChannelID)
 		return false
 	})
-
-	app.Draw()
 }
 
 func refreshVoiceTreeNode(node *tview.TreeNode, guildID, channelID int64) {
@@ -116,7 +117,9 @@ func refreshVoiceTreeNode(node *tview.TreeNode, guildID, channelID int64) {
 		nodes = append(nodes, vcNode)
 	}
 
-	node.SetChildren(nodes)
+	app.QueueUpdateDraw(func() {
+		node.SetChildren(nodes)
+	})
 }
 
 func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {

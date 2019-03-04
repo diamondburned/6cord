@@ -48,8 +48,9 @@ func handleReactionEvent(m *discordgo.Message) {
 		}
 	}
 
-	messagesView.SetText(strings.Join(messageStore, ""))
-	app.Draw()
+	app.QueueUpdateDraw(func() {
+		messagesView.SetText(strings.Join(messageStore, ""))
+	})
 
 	scrollChat()
 }

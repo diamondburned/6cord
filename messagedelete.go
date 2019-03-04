@@ -37,8 +37,9 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 				)
 			}
 
-			messagesView.SetText(strings.Join(messageStore, ""))
-			app.Draw()
+			app.QueueUpdate(func() {
+				messagesView.SetText(strings.Join(messageStore, ""))
+			})
 
 			scrollChat()
 

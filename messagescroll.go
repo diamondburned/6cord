@@ -136,7 +136,9 @@ func loadMore() {
 
 	messageStore = append(reversed, messageStore...)
 
-	messagesView.SetText(strings.Join(messageStore, ""))
+	app.QueueUpdateDraw(func() {
+		messagesView.SetText(strings.Join(messageStore, ""))
+	})
 
 	input.SetPlaceholder("Done.")
 	app.Draw()

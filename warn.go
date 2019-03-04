@@ -65,7 +65,10 @@ func Message(m string) {
 		0, strings.Join(c, "\n"),
 	)
 
-	messagesView.Write([]byte(msg))
+	app.QueueUpdate(func() {
+		messagesView.Write([]byte(msg))
+	})
+
 	messageStore = append(messageStore, msg)
 
 	scrollChat()
