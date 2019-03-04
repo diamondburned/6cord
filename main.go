@@ -371,7 +371,7 @@ func main() {
 	d.AddHandler(reactionAdd)
 	d.AddHandler(reactionRemove)
 	d.AddHandler(reactionRemoveAll)
-	d.AddHandler(onTyping)
+	// d.AddHandler(onTyping) - still broken
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
 	d.AddHandler(relationshipAdd)
@@ -381,6 +381,8 @@ func main() {
 	d.AddHandler(guildMemberRemove)
 
 	if *debug {
+		d.AddHandler(onTyping)
+
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {
 			log.Println(spew.Sdump(r))
 		})
