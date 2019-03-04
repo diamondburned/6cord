@@ -4,7 +4,7 @@
 
 #### With the channel browser
 
-![](http://u.cubeupload.com/diamondburned/C4L6St.png)
+![](http://u.cubeupload.com/diamondburned/i804yI.png)
 
 #### Hidden channel browser
 
