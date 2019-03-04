@@ -32,7 +32,7 @@
   - Any other key focuses back to input
 - Tab to hide channels, focusing on input
 - Tab again to show channels, focusing on the channel list
-- To clear the keyring, run `./6cord rmkeyring`
+- To clear the keyring, feed `6cord` a new token with `-t`
 
 ## Todo
 

@@ -104,33 +104,33 @@ func main() {
 		- Tab to show/hide channels
 		- /goto [#channel] jumps to that channel`)
 
-	var login []interface{}
+	var (
+		login []interface{}
+		err   error
+	)
 
-	k, err := keyring.Get(AppName, "token")
-	if err != nil {
-		if err != keyring.ErrNotFound {
-			log.Println(err.Error())
+	switch {
+	case *token != "":
+		login = append(login, *token)
+
+		if err := keyring.Delete(AppName, "token"); err == nil {
+			log.Println("Keyring deleted.")
 		}
 
-		switch {
-		case *token != "":
+	case *username != "", *password != "":
+		login = append(login, *username)
+		login = append(login, *password)
+
+		if *token != "" {
 			login = append(login, *token)
+		}
 
-			if err := keyring.Delete(AppName, "token"); err == nil {
-				log.Println("Keyring deleted.")
-			}
-
-		case *username != "", *password != "":
-			login = append(login, *username)
-			login = append(login, *password)
-
-			if *token != "" {
-				login = append(login, *token)
-			}
-		default:
+	default:
+		k, err := keyring.Get(AppName, "token")
+		if err != nil {
 			log.Fatalln("Token OR username + password missing! Refer to -h")
 		}
-	} else {
+
 		login = append(login, k)
 	}
 

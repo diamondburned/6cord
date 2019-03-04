@@ -34,10 +34,25 @@ func loadChannel(channelID int64) {
 
 	ChannelID = ch.ID
 
-	frameTitle := "[#" + ch.Name + "]"
+	var frameTitle string
 
-	if ch.Topic != "" {
-		frameTitle += " - [" + ch.Topic + "]"
+	if ch.Name != "" {
+		frameTitle = "[#" + ch.Name + "]"
+
+		if ch.Topic != "" {
+			frameTitle += " - [" + ch.Topic + "]"
+		}
+	} else {
+		if len(ch.Recipients) == 1 {
+			frameTitle = "[" + ch.Recipients[0].String() + "]"
+		} else {
+			var names = make([]string, len(ch.Recipients))
+			for i, r := range ch.Recipients {
+				names[i] = r.Username
+			}
+
+			frameTitle = "[" + HumanizeStrings(names) + "]"
+		}
 	}
 
 	wrapFrame.SetTitle(frameTitle)
@@ -192,4 +207,3 @@ func recurseMembers(memstore *[]*discordgo.Member, guildID, after int64) {
 
 	return
 }
-
