@@ -155,7 +155,7 @@ func main() {
 		guildView.SetBorder(true)
 		guildView.SetBorderAttributes(tcell.AttrDim)
 		guildView.SetBorderPadding(0, 0, 1, 1)
-		guildView.SetTitle("[Guilds[]")
+		guildView.SetTitle("[Servers[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 
 		guildView.SetBackgroundColor(BackgroundColor)
