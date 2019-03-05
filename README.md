@@ -24,7 +24,7 @@
 
 ### 2. `go get -u gitlab.com/diamondburned/6cord`
 
-## Behaviors
+## Behaviors (possibly outdated)
 
 - From input, hit arrow up to go to autocompletion. Arrow up again to go to the message box.
 - In the message box
@@ -33,6 +33,8 @@
 - Tab to hide channels, focusing on input
 - Tab again to show channels, focusing on the channel list
 - To clear the keyring, feed `6cord` a new token with `-t`
+- Plans:
+  - Disable focus on the message view and use Alt+Arrows instead (considering)
 
 ## Todo
 
@@ -41,6 +43,14 @@
 - [x] Syntax highlighting, better markdown parsing
 - [x] Message Delete and Edit
 - [x] Full reaction support
+- [ ] Command history (refer to Plans on above section)
+- [ ] A separate user view
+- [ ] Guild member _list_
+	- Should be combined with all guild infos imo
+	- Can also contain pinned messages, though I'm not sure
+	- A method to call this, preferably by
+		- A keybind when on the guild tree
+		- Commands: `/pins` , `/members`, etc
 - [ ] Typing events
 	- [x] The client sends the typing event
 	- [ ] The client receives and indicates typing events
@@ -92,7 +102,7 @@
 	- ~~Keyboard event handling~~
 - [x] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
-- [ ] ~~Confirm Windows compatibility~~
+- [x] Confirm Windows compatibility
 	- `/upload` fuzzy match doesn't work, wontfix
 
 ## Credits
