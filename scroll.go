@@ -19,13 +19,14 @@ func handleScroll() {
 	)
 
 	if toplinepos == 0 {
+		height = 0
 		go loadMore()
 	}
 
-	current := toplinepos + (height - 2)
+	current := toplinepos + height
 
 	input.SetPlaceholder(fmt.Sprintf(
 		"%d/%d %d%%",
-		current, lines, current*100/lines,
+		current, lines, min(current*100/lines, 100),
 	))
 }

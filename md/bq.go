@@ -26,12 +26,11 @@ func RenderBlockQuote(n mark.Node) (s string) {
 		case *mark.BlockQuoteNode:
 			// recursion recursion recursion recursion recursion
 			s += "[green]>" + RenderBlockQuote(c) + "[-]"
+
+		default:
+			s += c.Render()
 		}
 	}
 
-	return strings.TrimFunc(
-		s, func(r rune) bool {
-			return r == '\n'
-		},
-	)
+	return strings.TrimSuffix(s, "\n")
 }

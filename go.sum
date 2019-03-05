@@ -10,6 +10,7 @@ github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 h1:bvNMNQO63//z+xNg
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
 github.com/atotto/clipboard v0.1.1 h1:WSoEbAS70E5gw8FbiqFlp69MGsB6dUb4l+0AGGLiVGw=
 github.com/atotto/clipboard v0.1.1/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
+github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=
 github.com/bwmarrin/discordgo v0.18.0/go.mod h1:5NIvFv5Z7HddYuXbuQegZ684DleQaCFqChP2iuBivJ8=
 github.com/bwmarrin/discordgo v0.19.0 h1:kMED/DB0NR1QhRcalb85w0Cu3Ep2OrGAqZH1R5awQiY=
 github.com/bwmarrin/discordgo v0.19.0/go.mod h1:O9S4p+ofTFwB02em7jkpkV8M3R0/PUVOwN61zSZ0r4Q=
@@ -19,6 +20,10 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/diamondburned/mark v0.2.0 h1:6MkmxDJtvvnuedzO2WGXpA0CDhrO1/FL5ITD1AtNd7A=
 github.com/diamondburned/mark v0.2.0/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
+github.com/diamondburned/mark v0.2.1 h1:nQvLfK/T9rrYV5O9PJD/NY5na/9CbhrKjSg/FsRYPWw=
+github.com/diamondburned/mark v0.2.1/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
+github.com/diamondburned/mark v0.2.2 h1:JlflDcQIw5c3fR/s+WxPytoqBqZ/oNAb1H2E0Pias/4=
+github.com/diamondburned/mark v0.2.2/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=
 github.com/dlclark/regexp2 v1.1.6/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/gdamore/encoding v1.0.0 h1:+7OoQ1Bc6eTm5niUzBa0Ctsh6JbMW6Ra+YNuAtDBdko=

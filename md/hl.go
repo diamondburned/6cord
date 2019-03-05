@@ -25,8 +25,6 @@ func RenderCodeBlock(n mark.Node) (s string) {
 	if c.Lang != "" {
 		if l := lexers.Get(c.Lang); l != nil {
 			lexer = l
-		} else {
-			content = c.Lang + "\n" + content
 		}
 	}
 
