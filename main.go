@@ -285,12 +285,7 @@ func main() {
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyPgDn, tcell.KeyPgUp, tcell.KeyUp, tcell.KeyDown:
-			s, _ := messagesView.GetScrollOffset()
-			if s == 0 {
-				go loadMore()
-				return nil
-			}
-
+			handleScroll()
 			return event
 
 		case tcell.KeyLeft:
@@ -300,18 +295,14 @@ func main() {
 
 		switch event.Rune() {
 		case 'j', 'k':
-			s, _ := messagesView.GetScrollOffset()
-			if s == 0 {
-				go loadMore()
-				return nil
-			}
-
+			handleScroll()
 			return event
 
 		case 'g', 'G':
 			return event
 		}
 
+		resetInputBehavior()
 		app.SetFocus(input)
 		return nil
 	})

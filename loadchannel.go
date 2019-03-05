@@ -138,6 +138,7 @@ func loadChannel(channelID int64) {
 
 	messagesView.ScrollToEnd()
 
+	resetInputBehavior()
 	app.SetFocus(input)
 
 	go func() {
