@@ -1,22 +1,5 @@
-# 6cord
-
-## Screenshots
-
-#### With the channel browser
-
-![](http://u.cubeupload.com/diamondburned/i804yI.png)
-
-#### Hidden channel browser
-
-![](http://u.cubeupload.com/diamondburned/1jGJNU.png)
-
-#### Fuzzy commands
-
-![](http://u.cubeupload.com/diamondburned/H86qdB.png)
-
-#### Fuzzzy emojis
-
-![](http://u.cubeupload.com/diamondburned/dX90YD.png)
+<h1 align="center">6cord</h1>
+<p align="center"><img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" /></p>
 
 ## Installation
 
@@ -104,6 +87,16 @@
 	- A solution could be `./6cord 2> /dev/null`
 - [x] Confirm Windows compatibility
 	- `/upload` fuzzy match doesn't work, wontfix
+
+## Screenshots
+
+<p align="center">
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/highlight.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/reactions.png" />
+</p>
 
 ## Credits
 
