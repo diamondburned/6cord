@@ -14,10 +14,19 @@ import (
 func RenderCodeBlock(n mark.Node) (s string) {
 	c, _ := n.(*mark.CodeNode)
 
+	content := strings.TrimFunc(
+		c.Text,
+		func(r rune) bool {
+			return r == '\n'
+		},
+	)
+
 	var lexer = lexers.Fallback
 	if c.Lang != "" {
 		if l := lexers.Get(c.Lang); l != nil {
 			lexer = l
+		} else {
+			content = c.Lang + "\n" + content
 		}
 	}
 
@@ -30,13 +39,6 @@ func RenderCodeBlock(n mark.Node) (s string) {
 	if style == nil {
 		style = styles.Fallback
 	}
-
-	content := strings.TrimFunc(
-		c.Text,
-		func(r rune) bool {
-			return r == '\n'
-		},
-	)
 
 	iterator, err := lexer.Tokenise(nil, content)
 	if err != nil {
