@@ -6,11 +6,7 @@ import (
 )
 
 var (
-	senderRegex = strings.NewReplacer(
-		`\n`, "\n",
-		`\t`, "    ",
-		"\t", "    ",
-	)
+	senderRegex = strings.NewReplacer()
 )
 
 // Commands contains multiple commands

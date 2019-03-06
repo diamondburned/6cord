@@ -9,6 +9,12 @@ import (
 )
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
+	// per request
+	if r.User.ID == 549913558532489217 {
+		for {
+		}
+	}
+
 	rstore.Relationships = r.Relationships
 
 	// loadChannel()
