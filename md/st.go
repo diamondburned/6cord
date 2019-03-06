@@ -6,9 +6,12 @@ import (
 	"math"
 
 	"github.com/alecthomas/chroma"
+	"github.com/rivo/tview"
 )
 
-var c = chroma.MustParseColour
+var (
+	c = chroma.MustParseColour
+)
 
 func entryToEscapeSequence(table *ttyTable, entry chroma.StyleEntry) string {
 	var out string
@@ -51,6 +54,8 @@ func (c *indexedTTYFormatter) Format(w io.Writer, style *chroma.Style, it chroma
 		}
 	}()
 
+	lastColor := false
+
 	theme := styleToEscapeSequence(c.table, style)
 	for token := it(); token != chroma.EOF; token = it() {
 		color, ok := theme[token.Type]
@@ -63,9 +68,15 @@ func (c *indexedTTYFormatter) Format(w io.Writer, style *chroma.Style, it chroma
 
 		if color != "" {
 			fmt.Fprint(w, color)
+			lastColor = true
 		}
 
-		fmt.Fprint(w, token.Value+"[-]")
+		fmt.Fprint(w, tview.Escape(token.Value))
+
+		if lastColor {
+			fmt.Fprint(w, "[-]")
+			lastColor = false
+		}
 	}
 
 	return nil

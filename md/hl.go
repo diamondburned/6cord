@@ -21,6 +21,10 @@ func RenderCodeBlock(n mark.Node) (s string) {
 		},
 	)
 
+	if content == "" {
+		content = c.Lang
+	}
+
 	var lexer = lexers.Fallback
 	if c.Lang != "" {
 		if l := lexers.Get(c.Lang); l != nil {

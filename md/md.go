@@ -16,13 +16,8 @@ var HighlightStyle = "vs"
 
 var trashyCodeBlockMatching = regexp.MustCompile("(.)```")
 
-// Parse parses md into tview string
-func Parse(s string) string {
-	return ParseNoEscape(tview.Escape(s))
-}
-
-// ParseNoEscape parses md into tview string without escaping it
-func ParseNoEscape(s string) (results string) {
+// Parse parses md into tview strings
+func Parse(s string) (results string) {
 	results = s
 	defer func() {
 		if r := recover(); r != nil {
@@ -40,18 +35,10 @@ func ParseNoEscape(s string) (results string) {
 
 	m.AddRenderFn(mark.NodeText, func(n mark.Node) (s string) {
 		t, _ := n.(*mark.TextNode)
-		return t.Text
+		return tview.Escape(t.Text) + "asd"
 	})
 
-	m.AddRenderFn(mark.NodeEmphasis, func(n mark.Node) (s string) {
-		e, _ := n.(*mark.EmphasisNode)
-		for _, n := range e.Nodes {
-			s += n.Render()
-		}
-
-		return
-	})
-
+	m.AddRenderFn(mark.NodeEmphasis, RenderEmphasis)
 	m.AddRenderFn(mark.NodeBlockQuote, RenderBlockQuote)
 	m.AddRenderFn(mark.NodeCode, RenderCodeBlock)
 
@@ -60,13 +47,7 @@ func ParseNoEscape(s string) (results string) {
 		for _, n := range p.Nodes {
 			switch n := n.(type) {
 			case *mark.EmphasisNode:
-				s += tagReflect(n.Tag())
-
-				for _, n := range n.Nodes {
-					s += n.Render()
-				}
-
-				s += "[:-:-]"
+				s += RenderEmphasis(n)
 
 			case *mark.LinkNode:
 				if n.Title == "" {

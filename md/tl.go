@@ -4,21 +4,6 @@ import (
 	"strings"
 )
 
-func tagReflect(t string) string {
-	switch t {
-	case "strong":
-		return "[::b]"
-	case "em":
-		return "[::b]"
-	case "del":
-		return "[::d]"
-	case "code":
-		return "[:#4f4f4f:]"
-	}
-
-	return ""
-}
-
 func isFormatEnter(e bool, p string) string {
 	if e {
 		return "[::" + p + "]"

@@ -226,7 +226,7 @@ func fmtMessage(m *discordgo.Message) string {
 
 	if len(m.Reactions) > 0 { // Reactions
 		c = append(c,
-			chatPadding+chatPadding+reactions, "",
+			chatPadding+chatPadding+reactions,
 		)
 	}
 
