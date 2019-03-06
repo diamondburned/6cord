@@ -63,7 +63,7 @@ okay homo
 4. gay
 `
 
-	if p := ParseNoEscape(strings.Join(testSuite, "\n\n")); p != result {
+	if p := Parse(strings.Join(testSuite, "\n\n")); p != result {
 		t.Errorf("Test failed---\n%v", diff.LineDiff(p, result))
 	}
 }

@@ -35,7 +35,7 @@ func Parse(s string) (results string) {
 
 	m.AddRenderFn(mark.NodeText, func(n mark.Node) (s string) {
 		t, _ := n.(*mark.TextNode)
-		return tview.Escape(t.Text) + "asd"
+		return tview.Escape(t.Text)
 	})
 
 	m.AddRenderFn(mark.NodeEmphasis, RenderEmphasis)
@@ -51,16 +51,17 @@ func Parse(s string) (results string) {
 
 			case *mark.LinkNode:
 				if n.Title == "" {
-					s += "[::u]" + n.Href + "[::-]"
+					s += "[::u]" + tview.Escape(n.Href) + "[::-]"
 				} else {
 					s += fmt.Sprintf(
 						"[%s](%s)",
-						n.Title, n.Href,
+						tview.Escape(n.Title),
+						tview.Escape(n.Href),
 					)
 				}
 
 			default:
-				s += n.Render()
+				s += tview.Escape(n.Render())
 			}
 		}
 

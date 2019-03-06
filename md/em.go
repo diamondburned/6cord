@@ -1,6 +1,9 @@
 package md
 
-import "github.com/diamondburned/mark"
+import (
+	"github.com/diamondburned/mark"
+	"github.com/rivo/tview"
+)
 
 func tagReflect(t string) string {
 	switch t {
@@ -27,7 +30,7 @@ func RenderEmphasis(n mark.Node) (s string) {
 		if _, ok := n.(*mark.EmphasisNode); ok {
 			s += RenderEmphasis(n)
 		} else {
-			s += n.Render()
+			s += tview.Escape(n.Render())
 		}
 	}
 
