@@ -9,6 +9,21 @@ import (
 	"github.com/rumblefrog/discordgo"
 )
 
+func userSettingsUpdate(s *discordgo.Session, settings *discordgo.UserSettingsUpdate) {
+	if settings == nil {
+		return
+	}
+
+	_settings := *settings
+
+	if status, ok := _settings["status"]; ok {
+		if str, ok := status.(string); ok {
+			st := discordgo.Status(str)
+			d.State.Settings.Status = st
+		}
+	}
+}
+
 func safeAuthor(u *discordgo.User) (string, int64) {
 	if u != nil {
 		return u.Username, u.ID

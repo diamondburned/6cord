@@ -14,21 +14,10 @@ func mentionHandler(m *discordgo.MessageCreate) {
 		return
 	}
 
-	if m.GuildID != 0 {
-		for _, mention := range m.Mentions {
-			if mention.ID == d.State.User.ID {
-				goto PingConfirmed
-			}
-		}
-	} else {
-		if m.Author.ID != d.State.User.ID {
-			goto PingConfirmed
-		}
+	if !messagePingable(m.Message, m.GuildID) {
+		return
 	}
 
-	return
-
-PingConfirmed:
 	var submessage = "mentioned you"
 	var name = m.Author.Username
 

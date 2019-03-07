@@ -366,6 +366,7 @@ func main() {
 	// d.AddHandler(onTyping) - still broken
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
+	d.AddHandler(userSettingsUpdate)
 	d.AddHandler(relationshipAdd)
 	d.AddHandler(relationshipRemove)
 	d.AddHandler(guildMemberAdd)

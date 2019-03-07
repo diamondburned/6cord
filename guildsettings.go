@@ -4,6 +4,49 @@ import (
 	"github.com/rumblefrog/discordgo"
 )
 
+func messagePingable(m *discordgo.Message, gID int64) bool {
+	g, err := d.State.Guild(gID)
+	if err != nil || gID == 0 {
+		if m.Author.ID != d.State.User.ID {
+			return true
+		}
+
+		return false
+	}
+
+	s := getGuildFromSettings(g.ID)
+
+	if m.MentionEveryone {
+		return settingGuildAllowEveryone(s)
+	}
+
+	if s == nil {
+		switch g.DefaultMessageNotifications {
+		case 0:
+			return true
+		case 2:
+			return false
+		default:
+		}
+	} else {
+		switch s.MessageNotifications {
+		case 0: // all messages
+			return true
+		case 2:
+			return false
+		default: // case 1 - mentions only
+		}
+
+		for _, mention := range m.Mentions {
+			if mention.ID == d.State.User.ID {
+				return true
+			}
+		}
+	}
+
+	return false
+}
+
 func getGuildFromSettings(guildID int64) *discordgo.UserGuildSettings {
 	for _, ugs := range d.State.UserGuildSettings {
 		if ugs.GuildID == guildID {
@@ -20,6 +63,14 @@ func settingGuildIsMuted(s *discordgo.UserGuildSettings) bool {
 	}
 
 	return s.Muted
+}
+
+func settingGuildAllowEveryone(s *discordgo.UserGuildSettings) bool {
+	if s == nil {
+		return true
+	}
+
+	return !s.SupressEveryone
 }
 
 func getChannelFromGuildSettings(chID int64, s *discordgo.UserGuildSettings,
