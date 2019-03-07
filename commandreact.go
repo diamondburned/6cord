@@ -11,6 +11,11 @@ import (
 )
 
 func reactMessage(text []string) {
+	if Channel == nil {
+		Message("You're not in a channel!")
+		return
+	}
+
 	if len(text) != 3 {
 		Message("Invalid arguments! Refer to description.")
 		return
@@ -22,7 +27,7 @@ func reactMessage(text []string) {
 		return
 	}
 
-	message, err := d.State.Message(ChannelID, messageID)
+	message, err := d.State.Message(Channel.ID, messageID)
 	if err != nil {
 		Message("Failed to find the message.")
 		return
@@ -64,13 +69,13 @@ func reactMessage(text []string) {
 
 	if reacted {
 		err = d.MessageReactionRemoveMe(
-			ChannelID,
+			Channel.ID,
 			message.ID,
 			emoji,
 		)
 	} else {
 		err = d.MessageReactionAdd(
-			ChannelID,
+			Channel.ID,
 			message.ID,
 			emoji,
 		)

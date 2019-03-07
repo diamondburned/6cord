@@ -21,8 +21,6 @@ func relationshipAdd(s *discordgo.Session, ra *discordgo.RelationshipAdd) {
 		d.State.Relationships,
 		ra.Relationship,
 	)
-
-	loadChannel(ChannelID)
 }
 
 func relationshipRemove(s *discordgo.Session, rm *discordgo.RelationshipRemove) {
@@ -36,8 +34,6 @@ func relationshipRemove(s *discordgo.Session, rm *discordgo.RelationshipRemove) 
 	}
 
 	d.State.Relationships = rs
-
-	loadChannel(ChannelID)
 }
 
 // RStore contains Discord relationships

@@ -13,6 +13,10 @@ func handleScroll() {
 		),
 	)
 
+	if lines <= 1 {
+		lines = len(messagesView.GetText(false))
+	}
+
 	var (
 		toplinepos, _   = messagesView.GetScrollOffset()
 		_, _, _, height = messagesView.GetInnerRect()

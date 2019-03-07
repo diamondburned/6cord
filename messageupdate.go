@@ -8,15 +8,15 @@ import (
 )
 
 func messageUpdate(s *discordgo.Session, u *discordgo.MessageUpdate) {
-	if ChannelID != u.ChannelID {
+	if d == nil || Channel == nil {
 		return
 	}
 
-	if d == nil {
+	if Channel.ID != u.ChannelID {
 		return
 	}
 
-	m, err := d.State.Message(ChannelID, u.ID)
+	m, err := d.State.Message(Channel.ID, u.ID)
 	if err != nil {
 		Warn(err.Error())
 		return

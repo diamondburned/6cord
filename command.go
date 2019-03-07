@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"strings"
 )
@@ -24,6 +25,11 @@ var commands = Commands{
 		Command:     "/goto",
 		Function:    gotoChannel,
 		Description: "[channel name] - jumps to a channel",
+	},
+	Command{
+		Command:     "/mentions",
+		Function:    commandMentions,
+		Description: "shows the last mentions",
 	},
 	Command{
 		Command:     "/nick",
@@ -108,7 +114,16 @@ func CommandHandler() {
 
 		for _, cmd := range commands {
 			if f[0] == cmd.Command && cmd.Function != nil {
-				go cmd.Function(f)
+				go func() {
+					defer func() {
+						if r := recover(); r != nil {
+							Warn(fmt.Sprintf("%v", r))
+						}
+					}()
+
+					cmd.Function(f)
+				}()
+
 				return
 			}
 		}
@@ -119,8 +134,14 @@ func CommandHandler() {
 		text = strings.TrimPrefix(text, `\`)
 		text = senderRegex.Replace(text)
 
+		if Channel == nil {
+			Message("You're not in a channel!")
+			return
+		}
+
 		go func(text string) {
-			if _, err := d.ChannelMessageSend(ChannelID, text); err != nil {
+			_, err := d.ChannelMessageSend(Channel.ID, text)
+			if err != nil {
 				Warn("Failed to send message:\n" + text + "\nError: " + err.Error())
 			}
 		}(text)

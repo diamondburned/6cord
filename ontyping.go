@@ -26,7 +26,11 @@ var typing = &TypingUsers{}
 func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 	// Message(spew.Sdump(ts))
 
-	if ts.ChannelID != ChannelID {
+	if Channel == nil {
+		return
+	}
+
+	if ts.ChannelID != Channel.ID {
 		return
 	}
 
@@ -35,7 +39,7 @@ func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 }
 
 func renderCallback(tu *TypingUsers) {
-	ch, err := d.State.Channel(ChannelID)
+	ch, err := d.State.Channel(Channel.ID)
 	if err != nil {
 		return
 	}

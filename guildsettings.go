@@ -5,8 +5,12 @@ import (
 )
 
 func messagePingable(m *discordgo.Message, gID int64) bool {
-	g, err := d.State.Guild(gID)
-	if err != nil || gID == 0 {
+	c, err := d.State.Channel(m.ChannelID)
+	if err != nil {
+		return false
+	}
+
+	if c.GuildID == 0 {
 		if m.Author.ID != d.State.User.ID {
 			return true
 		}
@@ -14,35 +18,51 @@ func messagePingable(m *discordgo.Message, gID int64) bool {
 		return false
 	}
 
-	s := getGuildFromSettings(g.ID)
+	s := getGuildFromSettings(c.GuildID)
 
 	if m.MentionEveryone {
+		//log.Println(2)
 		return settingGuildAllowEveryone(s)
 	}
 
-	if s == nil {
-		switch g.DefaultMessageNotifications {
-		case 0:
+	for _, mention := range m.Mentions {
+		if mention.ID == d.State.User.ID {
+			//log.Println(4)
 			return true
-		case 2:
-			return false
-		default:
-		}
-	} else {
-		switch s.MessageNotifications {
-		case 0: // all messages
-			return true
-		case 2:
-			return false
-		default: // case 1 - mentions only
-		}
-
-		for _, mention := range m.Mentions {
-			if mention.ID == d.State.User.ID {
-				return true
-			}
 		}
 	}
+
+	/*	if s == nil {
+			switch g.DefaultMessageNotifications {
+			case 0:
+				log.Println(3)
+				return true
+			case 2:
+			default:
+			}
+		} else {
+			var notify = s.MessageNotifications
+			if c := getChannelFromGuildSettings(m.ChannelID, s); c != nil {
+				notify = c.MessageNotifications
+			}
+
+			switch notify {
+			case 0: // all messages
+				log.Println(3)
+				return true
+			case 2:
+				return false
+			default: // case 1 - mentions only
+			}
+
+			for _, mention := range m.Mentions {
+				if mention.ID == d.State.User.ID {
+					log.Println(4)
+					return true
+				}
+			}
+		}
+	*/
 
 	return false
 }

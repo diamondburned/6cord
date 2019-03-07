@@ -13,7 +13,7 @@ func guildMemberRemove(s *discordgo.Session, gmr *discordgo.GuildMemberRemove) {
 		return
 	}
 
-	us.RemoveUser(gmr.User.ID)
+	us.RemoveUser(gmr.GuildID, gmr.User.ID)
 }
 
 func guildMemberUpdate(s *discordgo.Session, gma *discordgo.GuildMemberUpdate) {
@@ -26,6 +26,7 @@ func guildMemberDoSomething(gm *discordgo.Member) {
 	}
 
 	us.UpdateUser(
+		gm.GuildID,
 		gm.User.ID,
 		gm.User.Username,
 		gm.Nick,

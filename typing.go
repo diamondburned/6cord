@@ -11,12 +11,12 @@ func typingTrigger() {
 	select {
 	case <-typingTimer.C:
 		if TriggerTyping {
-			if ChannelID == 0 {
+			if Channel == nil {
 				return
 			}
 
 			go func() {
-				err := d.ChannelTyping(ChannelID)
+				err := d.ChannelTyping(Channel.ID)
 				if err != nil {
 					Message(err.Error())
 				}

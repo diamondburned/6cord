@@ -3,11 +3,11 @@ package main
 import "github.com/rumblefrog/discordgo"
 
 func reactionAdd(s *discordgo.Session, ra *discordgo.MessageReactionAdd) {
-	if ra.ChannelID != ChannelID {
+	if Channel == nil || ra.ChannelID != Channel.ID {
 		return
 	}
 
-	m, err := d.State.Message(ChannelID, ra.MessageID)
+	m, err := d.State.Message(Channel.ID, ra.MessageID)
 	if err != nil {
 		return
 	}
@@ -43,11 +43,11 @@ Found:
 }
 
 func reactionRemove(s *discordgo.Session, rm *discordgo.MessageReactionRemove) {
-	if rm.ChannelID != ChannelID {
+	if Channel == nil || rm.ChannelID != Channel.ID {
 		return
 	}
 
-	m, err := d.State.Message(ChannelID, rm.MessageID)
+	m, err := d.State.Message(Channel.ID, rm.MessageID)
 	if err != nil {
 		return
 	}
@@ -79,11 +79,11 @@ func reactionRemove(s *discordgo.Session, rm *discordgo.MessageReactionRemove) {
 }
 
 func reactionRemoveAll(s *discordgo.Session, rm *discordgo.MessageReactionRemoveAll) {
-	if rm.ChannelID != ChannelID {
+	if Channel == nil || rm.ChannelID != Channel.ID {
 		return
 	}
 
-	m, err := d.State.Message(ChannelID, rm.MessageID)
+	m, err := d.State.Message(Channel.ID, rm.MessageID)
 	if err != nil {
 		return
 	}

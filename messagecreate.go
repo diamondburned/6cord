@@ -20,7 +20,7 @@ var (
 )
 
 func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
-	if d == nil {
+	if d == nil || Channel == nil {
 		return
 	}
 
@@ -31,7 +31,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	// Notify mentions
 	go mentionHandler(m)
 
-	if m.ChannelID != ChannelID {
+	if m.ChannelID != Channel.ID {
 		c, err := d.State.Channel(m.ChannelID)
 		if err == nil {
 			c.LastMessageID = m.ID

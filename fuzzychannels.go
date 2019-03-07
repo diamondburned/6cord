@@ -79,16 +79,15 @@ func fuzzyChannels(last string) {
 			channelFuzzyCache,
 		)
 
-		var guildID int64
-
-		c, err := d.State.Channel(ChannelID)
-		if err == nil {
-			guildID = c.GuildID
+		if Channel != nil {
+			c, err := d.State.Channel(Channel.ID)
+			if err == nil {
+				guildID := c.GuildID
+				sort.SliceStable(fuzzied, func(i, j int) bool {
+					return channelFuzzyCache[fuzzied[i].Index].GuildID == guildID
+				})
+			}
 		}
-
-		sort.SliceStable(fuzzied, func(i, j int) bool {
-			return channelFuzzyCache[fuzzied[i].Index].GuildID == guildID
-		})
 	}
 
 	clearList()

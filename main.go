@@ -33,8 +33,8 @@ var (
 	input         = tview.NewInputField()
 	autocomp      = tview.NewList()
 
-	// ChannelID stores the current channel's ID
-	ChannelID int64
+	// Channel.ID stores the current channel's ID
+	Channel *discordgo.Channel
 
 	// LastAuthor stores for appending messages
 	// TODO: migrate to table + lastRow

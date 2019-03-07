@@ -48,11 +48,15 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 				switch buttonLabel {
 				case "Yes":
 					go func() {
+						if Channel == nil {
+							Warn("Not in a channel.")
+						}
+
 						input.SetPlaceholder("Uploading file...")
 
 						br := bytes.NewReader(b)
 						_, err = d.ChannelFileSend(
-							ChannelID,
+							Channel.ID,
 							"clipboard.png",
 							br,
 						)

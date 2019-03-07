@@ -7,7 +7,11 @@ import (
 )
 
 func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
-	if rm.ChannelID != ChannelID {
+	if d == nil || Channel == nil {
+		return
+	}
+
+	if rm.ChannelID != Channel.ID {
 		return
 	}
 

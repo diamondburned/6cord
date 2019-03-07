@@ -1,11 +1,13 @@
 package main
 
 import (
+	"github.com/rumblefrog/discordgo"
 	"github.com/sahilm/fuzzy"
 )
 
 func stateResetter() {
 	channelFuzzyCache = allChannels([]fuzzyReadState{})
+	discordEmojis = DiscordEmojis([]*discordgo.Emoji{})
 	allMessages = []string{}
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()

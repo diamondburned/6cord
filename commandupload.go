@@ -6,6 +6,11 @@ import (
 )
 
 func uploadFile(args []string) {
+	if Channel == nil {
+		Message("You're not in a channel!")
+		return
+	}
+
 	if len(args) < 2 {
 		Message("Missing file path!")
 		return
@@ -20,7 +25,7 @@ func uploadFile(args []string) {
 	fileparts := strings.Split(file.Name(), "/")
 
 	_, err = d.ChannelFileSend(
-		ChannelID,
+		Channel.ID,
 		fileparts[len(fileparts)-1],
 		file,
 	)

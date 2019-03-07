@@ -59,6 +59,10 @@ func getIDfromindex(i int) int64 {
 var loading bool
 
 func loadMore() {
+	if d == nil || Channel == nil {
+		return
+	}
+
 	if loading {
 		return
 	}
@@ -76,13 +80,13 @@ func loadMore() {
 		loading = false
 	}()
 
-	c, err := d.State.Channel(ChannelID)
+	c, err := d.State.Channel(Channel.ID)
 	if err != nil {
 		Warn(err.Error())
 		return
 	}
 
-	msgs, err := d.ChannelMessages(ChannelID, 35, beforeID, 0, 0)
+	msgs, err := d.ChannelMessages(Channel.ID, 35, beforeID, 0, 0)
 	if err != nil {
 		return
 	}
@@ -141,7 +145,6 @@ func loadMore() {
 	})
 
 	input.SetPlaceholder("Done.")
-	app.Draw()
 
 	for i, j := 0, len(msgs)-1; i < j; i, j = i+1, j-1 {
 		msgs[i], msgs[j] = msgs[j], msgs[i]

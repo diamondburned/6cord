@@ -19,15 +19,20 @@ func matchCopyMessage(text []string) {
 		return
 	}
 
+	if Channel == nil {
+		Message("You're not in a channel!")
+		return
+	}
+
 	var message *discordgo.Message
 
-	m, err := d.State.Message(ChannelID, int64(residue))
+	m, err := d.State.Message(Channel.ID, int64(residue))
 	if err == nil {
 		message = m
 	} else {
 		for i := len(messageStore) - 1; i >= 0; i-- {
 			if ID := getIDfromindex(i); ID != 0 {
-				m, err := d.State.Message(ChannelID, ID)
+				m, err := d.State.Message(Channel.ID, ID)
 				if err != nil {
 					continue
 				}

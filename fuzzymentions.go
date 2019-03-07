@@ -26,10 +26,18 @@ func (gm UserStoreArray) Len() int {
 }
 
 // FuzzyMembers fuzzy searches and returns the slice of results
-func FuzzyMembers(pattern string, s *UserStore) (fzr UserStoreArray) {
-	results := fuzzy.FindFrom(pattern, s.Data)
+func FuzzyMembers(pattern string, s *UserStore, guildID int64) (fzr UserStoreArray) {
+	s.RLock()
+	defer s.RUnlock()
+
+	this, ok := s.Guilds[guildID]
+	if !ok {
+		return
+	}
+
+	results := fuzzy.FindFrom(pattern, this)
 	for i := 0; i < len(results) && i < 10; i++ {
-		fzr = append(fzr, s.Data[results[i].Index])
+		fzr = append(fzr, this[results[i].Index])
 	}
 
 	return
@@ -40,7 +48,7 @@ func fuzzyMentions(last string) {
 
 	if len(last) > 0 {
 		fuzzied = FuzzyMembers(
-			strings.TrimPrefix(last, "@"), us,
+			strings.TrimPrefix(last, "@"), us, Channel.GuildID,
 		)
 	}
 

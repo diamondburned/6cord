@@ -19,6 +19,11 @@ const (
 var toEditMessage int64
 
 func editMessage(text []string) {
+	if Channel == nil {
+		Message("You're not in a channel!")
+		return
+	}
+
 	var messageN int
 
 	if len(text) == 2 {
@@ -55,11 +60,11 @@ func editHandler() {
 
 	if i != "" {
 		_, err = d.ChannelMessageEdit(
-			ChannelID, toEditMessage, i,
+			Channel.ID, toEditMessage, i,
 		)
 	} else {
 		err = d.ChannelMessageDelete(
-			ChannelID, toEditMessage,
+			Channel.ID, toEditMessage,
 		)
 	}
 
@@ -73,6 +78,10 @@ func editHandler() {
 }
 
 func editMessageRegex(text string) {
+	if Channel == nil {
+		Message("You're not in a channel!")
+	}
+
 	input := csv.NewReader(strings.NewReader(text))
 	input.Comma = '/' // delimiter
 	args, err := input.Read()
@@ -126,14 +135,14 @@ func editMessageRegex(text string) {
 }
 
 func matchMyMessage(residue int) *discordgo.Message {
-	m, err := d.State.Message(ChannelID, int64(residue))
+	m, err := d.State.Message(Channel.ID, int64(residue))
 	if err == nil && m.Author.ID == d.State.User.ID {
 		return m
 	}
 
 	for i := len(messageStore) - 1; i >= 0; i-- {
 		if ID := getIDfromindex(i); ID != 0 {
-			m, err := d.State.Message(ChannelID, ID)
+			m, err := d.State.Message(Channel.ID, ID)
 			if err != nil {
 				continue
 			}

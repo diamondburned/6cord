@@ -1,6 +1,8 @@
 package main
 
 import (
+	"sync"
+
 	"github.com/rumblefrog/discordgo"
 )
 
@@ -15,14 +17,16 @@ type User struct {
 
 // UserStore stores multiple users
 type UserStore struct {
-	GuildID int64
-	Data    UserStoreArray
+	sync.RWMutex
+	Guilds map[int64]UserStoreArray
 }
 
 // UserStoreArray is an array
 type UserStoreArray []User
 
-var us = &UserStore{}
+var us = &UserStore{
+	Guilds: map[int64]UserStoreArray{},
+}
 
 // Reset resets the store
 func (s *UserStore) Reset(guildID int64) {
@@ -30,36 +34,23 @@ func (s *UserStore) Reset(guildID int64) {
 		return
 	}
 
-	s.GuildID = guildID
-	s.Data = []User{}
+	s.Lock()
+	defer s.Unlock()
+
+	s.Guilds[guildID] = UserStoreArray([]User{})
 }
 
 // InStore checks if a user is in the store
-func (s *UserStore) InStore(id int64) bool {
+func (s *UserStore) InStore(guildID, id int64) bool {
 	if s == nil {
 		return false
 	}
 
-	if _, u := s.GetUser(id); u != nil {
+	if _, u := s.GetUser(guildID, id); u != nil {
 		return true
 	}
 
 	return false
-}
-
-// AddUser adds an user into the store
-func (s *UserStore) AddUser(id int64, name, nick, discrim string, color int) {
-	if s.InStore(id) {
-		return
-	}
-
-	s.Data = append(s.Data, User{
-		ID:      id,
-		Discrim: discrim,
-		Name:    name,
-		Nick:    nick,
-		Color:   color,
-	})
 }
 
 // DiscordThis interfaces with DiscordGo
@@ -71,7 +62,16 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 		return
 	}
 
-	_, user := s.GetUser(m.Author.ID)
+	if m.GuildID == 0 {
+		channel, err := d.State.Channel(m.ChannelID)
+		if err != nil {
+			return
+		}
+
+		m.GuildID = channel.GuildID
+	}
+
+	_, user := s.GetUser(m.GuildID, m.Author.ID)
 	if user != nil {
 		n = user.Name
 		c = user.Color
@@ -84,7 +84,8 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	}
 
 	nick, color := getUserData(m.Author, m.ChannelID)
-	s.AddUser(
+	s.UpdateUser(
+		m.GuildID,
 		m.Author.ID,
 		m.Author.Username,
 		nick,
@@ -102,49 +103,54 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	return
 }
 
-// GetUser returns the index of the array and the user for that ID
-func (s *UserStore) GetUser(id int64) (int, *User) {
-	for i, u := range s.Data {
-		if u.ID == id {
-			return i, &u
+// GetUser returns the index and user for that ID
+func (s *UserStore) GetUser(guildID, id int64) (int, *User) {
+	s.RLock()
+	defer s.RUnlock()
+
+	if v, ok := s.Guilds[guildID]; ok {
+		for i, u := range v {
+			if u.ID == id {
+				return i, &u
+			}
 		}
 	}
 
-	return -1, nil
-}
-
-// GetGuildID returns the guildID for the store
-func (s *UserStore) GetGuildID() int64 {
-	return s.GuildID
+	return 0, nil
 }
 
 // RemoveUser removes the user from the store
-func (s *UserStore) RemoveUser(id int64) {
+func (s *UserStore) RemoveUser(guildID, id int64) {
 	var index int
 
-	for i, u := range s.Data {
-		if u.ID == id {
-			index = i
-			goto Remove
+	s.Lock()
+	defer s.Unlock()
+
+	if v, ok := s.Guilds[guildID]; ok {
+		for i, u := range v {
+			if u.ID == id {
+				index = i
+				goto Remove
+			}
 		}
 	}
 
 	return
 
 Remove:
-	var st = s.Data
+	var st = s.Guilds[guildID]
 
 	st[len(st)-1], st[index] = st[index], st[len(st)-1]
-	s.Data = st[:len(st)-1]
+	s.Guilds[guildID] = st[:len(st)-1]
 }
 
 // UpdateUser updates an user
-func (s *UserStore) UpdateUser(id int64, name, nick, discrim string, color int) {
+func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, color int) {
 	if s == nil {
 		return
 	}
 
-	if i, u := s.GetUser(id); u != nil {
+	if i, u := s.GetUser(guildID, id); u != nil {
 		if name != "" {
 			u.Name = name
 		}
@@ -161,9 +167,20 @@ func (s *UserStore) UpdateUser(id int64, name, nick, discrim string, color int) 
 			u.Color = color
 		}
 
-		s.Data[i] = *u
+		s.Lock()
+		defer s.Unlock()
 
+		s.Guilds[guildID][i] = *u
 	} else {
-		us.AddUser(id, name, nick, discrim, color)
+		s.Lock()
+		defer s.Unlock()
+
+		s.Guilds[guildID] = append(s.Guilds[guildID], User{
+			ID:      id,
+			Discrim: discrim,
+			Name:    name,
+			Nick:    nick,
+			Color:   color,
+		})
 	}
 }

@@ -65,7 +65,7 @@ func Message(m string) {
 		0, strings.Join(c, "\n"),
 	)
 
-	app.QueueUpdate(func() {
+	app.QueueUpdateDraw(func() {
 		messagesView.Write([]byte(msg))
 	})
 

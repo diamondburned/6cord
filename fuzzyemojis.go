@@ -20,29 +20,34 @@ func (de DiscordEmojis) Len() int {
 	return len(de)
 }
 
+var discordEmojis = DiscordEmojis([]*discordgo.Emoji{})
+
 func fuzzyEmojis(last string) {
-	var (
-		fuzzied []fuzzy.Match
-		emojis  DiscordEmojis
-	)
+	var fuzzied []fuzzy.Match
 
-	if len(last) > 0 {
-		c, err := d.State.Channel(ChannelID)
-		if err != nil {
-			return
-		}
+	if len(last) > 0 && Channel != nil {
+		if len(discordEmojis) < 1 {
+			c, err := d.State.Channel(Channel.ID)
+			if err != nil {
+				return
+			}
 
-		g, err := d.State.Guild(c.GuildID)
-		if err == nil {
-			emojis = g.Emojis
-			emojis = append(emojis, demojis.DiscordEmojis...)
-		} else {
-			emojis = demojis.DiscordEmojis
+			emojis := DiscordEmojis{}
+
+			g, err := d.State.Guild(c.GuildID)
+			if err == nil {
+				emojis = g.Emojis
+				emojis = append(emojis, demojis.DiscordEmojis...)
+			} else {
+				emojis = demojis.DiscordEmojis
+			}
+
+			discordEmojis = emojis
 		}
 
 		fuzzied = fuzzy.FindFrom(
 			strings.TrimPrefix(last, ":"),
-			emojis,
+			discordEmojis,
 		)
 	}
 
@@ -65,9 +70,11 @@ func fuzzyEmojis(last string) {
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
 		autofillfunc = func(i int) {
+			defer stateResetter()
+
 			var (
 				words  = strings.Fields(input.GetText())
-				emoji  = emojis[fuzzied[i].Index]
+				emoji  = discordEmojis[fuzzied[i].Index]
 				insert string
 			)
 

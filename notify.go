@@ -62,7 +62,7 @@ func mentionHandler(m *discordgo.MessageCreate) {
 
 	// Walk the tree for the sake of a (1)
 
-	if m.ChannelID == ChannelID {
+	if Channel != nil && m.ChannelID == Channel.ID {
 		return
 	}
 

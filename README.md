@@ -19,6 +19,12 @@
 - Plans:
   - Disable focus on the message view and use Alt+Arrows instead (considering)
 
+## Tricks
+
+- To get the following colors, use the variable
+	- Monochrome: `TERM=xtermm`
+	- Terminal colors: `TERM=xterm-basic`
+
 ## Todo
 
 - [ ] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)

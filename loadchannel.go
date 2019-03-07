@@ -13,10 +13,11 @@ import (
 
 func loadChannel(channelID int64) {
 	wrapFrame.SetTitle("[Loading...]")
+	app.Draw()
 
 	ch, err := d.State.Channel(channelID)
 	if err != nil {
-		ch, err = d.Channel(ChannelID) // todo: state first
+		ch, err = d.Channel(channelID)
 		if err != nil {
 			Warn(err.Error())
 			return
@@ -32,7 +33,7 @@ func loadChannel(channelID int64) {
 		return
 	}
 
-	ChannelID = ch.ID
+	Channel = ch
 
 	var frameTitle string
 
@@ -57,13 +58,11 @@ func loadChannel(channelID int64) {
 	}
 
 	wrapFrame.SetTitle(tview.Escape(frameTitle))
+	app.Draw()
+
 	typing.Reset()
 
-	if us.GetGuildID() != ch.GuildID {
-		us.Reset(ch.GuildID)
-	}
-
-	msgs, err := d.ChannelMessages(ChannelID, 35, 0, 0, 0)
+	msgs, err := d.ChannelMessages(Channel.ID, 35, 0, 0, 0)
 	if err != nil {
 		Warn(err.Error())
 		return
@@ -88,10 +87,6 @@ func loadChannel(channelID int64) {
 
 	for i := 0; i < len(msgs); i++ {
 		m := msgs[i]
-
-		//wg.Add(1)
-		//go func(m *discordgo.Message, i int) {
-		//defer wg.Done()
 
 		if rstore.Check(m.Author, RelationshipBlocked) {
 			continue
@@ -122,11 +117,7 @@ func loadChannel(channelID int64) {
 		))
 
 		d.State.MessageAdd(m)
-
-		//}(m, i)
 	}
-
-	//wg.Wait()
 
 	setLastAuthor(msgs[len(msgs)-1].Author.ID)
 
@@ -179,6 +170,7 @@ func loadChannel(channelID int64) {
 			}
 
 			us.UpdateUser(
+				guild.ID,
 				m.User.ID,
 				m.User.Username,
 				m.Nick,

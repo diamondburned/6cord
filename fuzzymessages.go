@@ -13,10 +13,10 @@ var allMessages []string
 func fuzzyMessages(text string) {
 	var fuzzied []string
 
-	if len(allMessages) == 0 {
+	if len(allMessages) == 0 && Channel != nil {
 		for i := len(messageStore) - 1; i >= 0; i-- {
 			if ID := getIDfromindex(i); ID != 0 {
-				m, err := d.State.Message(ChannelID, ID)
+				m, err := d.State.Message(Channel.ID, ID)
 				if err != nil {
 					continue
 				}
