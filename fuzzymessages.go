@@ -80,7 +80,7 @@ func fuzzyMessages(text string) {
 				strings.Split(fuzzied[i], " - ")[0],
 			)
 
-			input.SetText(strings.Join(withoutlast, " "))
+			input.SetText(strings.Join(withoutlast, " ") + " ")
 
 			clearList()
 			app.SetFocus(input)
