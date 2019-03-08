@@ -6,7 +6,7 @@ package main
 import (
 	"sync"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func relationshipAdd(s *discordgo.Session, ra *discordgo.RelationshipAdd) {

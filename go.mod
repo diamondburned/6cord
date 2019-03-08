@@ -7,14 +7,14 @@ require (
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.1
 	github.com/bwmarrin/dgvoice v0.0.0-20170706020935-3c939eca8b2f
-	github.com/bwmarrin/discordgo v0.18.0
+	github.com/bwmarrin/discordgo v0.19.0
 	github.com/davecgh/go-spew v1.1.1
+	github.com/diamondburned/discordgo v1.0.5
 	github.com/diamondburned/mark v0.2.2
 	github.com/gdamore/tcell v1.1.1
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
-	github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c // indirect
 	github.com/marcusolsson/tui-go v0.4.0
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/rivo/tview v0.0.0-20190213202703-b373355e9db4

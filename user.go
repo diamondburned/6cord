@@ -6,7 +6,7 @@ import (
 
 	"github.com/rivo/tview"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func userSettingsUpdate(s *discordgo.Session, settings *discordgo.UserSettingsUpdate) {

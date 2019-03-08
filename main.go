@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
+	"github.com/diamondburned/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/md"
 )
@@ -363,7 +363,7 @@ func main() {
 	d.AddHandler(reactionAdd)
 	d.AddHandler(reactionRemove)
 	d.AddHandler(reactionRemoveAll)
-	// d.AddHandler(onTyping) - still broken
+	d.AddHandler(onTyping)
 	d.AddHandler(messageAck)
 	d.AddHandler(voiceStateUpdate)
 	d.AddHandler(userSettingsUpdate)
@@ -383,6 +383,9 @@ func main() {
 		d.AddHandler(func(s *discordgo.Session, dc *discordgo.Disconnect) {
 			log.Println(spew.Sdump(dc))
 		})
+
+		d.Debug = true
+		d.LogLevel = discordgo.LogDebug
 
 		// d.AddHandler(func(s *discordgo.Session, i interface{}) {
 		// 	log.Println(spew.Sdump(i))

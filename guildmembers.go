@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func guildMemberAdd(s *discordgo.Session, gma *discordgo.GuildMemberAdd) {

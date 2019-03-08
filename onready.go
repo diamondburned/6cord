@@ -5,7 +5,7 @@ import (
 
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {

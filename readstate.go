@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {

@@ -3,7 +3,7 @@ package main
 import (
 	"sync"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 // User is used for one user
@@ -28,16 +28,18 @@ var us = &UserStore{
 	Guilds: map[int64]UserStoreArray{},
 }
 
-// Reset resets the store
-func (s *UserStore) Reset(guildID int64) {
+// Populated returns a bool on whether or not the array
+// alraedy is populated
+func (s *UserStore) Populated(guildID int64) bool {
 	if s == nil {
-		return
+		return false
 	}
 
-	s.Lock()
-	defer s.Unlock()
+	if guildID == 0 {
+		return true
+	}
 
-	s.Guilds[guildID] = UserStoreArray([]User{})
+	return len(s.Guilds[guildID]) > 0
 }
 
 // InStore checks if a user is in the store

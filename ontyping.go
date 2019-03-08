@@ -1,31 +1,21 @@
 package main
 
 import (
-	"log"
-	"sort"
 	"sync"
 	"time"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 // TypingUsers is a store for all typing users
 type TypingUsers struct {
-	Store []TypingUser
-	lock  sync.RWMutex
-}
-
-// TypingUser one user
-type TypingUser struct {
-	ID   int64
-	Time time.Time
+	sync.RWMutex
+	Store []*discordgo.TypingStart
 }
 
 var typing = &TypingUsers{}
 
 func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
-	// Message(spew.Sdump(ts))
-
 	if Channel == nil {
 		return
 	}
@@ -34,41 +24,71 @@ func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 		return
 	}
 
-	log.Println(ts.UserID, ts.Timestamp)
-	typing.AddUser(ts.UserID, time.Now())
-}
-
-func renderCallback(tu *TypingUsers) {
-	ch, err := d.State.Channel(Channel.ID)
-	if err != nil {
+	if ts.UserID == d.State.User.ID {
 		return
 	}
 
-	var mems []string
+	typing.AddUser(ts)
+}
 
-	for _, st := range tu.Store {
-		m, err := d.State.Member(ch.GuildID, st.ID)
-		if err != nil {
-			continue
+func renderCallback(tu *TypingUsers) {
+	var (
+		mems []string
+		text = DefaultStatus
+	)
+
+	if len(tu.Store) > 0 {
+		for _, st := range tu.Store {
+			if st.GuildID != 0 {
+				_, user := us.GetUser(
+					st.GuildID, st.UserID,
+				)
+
+				if user != nil {
+					var name = user.Nick
+					if name == "" {
+						name = user.Name
+					}
+
+					mems = append(mems, name)
+				} else {
+					m, err := d.State.Member(st.GuildID, st.UserID)
+					if err != nil {
+						continue
+					}
+
+					var name = m.Nick
+					if name == "" {
+						name = m.User.Username
+					}
+
+					mems = append(mems, name)
+				}
+			} else {
+				ch, err := d.State.Channel(Channel.ID)
+				if err != nil {
+					continue
+				}
+
+				for _, r := range ch.Recipients {
+					if r.ID == st.UserID {
+						mems = append(mems, r.Username)
+					}
+				}
+			}
 		}
 
-		if m.Nick != "" {
-			mems = append(mems, m.Nick)
-		} else {
-			mems = append(mems, m.User.Username)
+		text = HumanizeStrings(mems)
+		switch {
+		case len(mems) < 1:
+			text = "Send a message or input a command"
+		case len(mems) > 3:
+			text = "Several people are typing···"
+		case len(mems) == 1:
+			text += " is typing···"
+		case len(mems) > 1:
+			text += " are typing···"
 		}
-	}
-
-	text := HumanizeStrings(mems)
-	switch {
-	case len(mems) < 1:
-		text = "Send a message or input a command"
-	case len(mems) > 3:
-		text = "Several people are typing···"
-	case len(mems) == 1:
-		text += " is typing···"
-	case len(mems) > 1:
-		text += " are typing···"
 	}
 
 	input.SetPlaceholder(text)
@@ -76,57 +96,61 @@ func renderCallback(tu *TypingUsers) {
 
 // Reset resets the store
 func (tu *TypingUsers) Reset() {
-	tu.lock.Lock()
-	defer tu.lock.Unlock()
+	tu.Lock()
+	defer tu.Unlock()
 
-	tu.Store = []TypingUser{}
+	tu.Store = []*discordgo.TypingStart{}
+	go renderCallback(tu)
 }
 
 // AddUser this function needs to run in a goroutine
-func (tu *TypingUsers) AddUser(id int64, t time.Time) {
-	tu.lock.Lock()
+func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
+	tu.RLock()
 
-	tu.Store = append(tu.Store, TypingUser{
-		ID:   id,
-		Time: t,
-	})
+	for _, t := range tu.Store {
+		if t.UserID == ts.UserID {
+			tu.RUnlock()
+			return
+		}
+	}
+
+	tu.RUnlock()
+
+	tu.Lock()
+
+	tu.Store = append(tu.Store, ts)
 
 	// Might be overkill
-	sort.Slice(tu.Store, func(i, j int) bool {
-		return tu.Store[i].Time.UnixNano() <
-			tu.Store[j].Time.UnixNano()
-	})
+	/*
+		sort.Slice(tu.Store, func(i, j int) bool {
+			return tu.Store[i].Time.UnixNano() <
+				tu.Store[j].Time.UnixNano()
+		})
+	*/
 
-	tu.lock.Unlock()
+	tu.Unlock()
 
 	renderCallback(tu)
 
 	// 6 seconds according to djs code
 	time.Sleep(time.Second * 10)
 
-	tu.lock.Lock()
-	defer tu.lock.Unlock()
-
-	tu.RemoveUser(id)
+	tu.RemoveUser(ts)
 
 	renderCallback(tu)
 }
 
 // RemoveUser removes a user from a store array
-func (tu *TypingUsers) RemoveUser(id int64) {
+func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) {
+	tu.Lock()
+	defer tu.Unlock()
+
 	for i, d := range tu.Store {
-		if d.ID == id {
-			switch {
-			case len(tu.Store)-1 == i:
-				tu.Store = tu.Store[:i-1]
-			case i == 0:
-				tu.Store = tu.Store[i+1:]
-			default:
-				tu.Store = append(
-					tu.Store[:i],
-					tu.Store[i+1:]...,
-				)
-			}
+		if d == ts {
+			tu.Store = append(
+				tu.Store[:i],
+				tu.Store[i+1:]...,
+			)
 
 			return
 		}

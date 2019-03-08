@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {

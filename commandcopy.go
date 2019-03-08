@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/atotto/clipboard"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func matchCopyMessage(text []string) {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 const (

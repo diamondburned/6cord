@@ -4,7 +4,7 @@ package main
 //"log"
 
 //"github.com/gordonklaus/portaudio"
-//"github.com/rumblefrog/discordgo"
+//"github.com/diamondburned/discordgo"
 //"gitlab.com/diamondburned/dgvoice"
 //)
 

@@ -4,7 +4,7 @@ package demojis
 // EMOJICODEMAP CODE GENERATION TOOL (github.com/kyokomi/generateEmojiCodeMap)
 // DO NOT EDIT
 
-// Taken from github.com/rumblefrog/discordgo / emoji_codemap.go
+// Taken from github.com/diamondburned/discordgo / emoji_codemap.go
 
 // Mapping from character to concrete escape code.
 var emojiCodeMap = map[string]string{

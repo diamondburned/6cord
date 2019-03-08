@@ -8,7 +8,7 @@ import (
 	"strings"
 
 	"github.com/gdamore/tcell"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 const (

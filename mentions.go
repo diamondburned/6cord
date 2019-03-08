@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 const mentionsEndpoint = "https://discordapp.com/api/v6/users/@me/mentions?limit=%d&roles=true&everyone=true"

@@ -1,7 +1,7 @@
 package demojis
 
 import (
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 	"github.com/sahilm/fuzzy"
 )
 

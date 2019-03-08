@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 	"gitlab.com/diamondburned/6cord/md"
 )
 

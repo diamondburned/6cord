@@ -1,6 +1,6 @@
 package main
 
-import "github.com/rumblefrog/discordgo"
+import "github.com/diamondburned/discordgo"
 
 func reactionAdd(s *discordgo.Session, ra *discordgo.MessageReactionAdd) {
 	if Channel == nil || ra.ChannelID != Channel.ID {

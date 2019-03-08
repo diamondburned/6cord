@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func messagePingable(m *discordgo.Message, gID int64) bool {

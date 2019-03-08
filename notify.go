@@ -5,7 +5,7 @@ import (
 
 	"github.com/gen2brain/beeep"
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func mentionHandler(m *discordgo.MessageCreate) {

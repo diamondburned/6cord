@@ -40,9 +40,9 @@
 	- A method to call this, preferably by
 		- A keybind when on the guild tree
 		- Commands: `/pins` , `/members`, etc
-- [ ] Typing events
+- [x] Typing events
 	- [x] The client sends the typing event
-	- [ ] The client receives and indicates typing events
+	- [x] The client receives and indicates typing events
 - [x] Commands
     - [x] `/goto`
     - [x] `/edit`

@@ -7,8 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/diamondburned/discordgo"
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
 )
 
 func loadChannel(channelID int64) {
@@ -61,6 +61,12 @@ func loadChannel(channelID int64) {
 	app.Draw()
 
 	typing.Reset()
+
+	if !us.Populated(Channel.GuildID) {
+		d.GatewayManager.SubscribeGuild(
+			Channel.GuildID, true, true,
+		)
+	}
 
 	msgs, err := d.ChannelMessages(Channel.ID, 35, 0, 0, 0)
 	if err != nil {

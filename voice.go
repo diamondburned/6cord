@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/rivo/tview"
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 )
 
 func voiceStateUpdate(s *discordgo.Session, vsu *discordgo.VoiceStateUpdate) {

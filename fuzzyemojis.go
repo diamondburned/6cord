@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rumblefrog/discordgo"
+	"github.com/diamondburned/discordgo"
 	"github.com/sahilm/fuzzy"
 	"gitlab.com/diamondburned/6cord/demojis"
 )
