@@ -11,11 +11,11 @@ import (
 
 func resetInputBehavior() {
 	app.QueueUpdate(func() {
-		input.SetLabel(CommandPrefix)
-		input.SetPlaceholder(DefaultStatus)
-		input.SetLabelColor(BackgroundColor)
-		input.SetBackgroundColor(BackgroundColor)
-		input.SetFieldBackgroundColor(BackgroundColor)
+		input.SetLabel(cfg.CommandPrefix)
+		input.SetPlaceholder(cfg.DefaultStatus)
+		input.SetLabelColor(tcell.Color(cfg.BackgroundColor))
+		input.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+		input.SetFieldBackgroundColor(tcell.Color(cfg.BackgroundColor))
 		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 		input.SetText("")
 
@@ -61,7 +61,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 							br,
 						)
 
-						input.SetPlaceholder(DefaultStatus)
+						input.SetPlaceholder(cfg.DefaultStatus)
 
 						if err != nil {
 							Warn(err.Error())

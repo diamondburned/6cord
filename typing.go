@@ -10,7 +10,7 @@ var (
 func typingTrigger() {
 	select {
 	case <-typingTimer.C:
-		if TriggerTyping {
+		if cfg.TriggerTyping {
 			if Channel == nil {
 				return
 			}

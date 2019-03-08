@@ -9,7 +9,7 @@ import (
 
 func commandMentions(text []string) {
 	input.SetPlaceholder("Loading mentions...")
-	defer input.SetPlaceholder(DefaultStatus)
+	defer input.SetPlaceholder(cfg.DefaultStatus)
 
 	mentions, err := getMentions()
 	if err != nil {

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rivo/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/rivo/tview"
 )
 
 var chatPadding = func() (s string) {
-	for i := 0; i < ChatPadding; i++ {
+	for i := 0; i < cfg.ChatPadding; i++ {
 		s += " "
 	}
 

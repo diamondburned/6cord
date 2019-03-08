@@ -59,7 +59,7 @@ var (
 
 // Check returns true if user is blocked
 func (rs *RStore) Check(u *discordgo.User, relationship Relationship) bool {
-	if !HideBlocked && relationship == RelationshipBlocked {
+	if !cfg.HideBlocked && relationship == RelationshipBlocked {
 		return false
 	}
 

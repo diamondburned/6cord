@@ -1,6 +1,6 @@
 package main
 
-var showChannels = ShowChannelsOnStartup
+var showChannels = cfg.ShowChannelsOnStartup
 
 func toggleChannels() {
 	if showChannels {

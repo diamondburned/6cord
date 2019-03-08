@@ -24,7 +24,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
+	if rstore.Check(m.Author, RelationshipBlocked) && cfg.HideBlocked {
 		return
 	}
 
@@ -47,6 +47,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if !isRegularMessage(m.Message) {
 		return
+	}
+
+	if m.Author.ID != d.State.User.ID {
+		ackMe(m.Message)
 	}
 
 	if typing.RemoveUser(&discordgo.TypingStart{
