@@ -132,8 +132,7 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 
 	renderCallback(tu)
 
-	// 6 seconds according to djs code
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 15)
 
 	tu.RemoveUser(ts)
 
