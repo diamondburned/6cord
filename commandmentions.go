@@ -19,6 +19,7 @@ func commandMentions(text []string) {
 
 	Channel = nil
 	messageStore = []string{}
+	messagesView.Clear()
 
 	for i := len(mentions) - 1; i >= 0; i-- {
 		m := mentions[i]

@@ -5,12 +5,12 @@ import (
 	"log"
 	"time"
 
-	"github.com/rivo/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/rivo/tview"
 )
 
 const (
-	authorFormat  = "\n\n[#%06X::b]%s[-::-] [::d]%s[::-]"
+	authorFormat  = "\n\n[#%06X::]%s[-::] [::d]%s[::-]"
 	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
 )
 
@@ -47,6 +47,13 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	if !isRegularMessage(m.Message) {
 		return
+	}
+
+	if typing.RemoveUser(&discordgo.TypingStart{
+		UserID:    m.Author.ID,
+		ChannelID: m.ChannelID,
+	}) {
+		go renderCallback(typing)
 	}
 
 	if len(m.Embeds) == 1 {

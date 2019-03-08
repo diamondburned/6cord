@@ -134,24 +134,27 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 
 	time.Sleep(time.Second * 15)
 
-	tu.RemoveUser(ts)
-
-	renderCallback(tu)
+	if tu.RemoveUser(ts) {
+		renderCallback(tu)
+	}
 }
 
 // RemoveUser removes a user from a store array
-func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) {
+// true is returned when a user is found and removed
+func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
 	tu.Lock()
 	defer tu.Unlock()
 
 	for i, d := range tu.Store {
-		if d == ts {
+		if d.UserID == ts.UserID {
 			tu.Store = append(
 				tu.Store[:i],
 				tu.Store[i+1:]...,
 			)
 
-			return
+			return true
 		}
 	}
+
+	return false
 }
