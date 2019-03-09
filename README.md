@@ -1,5 +1,6 @@
 <h1 align="center">6cord</h1>
 <p align="center"><img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" /></p>
+<p align="center"><img src="http://u.cubeupload.com/diamondburned/MCz9fP.png" /></p>
 
 ## Installation
 
