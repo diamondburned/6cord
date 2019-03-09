@@ -1,7 +1,6 @@
 package main
 
 import (
-	"flag"
 	"log"
 	"os"
 	"strings"
@@ -10,6 +9,7 @@ import (
 	"github.com/diamondburned/discordgo"
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
+	"github.com/stevenroose/gonfig"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/md"
 )
@@ -17,9 +17,6 @@ import (
 const (
 	// AppName used for keyrings
 	AppName = "6cord"
-
-	// DefaultStatus is used as the default message in the status bar
-	DefaultStatus = "Send a message or input a command"
 )
 
 var (
@@ -33,23 +30,63 @@ var (
 	input         = tview.NewInputField()
 	autocomp      = tview.NewList()
 
-	// Channel.ID stores the current channel's ID
+	// Channel stores the current channel's pointer
 	Channel *discordgo.Channel
 
 	// LastAuthor stores for appending messages
 	// TODO: migrate to table + lastRow
 	LastAuthor int64
 
-	foregroundColor int
-
 	d *discordgo.Session
+
+	cfg Config
 )
 
+// Properties ..
+type Properties struct {
+	ShowChannelsOnStartup      bool   `id:"show-channels"    short:"s"  default:"true"  desc:"Show the left channel bar on startup"`
+	ChatPadding                int    `id:"chat-padding"     short:"pd"  default:"2"     desc:"Determine the default indentation of messages from the left side"`
+	HideBlocked                bool   `id:"hide-blocked"     short:"h"  default:"true"  desc:"Ignore all blocked users"`
+	TriggerTyping              bool   `id:"trigger-typing"   short:"tt" default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients"`
+	ForegroundColor            int    `id:"foreground-color" short:"fg" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white"`
+	BackgroundColor            int    `id:"background-color" short:"bg" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)"`
+	CommandPrefix              string `id:"command-prefix"   short:"pr" default:"[-]> " desc:"The prefix of the input box"`
+	DefaultStatus              string `id:"default-status"   short:"ds" default:"Send a message or input a command" desc:"The message in the status bar"`
+	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" short:"hl" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
+	ShowEmojiURLs              bool   `id:"show-emoji-urls"  short:"em" default:"true"  desc:"Converts emojis into clickable URLs"`
+}
+
+type Config struct {
+	Username string `id:"username" short:"u" default:"" desc:"Used when token is empty, avoid if 2FA"`
+	Password string `id:"password" short:"p" default:"" desc:"Used when token is empty"`
+	Token    string `id:"token" short:"t" default:"" desc:"Authentication Token, recommended way of using"`
+
+	Prop Properties `id:"properties"`
+
+	Debug bool `id:"debug" short:"d" default:"false" desc:"Enables debug mode"`
+
+	Config string `short:"c"`
+}
+
 func init() {
-	md.HighlightStyle = SyntaxHighlightColorscheme
+	err := gonfig.Load(&cfg, gonfig.Conf{
+		ConfigFileVariable:  "config", // enables passing --configfile myfile.conf
+		FileDefaultFilename: "6cord.toml",
+		FileDecoder:         gonfig.DecoderTOML,
+		EnvPrefix:           "6cord_",
+	})
+
+	if err != nil {
+		panic(err)
+	}
+
+	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
 
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
-		s.Clear()
+		if cfg.Prop.BackgroundColor == -1 {
+			s.Clear()
+		}
+
 		return false
 	})
 
@@ -57,18 +94,6 @@ func init() {
 }
 
 func main() {
-	token := flag.String("t", "", "Discord token (1)")
-
-	username := flag.String("u", "", "Username/Email (2)")
-	password := flag.String("p", "", "Password (2)")
-
-	debug := flag.Bool("d", false, "Logs extra events")
-	fgColor := flag.Int("fgc", 15, "Default foreground color, 0-255, 0 is black, 15 is white")
-
-	flag.Parse()
-
-	foregroundColor = *fgColor
-
 	tview.Borders.HorizontalFocus = tview.Borders.Horizontal
 	tview.Borders.VerticalFocus = tview.Borders.Vertical
 
@@ -95,8 +120,8 @@ func main() {
 	messagesView.SetWordWrap(false)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
-	messagesView.SetTextColor(tcell.Color(foregroundColor))
-	messagesView.SetBackgroundColor(BackgroundColor)
+	messagesView.SetTextColor(tcell.Color(cfg.Prop.ForegroundColor))
+	messagesView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 	messagesView.SetText(`    [::b]Quick Start[::-]
         - Right arrow from guild list to focus to input
 		- Left arrow from input to focus to guild list
@@ -110,25 +135,26 @@ func main() {
 	)
 
 	switch {
-	case *token != "":
-		login = append(login, *token)
+	case cfg.Token != "":
+		login = append(login, cfg.Token)
 
 		if err := keyring.Delete(AppName, "token"); err == nil {
 			log.Println("Keyring deleted.")
 		}
 
-	case *username != "", *password != "":
-		login = append(login, *username)
-		login = append(login, *password)
+	case cfg.Username != "" && cfg.Password != "":
+		login = append(login, cfg.Username)
+		login = append(login, cfg.Password)
 
-		if *token != "" {
-			login = append(login, *token)
+		if cfg.Token != "" {
+			login = append(login, cfg.Token)
 		}
 
 	default:
 		k, err := keyring.Get(AppName, "token")
 		if err != nil {
-			log.Fatalln("Token OR username + password missing! Refer to -h")
+			println("Token OR username + password missing! Refer to -h")
+			log.Fatalln()
 		}
 
 		login = append(login, k)
@@ -146,7 +172,7 @@ func main() {
 	// Main app page
 
 	appflex.SetDirection(tview.FlexColumn)
-	appflex.SetBackgroundColor(BackgroundColor)
+	appflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 	{ // Left container
 		guildView.SetPrefixes([]string{"", ""})
@@ -158,9 +184,9 @@ func main() {
 		guildView.SetTitle("[Servers[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 
-		guildView.SetBackgroundColor(BackgroundColor)
-		guildView.SetGraphicsColor(tcell.Color(foregroundColor))
-		guildView.SetTitleColor(tcell.Color(foregroundColor))
+		guildView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+		guildView.SetGraphicsColor(tcell.Color(cfg.Prop.ForegroundColor))
+		guildView.SetTitleColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			return nil
@@ -171,7 +197,7 @@ func main() {
 
 	{ // Right container
 		rightflex.SetDirection(tview.FlexRow)
-		rightflex.SetBackgroundColor(BackgroundColor)
+		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
@@ -179,15 +205,15 @@ func main() {
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
-		wrapFrame.SetTitleColor(tcell.Color(foregroundColor))
-		wrapFrame.SetBackgroundColor(BackgroundColor)
+		wrapFrame.SetTitleColor(tcell.Color(cfg.Prop.ForegroundColor))
+		wrapFrame.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		autocomp.ShowSecondaryText(false)
-		autocomp.SetBackgroundColor(BackgroundColor)
-		autocomp.SetMainTextColor(tcell.Color(foregroundColor))
-		autocomp.SetSelectedTextColor(tcell.Color(15 - foregroundColor))
-		autocomp.SetSelectedBackgroundColor(tcell.Color(foregroundColor))
-		autocomp.SetShortcutColor(tcell.Color(foregroundColor))
+		autocomp.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+		autocomp.SetMainTextColor(tcell.Color(cfg.Prop.ForegroundColor))
+		autocomp.SetSelectedTextColor(tcell.Color(15 - cfg.Prop.ForegroundColor))
+		autocomp.SetSelectedBackgroundColor(tcell.Color(cfg.Prop.ForegroundColor))
+		autocomp.SetShortcutColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
@@ -221,7 +247,7 @@ func main() {
 
 		resetInputBehavior()
 		input.SetInputCapture(inputKeyHandler)
-		input.SetFieldTextColor(tcell.Color(foregroundColor))
+		input.SetFieldTextColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {
@@ -272,12 +298,12 @@ func main() {
 		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
-		messagesFrame.SetBackgroundColor(BackgroundColor)
+		messagesFrame.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		rightflex.AddItem(messagesFrame, 0, 1, false)
 		rightflex.AddItem(autocomp, 1, 1, true)
 		rightflex.AddItem(input, 1, 1, true)
-		rightflex.SetBackgroundColor(BackgroundColor)
+		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		appflex.AddItem(wrapFrame, 0, 2, true)
 	}
@@ -349,7 +375,7 @@ func main() {
 	discordgo.Logger = func(msgL, caller int, format string, a ...interface{}) {
 		log.Println("Discordgo:", msgL, caller, format, a)
 
-		if *debug {
+		if cfg.Debug {
 			// Unsure if I should have spew as a dependency
 			log.Println(spew.Sdump(a))
 		}
@@ -373,7 +399,7 @@ func main() {
 	d.AddHandler(guildMemberUpdate)
 	d.AddHandler(guildMemberRemove)
 
-	if *debug {
+	if cfg.Debug {
 		d.AddHandler(onTyping)
 
 		d.AddHandler(func(s *discordgo.Session, r *discordgo.Resumed) {

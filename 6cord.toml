@@ -1,0 +1,25 @@
+# Username and password authentication flow
+# NOT recommended, neither me nor Discord
+username = ""
+password = ""
+
+# Token authentication flow
+# RECOMMENDED
+token = ""
+
+[[ properties ]]
+	# Refer to ./6cord -h for details.
+	# Defaults are rather defined in the code, which is why this
+	# should only be used as a reference on how to configure.
+	# Keys are optional.
+	show-channels = true
+	chat-padding = 2
+	hide-blocked = true
+	trigger-typing = true
+	foreground-color = 15
+	background-color = -1
+	command-prefix = "[-]> "
+	default-status = "Send a message or input a command"
+	syntax-highlight-colorscheme = "emacs"
+	show-emoji-urls = true
+

@@ -25,7 +25,7 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 
 			if i > 0 && len(messageStore)-1 > i {
 				if (strings.HasPrefix(messageStore[i-1], "\n\n[#")) &&
-					strings.HasPrefix(messageStore[i+1], "\n[\"") {
+					!strings.HasPrefix(messageStore[i+1], "\n[\"") {
 
 					prev = 1
 					setLastAuthor(0)

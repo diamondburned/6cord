@@ -34,7 +34,7 @@ func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 func renderCallback(tu *TypingUsers) {
 	var (
 		mems []string
-		text = DefaultStatus
+		text = cfg.Prop.DefaultStatus
 	)
 
 	if len(tu.Store) > 0 {
