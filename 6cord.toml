@@ -7,7 +7,7 @@ password = ""
 # RECOMMENDED
 token = ""
 
-[[ properties ]]
+[ properties ]
 	# Refer to ./6cord -h for details.
 	# Defaults are rather defined in the code, which is why this
 	# should only be used as a reference on how to configure.
