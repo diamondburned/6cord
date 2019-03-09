@@ -38,7 +38,7 @@ func parseEmojis(content string) (fmtted string, emojiMap map[string][]string) {
 				-1,
 			)
 
-			if cfg.ShowEmojiURLs {
+			if cfg.Prop.ShowEmojiURLs {
 				emojiMap[nameandID[3]] = []string{
 					tview.Escape(nameandID[2]),
 					fmt.Sprintf(

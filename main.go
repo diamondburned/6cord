@@ -42,13 +42,8 @@ var (
 	cfg Config
 )
 
-// Config ..
-type Config struct {
-	Username string `id:"username" short:"u" default:"" desc:"Used when token is empty, avoid if 2FA"`
-	Password string `id:"password" short:"p" default:"" desc:"Used when token is empty"`
-
-	Token string `id:"token" short:"t" default:"" desc:"Authentication Token, recommended way of using"`
-
+// Properties ..
+type Properties struct {
 	ShowChannelsOnStartup      bool   `id:"show-channels"    short:"s"  default:"true"  desc:"Show the left channel bar on startup"`
 	ChatPadding                int    `id:"chat-padding"     short:"pd"  default:"2"     desc:"Determine the default indentation of messages from the left side"`
 	HideBlocked                bool   `id:"hide-blocked"     short:"h"  default:"true"  desc:"Ignore all blocked users"`
@@ -59,6 +54,14 @@ type Config struct {
 	DefaultStatus              string `id:"default-status"   short:"ds" default:"Send a message or input a command" desc:"The message in the status bar"`
 	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" short:"hl" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
 	ShowEmojiURLs              bool   `id:"show-emoji-urls"  short:"em" default:"true"  desc:"Converts emojis into clickable URLs"`
+}
+
+type Config struct {
+	Username string `id:"username" short:"u" default:"" desc:"Used when token is empty, avoid if 2FA"`
+	Password string `id:"password" short:"p" default:"" desc:"Used when token is empty"`
+	Token    string `id:"token" short:"t" default:"" desc:"Authentication Token, recommended way of using"`
+
+	Prop Properties `id:"properties"`
 
 	Debug bool `id:"debug" short:"d" default:"false" desc:"Enables debug mode"`
 
@@ -68,7 +71,7 @@ type Config struct {
 func init() {
 	err := gonfig.Load(&cfg, gonfig.Conf{
 		ConfigFileVariable:  "config", // enables passing --configfile myfile.conf
-		FileDefaultFilename: "6cord.conf",
+		FileDefaultFilename: "6cord.toml",
 		FileDecoder:         gonfig.DecoderTOML,
 		EnvPrefix:           "6cord_",
 	})
@@ -77,10 +80,10 @@ func init() {
 		panic(err)
 	}
 
-	md.HighlightStyle = cfg.SyntaxHighlightColorscheme
+	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
 
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
-		if cfg.BackgroundColor == -1 {
+		if cfg.Prop.BackgroundColor == -1 {
 			s.Clear()
 		}
 
@@ -117,8 +120,8 @@ func main() {
 	messagesView.SetWordWrap(false)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
-	messagesView.SetTextColor(tcell.Color(cfg.ForegroundColor))
-	messagesView.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+	messagesView.SetTextColor(tcell.Color(cfg.Prop.ForegroundColor))
+	messagesView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 	messagesView.SetText(`    [::b]Quick Start[::-]
         - Right arrow from guild list to focus to input
 		- Left arrow from input to focus to guild list
@@ -169,7 +172,7 @@ func main() {
 	// Main app page
 
 	appflex.SetDirection(tview.FlexColumn)
-	appflex.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+	appflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 	{ // Left container
 		guildView.SetPrefixes([]string{"", ""})
@@ -181,9 +184,9 @@ func main() {
 		guildView.SetTitle("[Servers[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 
-		guildView.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
-		guildView.SetGraphicsColor(tcell.Color(cfg.ForegroundColor))
-		guildView.SetTitleColor(tcell.Color(cfg.ForegroundColor))
+		guildView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+		guildView.SetGraphicsColor(tcell.Color(cfg.Prop.ForegroundColor))
+		guildView.SetTitleColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			return nil
@@ -194,7 +197,7 @@ func main() {
 
 	{ // Right container
 		rightflex.SetDirection(tview.FlexRow)
-		rightflex.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		wrapFrame = tview.NewFrame(rightflex)
 		wrapFrame.SetBorder(true)
@@ -202,15 +205,15 @@ func main() {
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
-		wrapFrame.SetTitleColor(tcell.Color(cfg.ForegroundColor))
-		wrapFrame.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+		wrapFrame.SetTitleColor(tcell.Color(cfg.Prop.ForegroundColor))
+		wrapFrame.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		autocomp.ShowSecondaryText(false)
-		autocomp.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
-		autocomp.SetMainTextColor(tcell.Color(cfg.ForegroundColor))
-		autocomp.SetSelectedTextColor(tcell.Color(15 - cfg.ForegroundColor))
-		autocomp.SetSelectedBackgroundColor(tcell.Color(cfg.ForegroundColor))
-		autocomp.SetShortcutColor(tcell.Color(cfg.ForegroundColor))
+		autocomp.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+		autocomp.SetMainTextColor(tcell.Color(cfg.Prop.ForegroundColor))
+		autocomp.SetSelectedTextColor(tcell.Color(15 - cfg.Prop.ForegroundColor))
+		autocomp.SetSelectedBackgroundColor(tcell.Color(cfg.Prop.ForegroundColor))
+		autocomp.SetShortcutColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			switch ev.Key() {
@@ -244,7 +247,7 @@ func main() {
 
 		resetInputBehavior()
 		input.SetInputCapture(inputKeyHandler)
-		input.SetFieldTextColor(tcell.Color(cfg.ForegroundColor))
+		input.SetFieldTextColor(tcell.Color(cfg.Prop.ForegroundColor))
 
 		input.SetChangedFunc(func(text string) {
 			if len(text) == 0 {
@@ -295,12 +298,12 @@ func main() {
 		})
 
 		messagesFrame.SetBorders(0, 0, 0, 0, 0, 0)
-		messagesFrame.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+		messagesFrame.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		rightflex.AddItem(messagesFrame, 0, 1, false)
 		rightflex.AddItem(autocomp, 1, 1, true)
 		rightflex.AddItem(input, 1, 1, true)
-		rightflex.SetBackgroundColor(tcell.Color(cfg.BackgroundColor))
+		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		appflex.AddItem(wrapFrame, 0, 2, true)
 	}

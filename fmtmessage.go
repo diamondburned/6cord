@@ -9,7 +9,7 @@ import (
 )
 
 var chatPadding = func() (s string) {
-	for i := 0; i < cfg.ChatPadding; i++ {
+	for i := 0; i < cfg.Prop.ChatPadding; i++ {
 		s += " "
 	}
 

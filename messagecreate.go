@@ -24,7 +24,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if rstore.Check(m.Author, RelationshipBlocked) && cfg.HideBlocked {
+	if rstore.Check(m.Author, RelationshipBlocked) && cfg.Prop.HideBlocked {
 		return
 	}
 
