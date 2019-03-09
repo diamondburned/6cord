@@ -68,17 +68,25 @@ type Config struct {
 	Config string `short:"c"`
 }
 
-func init() {
+func parse(f string) {
 	err := gonfig.Load(&cfg, gonfig.Conf{
-		ConfigFileVariable:  "config", // enables passing --configfile myfile.conf
-		FileDefaultFilename: "6cord.toml",
+		ConfigFileVariable:  "config",
+		FileDefaultFilename: f,
 		FileDecoder:         gonfig.DecoderTOML,
-		EnvPrefix:           "6cord_",
+		EnvPrefix:           "sixcord_",
 	})
 
 	if err != nil {
 		println(err.Error())
 		os.Exit(1)
+	}
+}
+
+func init() {
+	parse("6cord.toml")
+	if cfg.Config != "" {
+		// hack to make it parse -c
+		parse(cfg.Config)
 	}
 
 	for i := 0; i < cfg.Prop.ChatPadding; i++ {
