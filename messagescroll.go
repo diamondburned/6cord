@@ -76,7 +76,7 @@ func loadMore() {
 	input.SetPlaceholder("Loading more...")
 
 	defer func() {
-		input.SetPlaceholder(DefaultStatus)
+		input.SetPlaceholder(cfg.Prop.DefaultStatus)
 		loading = false
 	}()
 
@@ -105,7 +105,7 @@ func loadMore() {
 		//go func(m *discordgo.Message, i int) {
 		//defer wg.Done()
 
-		if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
+		if rstore.Check(m.Author, RelationshipBlocked) && cfg.Prop.HideBlocked {
 			continue
 		}
 

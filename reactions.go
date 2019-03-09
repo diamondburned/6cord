@@ -31,7 +31,7 @@ func isSameEmoji(rs *discordgo.MessageReactions, r *discordgo.MessageReaction) b
 }
 
 func handleReactionEvent(m *discordgo.Message) {
-	if rstore.Check(m.Author, RelationshipBlocked) && HideBlocked {
+	if rstore.Check(m.Author, RelationshipBlocked) && cfg.Prop.HideBlocked {
 		return
 	}
 
