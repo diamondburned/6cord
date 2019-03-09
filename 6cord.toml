@@ -5,6 +5,8 @@ password = ""
 
 # Token authentication flow
 # RECOMMENDED
+# Uses the token stored in keyrings if empty, will attempt to
+# store the token if the first token works
 token = ""
 
 [ properties ]

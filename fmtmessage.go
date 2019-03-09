@@ -8,13 +8,7 @@ import (
 	"github.com/rivo/tview"
 )
 
-var chatPadding = func() (s string) {
-	for i := 0; i < cfg.Prop.ChatPadding; i++ {
-		s += " "
-	}
-
-	return
-}()
+var chatPadding string
 
 func fmtMessage(m *discordgo.Message) string {
 	ct, emojiMap := ParseAll(m)

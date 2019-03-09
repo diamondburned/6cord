@@ -81,6 +81,11 @@ func init() {
 		os.Exit(1)
 	}
 
+	for i := 0; i < cfg.Prop.ChatPadding; i++ {
+		chatPadding += " "
+	}
+
+	showChannels = cfg.Prop.ShowChannelsOnStartup
 	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
 
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {

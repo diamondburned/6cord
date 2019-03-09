@@ -1,6 +1,6 @@
 package main
 
-var showChannels = cfg.Prop.ShowChannelsOnStartup
+var showChannels bool
 
 func toggleChannels() {
 	if showChannels {
