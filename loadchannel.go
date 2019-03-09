@@ -76,6 +76,7 @@ func loadChannel(channelID int64) {
 
 	if len(msgs) < 1 {
 		// Drop out early if no messages
+		messagesView.SetText("")
 		return
 	}
 

@@ -4,14 +4,14 @@ import (
 	"log"
 	"strings"
 
-	"github.com/rivo/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/rivo/tview"
 )
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 	// Sets ReadState to the message you read
 	for _, c := range d.State.ReadState {
-		if c.ID == a.ChannelID {
+		if c.ID == a.ChannelID && c.LastMessageID != 0 {
 			c.LastMessageID = a.MessageID
 		}
 	}
@@ -142,8 +142,16 @@ func checkReadState(chID ...int64) {
 
 // true if channelID has unread msgs
 func isUnread(ch *discordgo.Channel) bool {
+	if ch.LastMessageID == 0 {
+		return false
+	}
+
 	for _, c := range d.State.ReadState {
-		if c.ID == ch.ID && c.LastMessageID != ch.LastMessageID {
+		if c.ID != ch.ID {
+			continue
+		}
+
+		if c.LastMessageID != ch.LastMessageID {
 			return true
 		}
 	}

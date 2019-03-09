@@ -55,10 +55,24 @@ func fuzzyMentions(last string) {
 	clearList()
 
 	if len(fuzzied) > 0 {
+		g, _ := d.State.Guild(Channel.GuildID)
+
 		for i, u := range fuzzied {
 			var username = u.Name + "[::d]#" + u.Discrim + "[::-]"
 			if u.Nick != "" {
 				username += " (" + tview.Escape(u.Nick) + ")"
+			}
+
+			if g != nil {
+				for _, p := range g.Presences {
+					if p.User.ID == fuzzied[i].ID {
+						username = fmt.Sprintf(
+							"[#%06X]%s[-]",
+							ReflectStatusColor(p.Status),
+							username,
+						)
+					}
+				}
 			}
 
 			autocomp.InsertItem(

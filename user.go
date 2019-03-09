@@ -93,3 +93,17 @@ func getUserColor(guildID int64, rls discordgo.IDSlice) int {
 
 	return 16711422
 }
+
+// ReflectStatusColor converts Discord status to HEX colors (#RRGGBB)
+func ReflectStatusColor(status discordgo.Status) string {
+	switch status {
+	case discordgo.StatusOnline:
+		return "#43b581"
+	case discordgo.StatusDoNotDisturb:
+		return "#f04747"
+	case discordgo.StatusIdle:
+		return "#faa61a"
+	default: // includes invisible and offline
+		return "#747f8d"
+	}
+}
