@@ -360,9 +360,11 @@ func main() {
 			}()
 
 		case tcell.KeyTab:
-			if !input.HasFocus() {
+			if autocomp.GetItemCount() < 1 {
 				toggleChannels()
 				app.ForceDraw()
+
+				return nil
 			}
 		}
 
