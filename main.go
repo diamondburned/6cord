@@ -7,8 +7,8 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/discordgo"
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tcell"
+	"github.com/diamondburned/tview"
 	"github.com/stevenroose/gonfig"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/md"

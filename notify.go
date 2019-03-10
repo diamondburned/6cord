@@ -4,7 +4,7 @@ import (
 	"html"
 
 	"github.com/gen2brain/beeep"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 	"github.com/diamondburned/discordgo"
 )
 

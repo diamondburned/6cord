@@ -2,7 +2,7 @@ package md
 
 import (
 	"github.com/diamondburned/mark"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 func tagReflect(t string) string {
@@ -10,9 +10,9 @@ func tagReflect(t string) string {
 	case "strong":
 		return "[::b]"
 	case "em":
-		return "[::b]"
+		return "[::i]"
 	case "del":
-		return "[::d]"
+		return "[::s]"
 	case "code":
 		return "[:#4f4f4f:]"
 	}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/diamondburned/mark"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 // RenderParagraph recursively renders a paragraph

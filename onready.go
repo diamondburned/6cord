@@ -4,8 +4,8 @@ import (
 	"sort"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tcell"
+	"github.com/diamondburned/tview"
 )
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 	"github.com/diamondburned/discordgo"
 	"gitlab.com/diamondburned/6cord/md"
 )

@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 var chatPadding string

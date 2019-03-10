@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 // Warn ..

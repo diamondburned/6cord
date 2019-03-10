@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/gdamore/tcell"
+	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/discordgo"
 )
 

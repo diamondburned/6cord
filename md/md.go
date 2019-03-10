@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/mark"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 // HighlightStyle determines the syntax highlighting colorstyle:

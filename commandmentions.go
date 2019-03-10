@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 func commandMentions(text []string) {

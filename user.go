@@ -4,7 +4,7 @@ import (
 	"log"
 	"sort"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 
 	"github.com/diamondburned/discordgo"
 )

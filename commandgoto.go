@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 func parseChannelID(input string) int64 {

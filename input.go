@@ -5,8 +5,8 @@ import (
 	"log"
 
 	"github.com/atotto/clipboard"
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tcell"
+	"github.com/diamondburned/tview"
 )
 
 func resetInputBehavior() {

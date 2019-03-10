@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
 

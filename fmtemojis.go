@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/rivo/tview"
+	"github.com/diamondburned/tview"
 )
 
 var (
