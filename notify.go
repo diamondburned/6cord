@@ -3,9 +3,9 @@ package main
 import (
 	"html"
 
-	"github.com/gen2brain/beeep"
-	"github.com/diamondburned/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
+	"github.com/gen2brain/beeep"
 )
 
 func mentionHandler(m *discordgo.MessageCreate) {
@@ -51,13 +51,12 @@ func mentionHandler(m *discordgo.MessageCreate) {
 
 	// Skip if user is busy
 	if d.State.Settings.Status != discordgo.StatusDoNotDisturb {
-		if err := beeep.Notify(
+		// we ignore errors for users without dbus/notify-send
+		beeep.Notify(
 			name+" "+submessage,
 			html.EscapeString(m.ContentWithMentionsReplaced()),
 			"",
-		); err != nil {
-			Warn(err.Error())
-		}
+		)
 	}
 
 	// Walk the tree for the sake of a (1)
