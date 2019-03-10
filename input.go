@@ -111,6 +111,14 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 		autocomp.SetCurrentItem(newitem)
 		app.SetFocus(autocomp)
 
+	case tcell.KeyTab:
+		if autocomp.GetItemCount() > 0 {
+			autofillfunc(autocomp.GetCurrentItem())
+			return nil
+		}
+
+		return ev
+
 	case tcell.KeyEnter:
 		if ev.Modifiers() == tcell.ModAlt {
 			input.SetText(input.GetText() + "\n")
@@ -118,7 +126,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 		}
 
 		if autocomp.GetItemCount() > 0 {
-			autofillfunc(0)
+			autofillfunc(autocomp.GetCurrentItem())
 			return nil
 		}
 

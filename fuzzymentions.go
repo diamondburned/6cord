@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strings"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
@@ -65,9 +67,11 @@ func fuzzyMentions(last string) {
 
 			if g != nil {
 				for _, p := range g.Presences {
+					log.Println(spew.Sdump(p.User))
 					if p.User.ID == fuzzied[i].ID {
+						log.Println(spew.Sdump(p, p.User))
 						username = fmt.Sprintf(
-							"[#%06X]%s[-]",
+							"[%s]%s[-]",
 							ReflectStatusColor(p.Status),
 							username,
 						)

@@ -360,8 +360,10 @@ func main() {
 			}()
 
 		case tcell.KeyTab:
-			toggleChannels()
-			app.ForceDraw()
+			if !input.HasFocus() {
+				toggleChannels()
+				app.ForceDraw()
+			}
 		}
 
 		return event

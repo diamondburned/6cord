@@ -11,7 +11,7 @@ import (
 // while
 func cleanupBuffer() {
 	if len(messageStore) > 512 && !messagesView.HasFocus() {
-		messageStore = messageStore[:512]
+		messageStore = messageStore[512:]
 
 		app.QueueUpdateDraw(func() {
 			messagesView.SetText(
