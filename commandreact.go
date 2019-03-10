@@ -2,12 +2,10 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"strconv"
 	"strings"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/davecgh/go-spew/spew"
 )
 
 func reactMessage(text []string) {
@@ -80,8 +78,6 @@ func reactMessage(text []string) {
 			emoji,
 		)
 	}
-
-	defer log.Println(spew.Sdump(emoji))
 
 	if err != nil {
 		if err, ok := err.(discordgo.RESTError); ok {

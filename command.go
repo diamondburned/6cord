@@ -8,6 +8,7 @@ import (
 
 var (
 	senderRegex = strings.NewReplacer()
+	cmdHistory  = make([]string, 0, 256)
 )
 
 // Commands contains multiple commands
@@ -102,6 +103,14 @@ func CommandHandler() {
 
 	defer input.SetText("")
 
+	if len(cmdHistory) >= 256 {
+		cmdHistory = cmdHistory[255:]
+	}
+
+	cmdHistory = append(
+		cmdHistory, text,
+	)
+
 	switch {
 	case strings.HasPrefix(text, "s/"):
 		go editMessageRegex(text)
@@ -132,7 +141,6 @@ func CommandHandler() {
 	default:
 		// Trim literal backslash, in case "\/actual message"
 		text = strings.TrimPrefix(text, `\`)
-		text = senderRegex.Replace(text)
 
 		if Channel == nil {
 			Message("You're not in a channel!")
@@ -140,7 +148,7 @@ func CommandHandler() {
 		}
 
 		go func(text string) {
-			_, err := d.ChannelMessageSend(Channel.ID, text)
+			_, err := d.ChannelMessageSend(Channel.ID, processString(text))
 			if err != nil {
 				Warn("Failed to send message:\n" + text + "\nError: " + err.Error())
 			}

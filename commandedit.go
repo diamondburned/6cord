@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tcell"
 )
 
 const (
@@ -60,7 +60,7 @@ func editHandler() {
 
 	if i != "" {
 		_, err = d.ChannelMessageEdit(
-			Channel.ID, toEditMessage, i,
+			Channel.ID, toEditMessage, processString(i),
 		)
 	} else {
 		err = d.ChannelMessageDelete(

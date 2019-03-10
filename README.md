@@ -23,6 +23,7 @@
 ## Stuff
 
 - Sample config is in `6cord.toml`, use with `-c`
+- Command history is cycled through with <Alt> + <Up>/<Down>/<j>/<k>
 - To get the following colors, use the variable
 	- Monochrome: `TERM=xtermm`
 	- Terminal colors: `TERM=xterm-basic`

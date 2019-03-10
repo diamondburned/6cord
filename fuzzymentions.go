@@ -48,7 +48,7 @@ func FuzzyMembers(pattern string, s *UserStore, guildID int64) (fzr UserStoreArr
 func fuzzyMentions(last string) {
 	var fuzzied UserStoreArray
 
-	if len(last) > 0 {
+	if len(last) > 0 && Channel != nil {
 		fuzzied = FuzzyMembers(
 			strings.TrimPrefix(last, "@"), us, Channel.GuildID,
 		)
