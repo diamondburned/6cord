@@ -48,9 +48,7 @@ func fuzzyCommands(last string) {
 			autocomp.InsertItem(
 				i,
 				"[::b]"+u.Command+"[::-] - "+tview.Escape(u.Description),
-				"",
-				rune(0x31+i),
-				nil,
+				"", 0, nil,
 			)
 		}
 

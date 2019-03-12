@@ -69,9 +69,7 @@ func fuzzyUpload(text string) {
 			autocomp.InsertItem(
 				i,
 				filename[0],
-				"",
-				rune(0x31+i),
-				nil,
+				"", 0, nil,
 			)
 		}
 
