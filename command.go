@@ -73,6 +73,11 @@ var commands = Commands{
 		Description: "[ID:int64] - highlights the message ID if possible",
 	},
 	Command{
+		Command:     "/dm",
+		Function:    makeDirectMessage,
+		Description: "[@mention] - starts a new direct message",
+	},
+	Command{
 		Command:     "/block",
 		Function:    blockUser,
 		Description: "[@mention] - blocks someone",
