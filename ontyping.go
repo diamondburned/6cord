@@ -140,6 +140,7 @@ func renderCallback() {
 			if t.Meta != nil {
 				mems = append(mems, t.Meta.Name)
 			}
+		case <-updateTyping:
 		}
 
 		typing.RUnlock()
@@ -161,7 +162,7 @@ func renderCallback() {
 				input.SetPlaceholder(text)
 			})
 
-			// laststring = text
+			laststring = text
 		}
 	}
 }
