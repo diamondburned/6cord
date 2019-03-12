@@ -79,7 +79,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		msg := fmt.Sprintf(
 			authorFormat,
 			color, tview.Escape(username),
-			sentTime.Format(time.Stamp),
+			sentTime.Local().Format(time.Stamp),
 		)
 
 		app.QueueUpdate(func() {

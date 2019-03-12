@@ -33,7 +33,7 @@ func fuzzyMessages(text string) {
 					fmt.Sprintf(
 						"%d - [#%06X]%s[-] [::d]- %s[::-]",
 						ID, color, username,
-						sentTime.Format(time.Stamp),
+						sentTime.Local().Format(time.Stamp),
 					),
 				)
 			}
@@ -63,9 +63,7 @@ func fuzzyMessages(text string) {
 		for i, u := range fuzzied {
 			autocomp.InsertItem(
 				i, u,
-				"",
-				rune(0x31+i),
-				nil,
+				"", 0, nil,
 			)
 		}
 

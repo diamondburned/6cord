@@ -114,7 +114,7 @@ func loadChannel(channelID int64) {
 			messageStore = append(messageStore, fmt.Sprintf(
 				authorFormat,
 				color, tview.Escape(username),
-				sentTime.Format(time.Stamp),
+				sentTime.Local().Format(time.Stamp),
 			))
 		}
 

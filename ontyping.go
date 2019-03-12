@@ -105,9 +105,7 @@ func renderCallback() {
 	var (
 		animation  uint
 		laststring string
-		tick       = time.Tick(
-			time.Duration(time.Millisecond * 500),
-		)
+		tick       = time.Tick(time.Millisecond * 500)
 	)
 
 	for {
@@ -117,7 +115,7 @@ func renderCallback() {
 			text = cfg.Prop.DefaultStatus
 		)
 
-		select { // 200ms or instant
+		select { // 500ms or instant
 		case <-tick:
 			if len(typing.Store) < 1 {
 				animation = 0
@@ -163,7 +161,7 @@ func renderCallback() {
 				input.SetPlaceholder(text)
 			})
 
-			laststring = text
+			// laststring = text
 		}
 	}
 }
@@ -219,13 +217,15 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 
 	updateTyping <- struct{}{}
 
-	time.Sleep(time.Second * 15)
+	time.Sleep(time.Second * 10)
 
 	// should always pass UNLESS there's another AddUser call bumping the
 	// time up
-	if ev.Meta.Time.Add(time.Duration(14 * time.Second)).Before(time.Now()) {
+	if ev.Meta.Time.Add(10 * time.Second).Before(time.Now()) {
 		tu.RemoveUser(ts)
 	}
+
+	time.Sleep(time.Second * 1)
 }
 
 // RemoveUser removes a user from a store array
@@ -237,6 +237,11 @@ func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
 	defer func() {
 		updateTyping <- struct{}{}
 	}()
+
+	if len(tu.Store) == 1 {
+		tu.Reset()
+		return true
+	}
 
 	for i, d := range tu.Store {
 		if d.UserID == ts.UserID {
