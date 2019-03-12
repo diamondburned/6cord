@@ -116,6 +116,7 @@ func renderCallback() {
 		)
 
 		select { // 500ms or instant
+		case <-updateTyping:
 		case <-tick:
 			if len(typing.Store) < 1 {
 				animation = 0
@@ -127,7 +128,6 @@ func renderCallback() {
 
 				anim = getAnimation(animation)
 			}
-		case <-updateTyping:
 		}
 
 		typing.RLock()
@@ -140,7 +140,6 @@ func renderCallback() {
 			if t.Meta != nil {
 				mems = append(mems, t.Meta.Name)
 			}
-		case <-updateTyping:
 		}
 
 		typing.RUnlock()
