@@ -81,9 +81,8 @@ func fuzzyMentions(last string) {
 
 			autocomp.InsertItem(
 				i,
-				username, "",
-				rune(0x31+i),
-				nil,
+				username,
+				"", 0, nil,
 			)
 		}
 

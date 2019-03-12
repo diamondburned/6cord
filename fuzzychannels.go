@@ -96,9 +96,8 @@ func fuzzyChannels(last string) {
 		for i, fz := range fuzzied {
 			autocomp.InsertItem(
 				i,
-				fz.Str, "",
-				rune(0x31+i),
-				nil,
+				fz.Str,
+				"", 0, nil,
 			)
 
 			if i == 25 {

@@ -223,6 +223,7 @@ func main() {
 		wrapFrame.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
 		autocomp.ShowSecondaryText(false)
+		autocomp.SetHighlightFullLine(true)
 		autocomp.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 		autocomp.SetMainTextColor(tcell.Color(cfg.Prop.ForegroundColor))
 		autocomp.SetSelectedTextColor(tcell.Color(15 - cfg.Prop.ForegroundColor))

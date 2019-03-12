@@ -57,9 +57,8 @@ func fuzzyEmojis(last string) {
 		for i, m := range fuzzied {
 			autocomp.InsertItem(
 				i,
-				":"+m.Str+":", "",
-				rune(0x31+i),
-				nil,
+				":"+m.Str+":",
+				"", 0, nil,
 			)
 
 			if i == 25 {

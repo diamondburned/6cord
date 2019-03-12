@@ -24,6 +24,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/diamondburned/discordgo v1.0.5 h1:qS+/SqB+LfwHpHOzg4UBchfEcTYo966ipLOLDjytHuc=
 github.com/diamondburned/discordgo v1.0.5/go.mod h1:h0RIN7ncYVfIPF/SVhG4yk/FI8LFhB8pxYJPO7FQaIE=
+github.com/diamondburned/discordgo v1.1.1 h1:Mb6UOLHOR605jo7Dj18OJGeiEeBhVXFyF3VbhjSPJ+Y=
+github.com/diamondburned/discordgo v1.1.1/go.mod h1:ARoPji8yedAsk0xiJRHDJ3VKbVAhPC48nY60lIlJMVA=
 github.com/diamondburned/mark v0.2.0 h1:6MkmxDJtvvnuedzO2WGXpA0CDhrO1/FL5ITD1AtNd7A=
 github.com/diamondburned/mark v0.2.0/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
 github.com/diamondburned/mark v0.2.1 h1:nQvLfK/T9rrYV5O9PJD/NY5na/9CbhrKjSg/FsRYPWw=

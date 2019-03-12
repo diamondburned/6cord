@@ -6,10 +6,9 @@ require (
 	github.com/alecthomas/chroma v0.6.2
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.1
-	github.com/bwmarrin/dgvoice v0.0.0-20170706020935-3c939eca8b2f
 	github.com/bwmarrin/discordgo v0.19.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/diamondburned/discordgo v1.0.5
+	github.com/diamondburned/discordgo v1.1.1
 	github.com/diamondburned/mark v0.2.2
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e
@@ -19,7 +18,6 @@ require (
 	github.com/marcusolsson/tui-go v0.4.0
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/rivo/tview v0.0.0-20190213202703-b373355e9db4
-	github.com/rumblefrog/discordgo v1.0.3
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/soniakeys/quant v1.0.0 // indirect
 	github.com/stevenroose/gonfig v0.1.4
