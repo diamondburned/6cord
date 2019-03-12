@@ -456,6 +456,8 @@ func main() {
 	defer d.Close()
 	defer app.Stop()
 
+	go renderCallback()
+
 	log.Println("Storing token inside keyring...")
 	if err := keyring.Set(AppName, "token", d.Token); err != nil {
 		log.Println("Failed to set keyring! Continuing anyway...", err.Error())

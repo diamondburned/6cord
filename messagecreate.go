@@ -53,12 +53,10 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		ackMe(m.Message)
 	}
 
-	if typing.RemoveUser(&discordgo.TypingStart{
+	typing.RemoveUser(&discordgo.TypingStart{
 		UserID:    m.Author.ID,
 		ChannelID: m.ChannelID,
-	}) {
-		go renderCallback(typing)
-	}
+	})
 
 	if len(m.Embeds) == 1 {
 		m := m.Embeds[0]
