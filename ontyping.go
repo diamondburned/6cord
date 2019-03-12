@@ -103,23 +103,34 @@ func getTypingMeta(typing *discordgo.TypingStart) *typingMeta {
 
 func renderCallback() {
 	var (
-		animation uint
-		tick      = time.Tick(
+		animation  uint
+		laststring string
+		tick       = time.Tick(
 			time.Duration(time.Millisecond * 500),
 		)
 	)
 
 	for {
-		select { // 200ms or instant
-		case <-tick:
-		case <-updateTyping:
-		}
-
 		var (
 			mems []string
 			anim string
 			text = cfg.Prop.DefaultStatus
 		)
+
+		select { // 200ms or instant
+		case <-tick:
+			if len(typing.Store) < 1 {
+				animation = 0
+			} else {
+				animation++
+				if animation > 5 {
+					animation = 0
+				}
+
+				anim = getAnimation(animation)
+			}
+		case <-updateTyping:
+		}
 
 		typing.RLock()
 
@@ -135,17 +146,6 @@ func renderCallback() {
 
 		typing.RUnlock()
 
-		if len(mems) < 1 {
-			animation = 0
-		} else {
-			animation++
-			if animation > 5 {
-				animation = 0
-			}
-
-			anim = getAnimation(animation)
-		}
-
 		text = HumanizeStrings(mems)
 		switch {
 		case len(mems) < 1:
@@ -158,7 +158,13 @@ func renderCallback() {
 			text += " are typing" + anim
 		}
 
-		input.SetPlaceholder(text)
+		if text != laststring {
+			app.QueueUpdateDraw(func() {
+				input.SetPlaceholder(text)
+			})
+
+			laststring = text
+		}
 	}
 }
 
@@ -187,6 +193,7 @@ func (tu *TypingUsers) Reset() {
 	defer tu.Unlock()
 
 	tu.Store = []*typingEvent{}
+	updateTyping <- struct{}{}
 }
 
 // AddUser this function needs to run in a goroutine
@@ -210,6 +217,8 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 	tu.Store = append(tu.Store, ev)
 	tu.Unlock()
 
+	updateTyping <- struct{}{}
+
 	time.Sleep(time.Second * 15)
 
 	// should always pass UNLESS there's another AddUser call bumping the
@@ -224,6 +233,10 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
 	tu.Lock()
 	defer tu.Unlock()
+
+	defer func() {
+		updateTyping <- struct{}{}
+	}()
 
 	for i, d := range tu.Store {
 		if d.UserID == ts.UserID {
