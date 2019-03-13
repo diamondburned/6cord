@@ -12,47 +12,47 @@
 
 - From input, hit arrow up to go to autocompletion. Arrow up again to go to the message box.
 - In the message box
-  - Arrow up/down and Page up/down will be used for scrolling
-  - Any other key focuses back to input
+- Arrow up/down and Page up/down will be used for scrolling
+- Any other key focuses back to input
 - Tab to hide channels, focusing on input
 - Tab again to show channels, focusing on the channel list
 - To clear the keyring, feed `6cord` a new token with `-t`
 - Plans:
-  - Disable focus on the message view and use Alt+Arrows instead (considering)
+	- Disable focus on the message view and use Alt+Arrows instead (considering)
 
 ## Stuff
 
-- Sample config is in `6cord.toml`, use with `-c`
-- Command history is cycled through with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>/<kbd>j</kbd>/<kbd>k</kbd>
-- To get the following colors, use the variable
+	- Sample config is in `6cord.toml`, use with `-c`
+	- Command history is cycled through with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>/<kbd>j</kbd>/<kbd>k</kbd>
+	- To get the following colors, use the variable
 	- Monochrome: `TERM=xtermm`
 	- Terminal colors: `TERM=xterm-basic`
 
 ## Todo
 
 - [x] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
-    - [x] Better paste library with image support (Linux only)
+	- [x] Better paste library with image support (Linux only)
 - [x] Syntax highlighting, better markdown parsing
 - [x] Message Delete and Edit
 - [x] Full reaction support
-- [ ] Command history (refer to Plans on above section)
+- [x] Command history (refer to Plans on above section)
 - [ ] A separate user view
 - [ ] Guild member _list_
 	- Should be combined with all guild infos imo
 	- Can also contain pinned messages, though I'm not sure
 	- A method to call this, preferably by
-		- A keybind when on the guild tree
-		- Commands: `/pins` , `/members`, etc
+	- A keybind when on the guild tree
+	- Commands: `/pins` , `/members`, etc
 - [x] Typing events
 	- [x] The client sends the typing event
 	- [x] The client receives and indicates typing events
 - [x] Commands
-    - [x] `/goto`
-    - [x] `/edit`
-    - [x] `s//` with regexp
-    - [x] `/exit`, `/shrug`
-    - [x] Autocompletion for those commands
-	- (refer to the screenshot)
+	- [x] `/goto`
+	- [x] `/edit`
+	- [x] `s//` with regexp
+	- [x] `/exit`, `/shrug`
+	- [x] Autocompletion for those commands
+		- (refer to the screenshot)
 - [x] Use TextView instead of List for Messages
 	- [x] Consider tv.Write() bytes
 	- [x] Proper inline message edit renders
@@ -61,8 +61,8 @@
 	- [x] Async should be for later, when Split messages is done
 	- [x] Add a user store
 - [ ] Implement embed SIXEL images
-    - [ ] Port library to [termui](https://github.com/gizak/termui)
-    - [ ] Work on [issue #213](https://github.com/gizak/termui/issues/213)
+	- [ ] Port library to [termui](https://github.com/gizak/termui)
+	- [ ] Work on [issue #213](https://github.com/gizak/termui/issues/213)
 - [x] Implement inline emojis
 - [x] Implement auto-completion popups
 	- Behavior: all keys except Enter and Esc belongs to the Input Field
@@ -70,17 +70,17 @@
 	- When 0 results, hide dialog
 	- Show dialog when: `@`, `#` and potentially `:` (`:` is pointless as I don't plan on adding emoji inputs any time soon)
 	- Auto-completed items:
-    	- Mentions `@`
-    	- Stock emojis `:`
+		- Mentions `@`
+		- Stock emojis `:`
 		- Commands `/`
 		- Channels `#`
 		- Messages `~`
 - [x] An actual channel browser
 - [x] Message acknowledgements (read/unread)
 	- Isn't fully working yet, channel overrides are still janky
-- [ ] Message mentions
+- [x] Message mentions
 	- Partially working (only counts future mentions)
-	- Todo: past mentions using the endpoint
+	- Past mentions using the endpoint (`/mentions`)
 - [x] Scrolling up gets more messages
 - [ ] Port current user stores into only Discord state caches
 - [ ] Voice support (partially atm)
@@ -91,7 +91,7 @@
 		- Then, I'll need to either root-mean-square it or calculate decibels 
 		- Finally, I will compare the calculated value to the one in `config.go`
 		- If it's louder, send it over to the buffer
-	- ~~Keyboard event handling~~
+- ~~Keyboard event handling~~
 - [x] Fix `discordgo` spasming out when a goroutine panics
 	- A solution could be `./6cord 2> /dev/null`
 - [x] Confirm Windows compatibility
@@ -99,22 +99,22 @@
 
 ## Screenshots
 
-<p align="center">
-<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
-<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
-<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
-<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/highlight.png" />
-<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/reactions.png" />
-</p>
+	<p align="center">
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/highlight.png" />
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/reactions.png" />
+	</p>
 
 ## Credits
 
-- XTerm from 
+	- XTerm from 
 	- https://invisible-island.net/xterm/
 	- https://gist.github.com/saitoha/7822989
-- Fishy ([RumbleFrog](https://github.com/rumblefrog)) for his
+	- Fishy ([RumbleFrog](https://github.com/rumblefrog)) for his
 	- [discordgo fork](https://github.com/rumblefrog/discordgo)
 	- [Channel sort lib ~~that he stole from my shittercord~~](https://gist.github.com/rumblefrog/c9ebd9fb84a8955495d4fb7983345530)
 - Some people on unixporn and nix nest (ym555, tdeo, ...)
-- [cordless](https://github.com/Bios-Marcel/cordless) [author](https://github.com/Bios-Marcel) for some of the functions
+	- [cordless](https://github.com/Bios-Marcel/cordless) [author](https://github.com/Bios-Marcel) for some of the functions
 

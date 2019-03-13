@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"sync"
 	"time"
 
@@ -41,7 +42,7 @@ func onTyping(s *discordgo.Session, ts *discordgo.TypingStart) {
 		return
 	}
 
-	typing.AddUser(ts)
+	go typing.AddUser(ts)
 }
 
 func getTypingMeta(typing *discordgo.TypingStart) *typingMeta {
@@ -96,9 +97,8 @@ func getTypingMeta(typing *discordgo.TypingStart) *typingMeta {
 
 func renderCallback() {
 	var (
-		animation  uint
-		laststring string
-		tick       = time.Tick(time.Millisecond * 500)
+		animation uint
+		tick      = time.Tick(time.Millisecond * 500)
 	)
 
 	for {
@@ -145,11 +145,8 @@ func renderCallback() {
 			text += " are typing" + anim
 		}
 
-		if text != laststring {
-			input.SetPlaceholder(text)
-			app.Draw()
-			laststring = text
-		}
+		input.SetPlaceholder(text)
+		app.Draw()
 	}
 }
 
@@ -183,6 +180,13 @@ func (tu *TypingUsers) Reset() {
 
 // AddUser this function needs to run in a goroutine
 func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
+	defer func() {
+		if r := recover(); r != nil {
+			Message(fmt.Sprintf("%+v", r))
+			return
+		}
+	}()
+
 	tu.Lock()
 	for _, s := range tu.Store {
 		if s.UserID == ts.UserID && s.Meta != nil {
@@ -204,7 +208,7 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 
 	updateTyping <- struct{}{}
 
-	time.Sleep(time.Second * 8)
+	time.Sleep(time.Second * 10)
 
 	// should always pass UNLESS there's another AddUser call bumping the
 	// time up

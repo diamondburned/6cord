@@ -23,18 +23,16 @@ var (
 func resetInputBehavior() {
 	app.QueueUpdate(func() {
 		input.SetLabel(cfg.Prop.CommandPrefix)
-		input.SetPlaceholder(cfg.Prop.DefaultStatus)
 		input.SetLabelColor(tcell.Color(cfg.Prop.BackgroundColor))
 		input.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 		input.SetFieldBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
 		input.SetText("")
-
-		clearList()
-
-		stateResetter()
-		toEditMessage = 0
 	})
+	clearList()
+
+	stateResetter()
+	toEditMessage = 0
 }
 
 func processString(input string) string {
