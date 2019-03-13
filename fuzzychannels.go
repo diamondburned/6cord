@@ -22,10 +22,10 @@ var channelFuzzyCache = allChannels([]fuzzyReadState{})
 // String returns the fuzzy search part of the struct
 func (ac allChannels) String(i int) string {
 	if ac[i].Unread {
-		return "[::b]" + ac[i].Format + "[::-]"
+		return "[::b]#" + ac[i].Format + "[::-]"
 	}
 
-	return "[::d]" + ac[i].Format + "[::-]"
+	return "[::d]#" + ac[i].Format + "[::-]"
 }
 
 // Len returns the length

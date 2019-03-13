@@ -81,7 +81,7 @@ func fuzzyMentions(last string) {
 
 			autocomp.InsertItem(
 				i,
-				username,
+				"@"+username,
 				"", 0, nil,
 			)
 		}

@@ -136,12 +136,12 @@ func main() {
 	messagesView.SetDynamicColors(true)
 	messagesView.SetTextColor(tcell.Color(cfg.Prop.ForegroundColor))
 	messagesView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
-	messagesView.SetText(`    [::b]Quick Start[::-]
-        - Right arrow from guild list to focus to input
-		- Left arrow from input to focus to guild list
-		- Up arrow from input to go to autocomplete/message scrollback
-		- Tab to show/hide channels
-		- /goto [#channel] jumps to that channel`)
+	messagesView.SetText(` [::b]Quick Start[::-]
+    - Right arrow from guild list to focus to input
+    - Left arrow from input to focus to guild list
+    - Up arrow from input to go to autocomplete/message scrollback
+    - Tab to show/hide channels
+    - /goto [#channel] jumps to that channel`)
 
 	var (
 		login []interface{}
@@ -194,7 +194,7 @@ func main() {
 		guildView.SetAlign(false)
 		guildView.SetBorder(true)
 		guildView.SetBorderAttributes(tcell.AttrDim)
-		guildView.SetBorderPadding(0, 0, 1, 1)
+		guildView.SetBorderPadding(0, 0, 1, 0)
 		guildView.SetTitle("[Servers[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 
@@ -205,8 +205,6 @@ func main() {
 		guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 			return nil
 		})
-
-		appflex.AddItem(guildView, 0, 1, true)
 	}
 
 	{ // Right container
@@ -319,8 +317,6 @@ func main() {
 		rightflex.AddItem(autocomp, 1, 1, true)
 		rightflex.AddItem(input, 1, 1, true)
 		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
-
-		appflex.AddItem(wrapFrame, 0, 2, true)
 	}
 
 	messagesView.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {

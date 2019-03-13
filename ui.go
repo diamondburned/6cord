@@ -11,7 +11,7 @@ func toggleChannels() {
 		wrapFrame.SetBorders(0, 0, 0, 0, 1, 1)
 
 		appflex.AddItem(guildView, 0, 1, true)
-		appflex.AddItem(wrapFrame, 0, 2, true)
+		appflex.AddItem(wrapFrame, 0, 3, true)
 
 		app.SetFocus(guildView)
 	} else {

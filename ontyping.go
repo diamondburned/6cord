@@ -23,13 +23,6 @@ type typingMeta struct {
 	Time time.Time
 }
 
-type typingType int
-
-const (
-	typingStart typingType = iota
-	typingStop
-)
-
 var (
 	typing       = &TypingUsers{}
 	updateTyping = make(chan struct{})
@@ -133,10 +126,6 @@ func renderCallback() {
 		typing.RLock()
 
 		for _, t := range typing.Store {
-			if t.Meta == nil {
-				t.Meta = getTypingMeta(t.TypingStart)
-			}
-
 			if t.Meta != nil {
 				mems = append(mems, t.Meta.Name)
 			}
@@ -157,10 +146,8 @@ func renderCallback() {
 		}
 
 		if text != laststring {
-			app.QueueUpdateDraw(func() {
-				input.SetPlaceholder(text)
-			})
-
+			input.SetPlaceholder(text)
+			app.Draw()
 			laststring = text
 		}
 	}
@@ -217,15 +204,17 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 
 	updateTyping <- struct{}{}
 
-	time.Sleep(time.Second * 10)
+	time.Sleep(time.Second * 8)
 
 	// should always pass UNLESS there's another AddUser call bumping the
 	// time up
-	if ev.Meta.Time.Add(10 * time.Second).Before(time.Now()) {
-		tu.RemoveUser(ts)
-	}
+	for {
+		if ev.Meta.Time.Add(10 * time.Second).Before(time.Now()) {
+			tu.RemoveUser(ts)
+		}
 
-	time.Sleep(time.Second * 1)
+		time.Sleep(time.Second * 1)
+	}
 }
 
 // RemoveUser removes a user from a store array
@@ -234,15 +223,6 @@ func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
 	tu.Lock()
 	defer tu.Unlock()
 
-	defer func() {
-		updateTyping <- struct{}{}
-	}()
-
-	if len(tu.Store) == 1 {
-		tu.Reset()
-		return true
-	}
-
 	for i, d := range tu.Store {
 		if d.UserID == ts.UserID {
 			tu.Store = append(
@@ -250,6 +230,7 @@ func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
 				tu.Store[i+1:]...,
 			)
 
+			updateTyping <- struct{}{}
 			return true
 		}
 	}
