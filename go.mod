@@ -11,7 +11,7 @@ require (
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/mark v0.2.2
 	github.com/diamondburned/tcell v1.1.6
-	github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e
+	github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect

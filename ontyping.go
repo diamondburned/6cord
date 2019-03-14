@@ -105,7 +105,6 @@ func renderCallback() {
 		var (
 			mems []string
 			anim string
-			text = cfg.Prop.DefaultStatus
 		)
 
 		select { // 500ms or instant
@@ -133,7 +132,7 @@ func renderCallback() {
 
 		typing.RUnlock()
 
-		text = HumanizeStrings(mems)
+		text := HumanizeStrings(mems)
 		switch {
 		case len(mems) < 1:
 			text = "Send a message or input a command"
@@ -145,8 +144,10 @@ func renderCallback() {
 			text += " are typing" + anim
 		}
 
-		input.SetPlaceholder(text)
-		app.Draw()
+		if text != input.GetPlaceholder() || !messagesView.HasFocus() {
+			input.SetPlaceholder(text)
+			app.Draw()
+		}
 	}
 }
 
@@ -213,8 +214,10 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 	// should always pass UNLESS there's another AddUser call bumping the
 	// time up
 	for {
-		if ev.Meta.Time.Add(10 * time.Second).Before(time.Now()) {
+		t := ev.Meta.Time
+		if t.Add(10 * time.Second).Before(time.Now()) {
 			tu.RemoveUser(ts)
+			break
 		}
 
 		time.Sleep(time.Second * 1)

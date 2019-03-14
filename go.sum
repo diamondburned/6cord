@@ -46,6 +46,8 @@ github.com/diamondburned/tview v0.0.0-20190310005802-2b799ba83f97 h1:zaSGqbJOJWC
 github.com/diamondburned/tview v0.0.0-20190310005802-2b799ba83f97/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e h1:UJoUP+RvhPdROqzTfoI+nEeUQIhJqJFJTtfDsYRhM2c=
 github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
+github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9 h1:Ld4HKkq2DSO+5trYIWbkZM3etut5UWcgxStXCe8mieA=
+github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=
 github.com/dlclark/regexp2 v1.1.6/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/gdamore/encoding v0.0.0-20151215212835-b23993cbb635/go.mod h1:yrQYJKKDTrHmbYxI7CYi+/hbdiDT2m4Hj+t0ikCjsrQ=
