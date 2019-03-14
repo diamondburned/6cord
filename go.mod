@@ -8,7 +8,7 @@ require (
 	github.com/atotto/clipboard v0.1.1
 	github.com/bwmarrin/discordgo v0.19.0
 	github.com/davecgh/go-spew v1.1.1
-	github.com/diamondburned/discordgo v1.1.1
+	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/mark v0.2.2
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e
