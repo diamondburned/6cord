@@ -5,6 +5,7 @@ GOFLAGS = -buildmode=pie -ldflags="-s -w -extldflags=$(LDFLAGS)" -gcflags=all=-t
 CGO_ENABLED = 0
 
 all: build
+.PHONY: all build install clean
 
 build:
 	go build $(GOFLAGS) -o $(TARGET) .
