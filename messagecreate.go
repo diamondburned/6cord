@@ -71,7 +71,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		sentTime = time.Now()
 	}
 
-	if getLastAuthor() != m.Author.ID {
+	var lastmsg *discordgo.Message
+	if len(Channel.Messages) >= 2 {
+		lastmsg = Channel.Messages[len(Channel.Messages)-1]
+	}
+
+	if getLastAuthor() != m.Author.ID || messageisOld(m.Message, lastmsg) {
 		setLastAuthor(m.Author.ID)
 
 		username, color := us.DiscordThis(m.Message)
