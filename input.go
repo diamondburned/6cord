@@ -22,7 +22,7 @@ var (
 
 func resetInputBehavior() {
 	app.QueueUpdate(func() {
-		input.SetLabel(cfg.Prop.CommandPrefix)
+		input.SetLabel(templatePrefix())
 		input.SetLabelColor(tcell.Color(cfg.Prop.BackgroundColor))
 		input.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 		input.SetFieldBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
@@ -33,6 +33,41 @@ func resetInputBehavior() {
 
 	stateResetter()
 	toEditMessage = 0
+}
+
+func templatePrefix() string {
+	var (
+		channelTpl  = "#nil"
+		guildTpl    = "nil"
+		selfnameTpl = "nil"
+		discrimTpl  = "0000"
+	)
+
+	if Channel != nil {
+		switch {
+		case Channel.Name == "":
+			channelTpl = "#dm"
+		default:
+			channelTpl = "#" + Channel.Name
+		}
+
+		g, _ := d.State.Guild(Channel.GuildID)
+		if g != nil {
+			guildTpl = g.Name
+		}
+	}
+
+	if d != nil && d.State.User != nil {
+		selfnameTpl = d.State.User.Username
+		discrimTpl = d.State.User.Discriminator
+	}
+
+	return prefixTpl.ExecuteString(map[string]interface{}{
+		"CHANNEL":  channelTpl,
+		"GUILD":    guildTpl,
+		"USERNAME": selfnameTpl,
+		"DISCRIM":  discrimTpl,
+	})
 }
 
 func processString(input string) string {

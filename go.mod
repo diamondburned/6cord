@@ -21,6 +21,7 @@ require (
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/soniakeys/quant v1.0.0 // indirect
 	github.com/stevenroose/gonfig v0.1.4
+	github.com/valyala/fasttemplate v1.0.0
 	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07
 	golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25 // indirect
 	golang.org/x/sys v0.0.0-20190302025703-b6889370fb10 // indirect
