@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	authorFormat  = "\n\n[#%06X::]%s[-::] [::d]%s[::-]"
+	authorFormat  = "\n\n[#%06X::][\"\"]%s[-::] [::d]%s[::-]"
 	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
 )
 
