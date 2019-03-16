@@ -10,6 +10,7 @@ import (
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
 	"github.com/stevenroose/gonfig"
+	"github.com/valyala/fasttemplate"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/md"
 )
@@ -40,6 +41,8 @@ var (
 	d *discordgo.Session
 
 	cfg Config
+
+	prefixTpl *fasttemplate.Template
 )
 
 // Properties ..
@@ -50,7 +53,7 @@ type Properties struct {
 	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients"`
 	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white"`
 	BackgroundColor            int    `id:"background-color" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)"`
-	CommandPrefix              string `id:"command-prefix"   default:"[-]> " desc:"The prefix of the input box"`
+	CommandPrefix              string `id:"command-prefix"   default:"[${GUILD}${CHANNEL}] " desc:"The prefix of the input box"`
 	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar"`
 	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
 	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs"`
@@ -95,6 +98,14 @@ func init() {
 
 	showChannels = cfg.Prop.ShowChannelsOnStartup
 	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
+
+	t, err := fasttemplate.NewTemplate(cfg.Prop.CommandPrefix, "${", "}")
+	if err != nil {
+		println(err.Error())
+		os.Exit(1)
+	}
+
+	prefixTpl = t
 
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
 		if cfg.Prop.BackgroundColor == -1 {

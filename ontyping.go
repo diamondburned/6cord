@@ -172,9 +172,6 @@ func getAnimation(i uint) string {
 
 // Reset resets the store
 func (tu *TypingUsers) Reset() {
-	tu.Lock()
-	defer tu.Unlock()
-
 	tu.Store = []*typingEvent{}
 	updateTyping <- struct{}{}
 }

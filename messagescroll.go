@@ -118,7 +118,7 @@ func loadMore() {
 			sentTime = time.Now()
 		}
 
-		if i < len(msgs)-1 && msgs[i+1].Author.ID != m.Author.ID {
+		if i < len(msgs)-1 && (msgs[i+1].Author.ID != m.Author.ID || messageisOld(m, msgs[i+1])) {
 			username, color := us.DiscordThis(m)
 
 			reversed = append(reversed, fmt.Sprintf(

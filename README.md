@@ -22,11 +22,14 @@
 
 ## Stuff
 
-	- Sample config is in `6cord.toml`, use with `-c`
-	- Command history is cycled through with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>/<kbd>j</kbd>/<kbd>k</kbd>
-	- To get the following colors, use the variable
-	- Monochrome: `TERM=xtermm`
-	- Terminal colors: `TERM=xterm-basic`
+- Sample config is in `6cord.toml`, use with `-c`
+- Command history is cycled through with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>/<kbd>j</kbd>/<kbd>k</kbd>
+- To get the following colors, use the variable
+- Monochrome: `TERM=xtermm`
+- Terminal colors: `TERM=xterm-basic`
+- Templating for `command-prefix`
+	- This can be templated, for example: "`[${GUILD}@${CHANNEL}] `"
+	- Avaiable variables are `CHANNEL`, `GUILD`, `USERNAME` and `DISCRIM`
 
 ## Todo
 

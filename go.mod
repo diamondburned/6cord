@@ -26,6 +26,7 @@ require (
 	github.com/sourcegraph/jsonrpc2 v0.0.0-20190106185902-35a74f039c6a // indirect
 	github.com/stevenroose/gonfig v0.1.4
 	github.com/stretchr/objx v0.1.1 // indirect
+	github.com/valyala/fasttemplate v1.0.0
 	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07
 	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a // indirect
 	golang.org/x/net v0.0.0-20190313220215-9f648a60d977 // indirect

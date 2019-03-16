@@ -108,7 +108,7 @@ func loadChannel(channelID int64) {
 			sentTime = time.Now()
 		}
 
-		if i > 0 && msgs[i-1].Author.ID != m.Author.ID {
+		if i > 0 && (msgs[i-1].Author.ID != m.Author.ID || messageisOld(m, msgs[i-1])) {
 			username, color := us.DiscordThis(m)
 
 			messageStore = append(messageStore, fmt.Sprintf(
@@ -186,6 +186,24 @@ func loadChannel(channelID int64) {
 			)
 		}
 	}()
+}
+
+func messageisOld(m, l *discordgo.Message) bool {
+	if m == nil || l == nil {
+		return true
+	}
+
+	mt, err := m.Timestamp.Parse()
+	if err != nil {
+		return true
+	}
+
+	lt, err := l.Timestamp.Parse()
+	if err != nil {
+		return true
+	}
+
+	return lt.Add(time.Minute).Before(mt)
 }
 
 func recurseMembers(memstore *[]*discordgo.Member, guildID, after int64) {
