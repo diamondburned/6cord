@@ -7,11 +7,11 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/discordgo"
+	keyring "github.com/diamondburned/go-keyring"
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
 	"github.com/stevenroose/gonfig"
 	"github.com/valyala/fasttemplate"
-	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/md"
 )
 

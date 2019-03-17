@@ -28,6 +28,8 @@ github.com/diamondburned/discordgo v1.1.1 h1:Mb6UOLHOR605jo7Dj18OJGeiEeBhVXFyF3V
 github.com/diamondburned/discordgo v1.1.1/go.mod h1:ARoPji8yedAsk0xiJRHDJ3VKbVAhPC48nY60lIlJMVA=
 github.com/diamondburned/discordgo v1.1.2 h1:j1XJDMisVea2CzfiX6tHyEB6A1JNrwU5GWY/Hy6bWIA=
 github.com/diamondburned/discordgo v1.1.2/go.mod h1:ARoPji8yedAsk0xiJRHDJ3VKbVAhPC48nY60lIlJMVA=
+github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6 h1:1GUIrx3DrKATbHwjE2fuiq0StCM3fNIYQ6K9uPkqfyo=
+github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6/go.mod h1:7QuKJFuPnAlkgzOWxYU2kVlIalaQx/XzZmxaYloKCsE=
 github.com/diamondburned/mark v0.2.0 h1:6MkmxDJtvvnuedzO2WGXpA0CDhrO1/FL5ITD1AtNd7A=
 github.com/diamondburned/mark v0.2.0/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
 github.com/diamondburned/mark v0.2.1 h1:nQvLfK/T9rrYV5O9PJD/NY5na/9CbhrKjSg/FsRYPWw=

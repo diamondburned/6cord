@@ -10,6 +10,7 @@ require (
 	github.com/bwmarrin/discordgo v0.19.0
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.1.2
+	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
 	github.com/diamondburned/mark v0.2.2
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9
@@ -27,7 +28,7 @@ require (
 	github.com/stevenroose/gonfig v0.1.4
 	github.com/stretchr/objx v0.1.1 // indirect
 	github.com/valyala/fasttemplate v1.0.0
-	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07
+	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 // indirect
 	golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a // indirect
 	golang.org/x/net v0.0.0-20190313220215-9f648a60d977 // indirect
 	golang.org/x/sys v0.0.0-20190316082340-a2f829d7f35f // indirect
