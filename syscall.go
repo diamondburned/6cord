@@ -1,3 +1,5 @@
+// +build !linux,amd64 !linux,386
+
 package main
 
 import "os"
