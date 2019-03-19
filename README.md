@@ -1,6 +1,7 @@
 <h1 align="center">6cord</h1>
+<a href="https://liberapay.com/diamondburned/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
 <p align="center"><img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" /></p>
-<p align="center"><img src="http://u.cubeupload.com/diamondburned/MCz9fP.png" /></p>
+<p align="center"><img src="https://u.cubeupload.com/diamondburned/MCz9fP.png" /></p>
 
 ## Installation
 
@@ -112,12 +113,12 @@
 
 ## Credits
 
-	- XTerm from 
+- XTerm from 
 	- https://invisible-island.net/xterm/
 	- https://gist.github.com/saitoha/7822989
-	- Fishy ([RumbleFrog](https://github.com/rumblefrog)) for his
+- Fishy ([RumbleFrog](https://github.com/rumblefrog)) for his
 	- [discordgo fork](https://github.com/rumblefrog/discordgo)
 	- [Channel sort lib ~~that he stole from my shittercord~~](https://gist.github.com/rumblefrog/c9ebd9fb84a8955495d4fb7983345530)
 - Some people on unixporn and nix nest (ym555, tdeo, ...)
-	- [cordless](https://github.com/Bios-Marcel/cordless) [author](https://github.com/Bios-Marcel) for some of the functions
+- [cordless](https://github.com/Bios-Marcel/cordless) [(author)](https://github.com/Bios-Marcel) for some of the functions
 
