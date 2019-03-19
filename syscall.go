@@ -1,4 +1,4 @@
-// +build !linux,amd64 !linux,386
+// +build !linux,amd64 !linux,386 !windows
 
 package main
 

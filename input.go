@@ -76,7 +76,7 @@ func processString(input string) string {
 RuneWalk:
 	for i := 0; i < len(input); i++ {
 		for match, with := range toReplaceRuneMap {
-			if input[i] == '\\' && input[i+1] == match {
+			if input[i] == '\\' && (i < len(input)-1 && input[i+1] == match) {
 				if i == 0 || input[i-1] != '\\' {
 					output.WriteString(with)
 					if i < len(input)-2 && input[i+2] == ' ' {
