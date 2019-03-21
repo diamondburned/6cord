@@ -15,6 +15,13 @@ func loadChannel(channelID int64) {
 	wrapFrame.SetTitle("[Loading...]")
 	app.Draw()
 
+	go actualLoadChannel(channelID)
+}
+
+func actualLoadChannel(channelID int64) {
+	wrapFrame.SetTitle("[Loading...]")
+	app.Draw()
+
 	ch, err := d.State.Channel(channelID)
 	if err != nil {
 		ch, err = d.Channel(channelID)

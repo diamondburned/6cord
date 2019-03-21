@@ -54,27 +54,26 @@ func editMessage(text []string) {
 
 func editHandler() {
 	var (
-		i   = input.GetText()
-		err error
+		edit = toEditMessage
+		i    = input.GetText()
+		err  error
 	)
+
+	resetInputBehavior()
 
 	if i != "" {
 		_, err = d.ChannelMessageEdit(
-			Channel.ID, toEditMessage, processString(i),
+			Channel.ID, edit, processString(i),
 		)
 	} else {
 		err = d.ChannelMessageDelete(
-			Channel.ID, toEditMessage,
+			Channel.ID, edit,
 		)
 	}
-
-	toEditMessage = 0
 
 	if err != nil {
 		Warn(err.Error())
 	}
-
-	resetInputBehavior()
 }
 
 func editMessageRegex(text string) {
