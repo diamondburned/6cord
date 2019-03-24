@@ -12,16 +12,14 @@ import (
 )
 
 func loadChannel(channelID int64) {
-	wrapFrame.SetTitle("[Loading...]")
-	app.Draw()
+	app.QueueUpdateDraw(func() {
+		wrapFrame.SetTitle("[Loading...[]")
+	})
 
 	go actualLoadChannel(channelID)
 }
 
 func actualLoadChannel(channelID int64) {
-	wrapFrame.SetTitle("[Loading...]")
-	app.Draw()
-
 	ch, err := d.State.Channel(channelID)
 	if err != nil {
 		ch, err = d.Channel(channelID)
@@ -41,31 +39,6 @@ func actualLoadChannel(channelID int64) {
 	}
 
 	Channel = ch
-
-	var frameTitle string
-
-	if ch.Name != "" {
-		frameTitle = "[#" + ch.Name + "]"
-
-		if ch.Topic != "" {
-			topic, _ := parseEmojis(ch.Topic)
-			frameTitle += " - [" + topic + "]"
-		}
-	} else {
-		if len(ch.Recipients) == 1 {
-			frameTitle = "[" + ch.Recipients[0].String() + "]"
-		} else {
-			var names = make([]string, len(ch.Recipients))
-			for i, r := range ch.Recipients {
-				names[i] = r.Username
-			}
-
-			frameTitle = "[" + HumanizeStrings(names) + "]"
-		}
-	}
-
-	wrapFrame.SetTitle(tview.Escape(frameTitle))
-	app.Draw()
 
 	typing.Reset()
 
@@ -145,6 +118,32 @@ func actualLoadChannel(channelID int64) {
 
 	resetInputBehavior()
 	app.SetFocus(input)
+
+	var frameTitle string
+
+	if ch.Name != "" {
+		frameTitle = "[#" + ch.Name + "]"
+
+		if ch.Topic != "" {
+			topic, _ := parseEmojis(ch.Topic)
+			frameTitle += " - [" + topic + "]"
+		}
+	} else {
+		if len(ch.Recipients) == 1 {
+			frameTitle = "[" + ch.Recipients[0].String() + "]"
+		} else {
+			var names = make([]string, len(ch.Recipients))
+			for i, r := range ch.Recipients {
+				names[i] = r.Username
+			}
+
+			frameTitle = "[" + HumanizeStrings(names) + "]"
+		}
+	}
+
+	app.QueueUpdateDraw(func() {
+		wrapFrame.SetTitle(tview.Escape(frameTitle))
+	})
 
 	go func() {
 		if ch.GuildID == 0 {
