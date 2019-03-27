@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"runtime/debug"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -86,6 +87,9 @@ func parse(f string) {
 }
 
 func init() {
+	// less aggressive garbage collector
+	debug.SetGCPercent(200)
+
 	parse("6cord.toml")
 	if cfg.Config != "" {
 		// hack to make it parse -c
@@ -136,6 +140,11 @@ func main() {
 	tview.Borders.BottomRight = ' '
 
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+		if ev.Rune() == '/' {
+			app.SetFocus(input)
+			input.SetText("/")
+		}
+
 		// workaround to prevent crash when no root in tree
 		return nil
 	})

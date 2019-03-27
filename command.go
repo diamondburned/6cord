@@ -88,6 +88,11 @@ var commands = Commands{
 		Description: "[@mention] - unblocks someone",
 	},
 	Command{
+		Command:     "/debug",
+		Function:    commandDebug,
+		Description: "prints extra debug info",
+	},
+	Command{
 		Command:     "/quit",
 		Function:    commandExit,
 		Description: "quits",

@@ -1,6 +1,9 @@
 package md
 
 import (
+	"log"
+
+	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/mark"
 	"github.com/diamondburned/tview"
 )
@@ -24,12 +27,17 @@ func tagReflect(t string) string {
 func RenderEmphasis(n mark.Node) (s string) {
 	em, _ := n.(*mark.EmphasisNode)
 
+	log.Println(spew.Sdump(em))
+
 	s += tagReflect(em.Tag())
 
 	for _, n := range em.Nodes {
-		if _, ok := n.(*mark.EmphasisNode); ok {
+		switch n := n.(type) {
+		case *mark.EmphasisNode:
 			s += RenderEmphasis(n)
-		} else {
+		case *mark.TextNode:
+			s += n.Text
+		default:
 			s += tview.Escape(n.Render())
 		}
 	}

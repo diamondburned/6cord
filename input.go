@@ -122,8 +122,8 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case ev.Key() == tcell.KeyDown || ev.Rune() == 'j':
 			currentHistoryItem++
-			if currentHistoryItem == len(cmdHistory) {
-				currentHistoryItem = -1
+			if currentHistoryItem != len(cmdHistory) {
+				currentHistoryItem = len(cmdHistory) - 1
 			}
 
 			handleHistoryItem()
@@ -132,7 +132,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 		case ev.Key() == tcell.KeyUp || ev.Rune() == 'k':
 			currentHistoryItem--
 			if currentHistoryItem == -2 {
-				currentHistoryItem = len(cmdHistory) - 1
+				currentHistoryItem = -1
 			}
 
 			handleHistoryItem()
@@ -142,6 +142,14 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 		switch ev.Key() {
 		case tcell.KeyEscape:
 			resetInputBehavior()
+			if showChannels {
+				app.QueueUpdateDraw(func() {
+					toggleChannels()
+				})
+			}
+
+			app.SetFocus(guildView)
+			return nil
 
 		case tcell.KeyCtrlV:
 			cb, err := clipboard.ReadAll()

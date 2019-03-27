@@ -32,6 +32,9 @@ func RenderParagraph(n mark.Node) (s string) {
 		case *mark.BlockQuoteNode:
 			s += RenderBlockQuote(n)
 
+		case *mark.CodeNode:
+			s += n.Lang + n.Text
+
 		default:
 			s += tview.Escape(n.Render())
 		}
