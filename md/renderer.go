@@ -16,7 +16,7 @@ type tviewMarkdown struct{}
 func (*tviewMarkdown) RenderNode(w io.Writer, node *bf.Node, entering bool) blackfriday.WalkStatus {
 	switch node.Type {
 	case bf.Softbreak:
-		w.Write([]byte("\n"))
+		// w.Write([]byte("\n"))
 
 	case bf.Hardbreak:
 		w.Write([]byte("\n"))
@@ -46,7 +46,7 @@ func (*tviewMarkdown) RenderNode(w io.Writer, node *bf.Node, entering bool) blac
 		fmt.Fprintf(w, "[:#4f4f4f:]%s[:-:]", string(node.Literal))
 
 	case bf.Link:
-		fmt.Fprintf(w, "[::u]%s[::-]", string(node.Literal))
+		fmt.Fprintf(w, "[::u][%s[](%s)[::-]", string(node.Literal), string(node.Destination))
 
 	case bf.CodeBlock:
 		w.Write([]byte(RenderCodeBlock(node)))
