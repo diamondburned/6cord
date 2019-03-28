@@ -3,10 +3,8 @@ package md
 import (
 	"log"
 	"regexp"
-	"strings"
 
-	"github.com/diamondburned/mark"
-	"github.com/diamondburned/tview"
+	bf "github.com/russross/blackfriday"
 )
 
 // HighlightStyle determines the syntax highlighting colorstyle:
@@ -27,20 +25,6 @@ func Parse(s string) (results string) {
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
 	s = fixQuotes(s)
 
-	m := mark.New(s, &mark.Options{})
-	if m == nil {
-		return s
-	}
-
-	m.AddRenderFn(mark.NodeText, func(n mark.Node) (s string) {
-		t, _ := n.(*mark.TextNode)
-		return tview.Escape(t.Text)
-	})
-
-	m.AddRenderFn(mark.NodeEmphasis, RenderEmphasis)
-	m.AddRenderFn(mark.NodeBlockQuote, RenderBlockQuote)
-	m.AddRenderFn(mark.NodeCode, RenderCodeBlock)
-	m.AddRenderFn(mark.NodeParagraph, RenderParagraph)
-
-	return strings.TrimSpace(m.Render())
+	r := &tviewMarkdown{}
+	return string(bf.Run([]byte(s), bf.WithRenderer(r)))
 }

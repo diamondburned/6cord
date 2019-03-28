@@ -21,8 +21,10 @@ require (
 	github.com/mattn/go-isatty v0.0.7 // indirect
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/rivo/tview v0.0.0-20190213202703-b373355e9db4
+	github.com/russross/blackfriday v2.0.0+incompatible
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/saibing/bingo v0.0.0-20190314132233-9b5abfe83c95 // indirect
+	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect
 	github.com/soniakeys/quant v1.0.0 // indirect
 	github.com/sourcegraph/jsonrpc2 v0.0.0-20190106185902-35a74f039c6a // indirect
 	github.com/stevenroose/gonfig v0.1.4
