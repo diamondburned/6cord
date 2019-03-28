@@ -19,7 +19,7 @@ func (*tviewMarkdown) RenderNode(w io.Writer, node *bf.Node, entering bool) blac
 		w.Write([]byte("\n"))
 
 	case bf.Hardbreak:
-		w.Write([]byte("\n\n"))
+		w.Write([]byte("\n"))
 
 	case bf.Emph:
 		if entering {
@@ -53,20 +53,30 @@ func (*tviewMarkdown) RenderNode(w io.Writer, node *bf.Node, entering bool) blac
 
 	case bf.BlockQuote:
 		if entering {
-			node.Walk(func(node *bf.Node, entering bool) bf.WalkStatus {
-				switch node.Type {
-				case bf.BlockQuote:
-				default:
-					if entering {
-						literal := string(node.Literal)
+			var lastNode = node
+			node.Walk(func(child *bf.Node, entering bool) bf.WalkStatus {
+				if child == lastNode {
+					return blackfriday.GoToNext
+				}
+
+				if entering {
+					switch child.Type {
+					case bf.BlockQuote:
+						lastNode = child
+						fmt.Fprint(w, "[green]>")
+
+					case bf.Text:
+						literal := string(child.Literal)
 
 						if literal == "" {
-							return blackfriday.GoToNext
+							break
 						}
 
 						for _, l := range strings.Split(literal, "\n") {
 							fmt.Fprint(w, "[green]>"+l+"[-]\n")
 						}
+
+					default:
 					}
 				}
 
