@@ -40,6 +40,8 @@ github.com/diamondburned/markdown v0.0.0-20190331080637-62687440f648 h1:fftJjByQ
 github.com/diamondburned/markdown v0.0.0-20190331080637-62687440f648/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
 github.com/diamondburned/markdown v0.0.0-20190331085913-90706ad37608 h1:SGuGb3kp6YICOB9N9Iz6QXBya4eiNmiqCSGsg4MSbw0=
 github.com/diamondburned/markdown v0.0.0-20190331085913-90706ad37608/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
+github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c h1:DGqR/HqEQKAMpSokYCB5LrTf1h1GVxcdVQK5As3MVJ0=
+github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
 github.com/diamondburned/tcell v1.1.3 h1:xIfffsKVUCaZP8XYhsaA0bv1KHu6HvVCIx9FK3fjVb8=
 github.com/diamondburned/tcell v1.1.3/go.mod h1:twdb5a0XAYUZUgpuD0csV3S7iYlRRmw2KZQ3LQ/TSzg=
 github.com/diamondburned/tcell v1.1.4 h1:RFTP1pwEx3T5v2LKJsEPQOuZcwRgAA3PsBtHpNPJRq0=

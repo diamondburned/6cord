@@ -44,9 +44,9 @@ func Parse(s string) (results string) {
 		case *ast.Text:
 			builder.Write(node.Literal)
 		case *ast.Softbreak:
-			println("")
+			builder.WriteByte('\n')
 		case *ast.Hardbreak:
-			println("")
+			builder.WriteByte('\n')
 		case *ast.Und:
 			if entering {
 				builder.Write([]byte("[::u]"))

@@ -11,7 +11,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
-	github.com/diamondburned/markdown v0.0.0-20190331085913-90706ad37608
+	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9
 	github.com/disintegration/imaging v1.6.0
