@@ -23,6 +23,14 @@ var HighlightStyle = "vs"
 
 var trashyCodeBlockMatching = regexp.MustCompile("(.)```")
 
+const mdExtensions = 0 |
+	bf.NoIntraEmphasis |
+	bf.FencedCode |
+	bf.Autolink |
+	bf.Strikethrough |
+	bf.NoEmptyLineBeforeBlock |
+	bf.HardLineBreak
+
 // Parse parses md into tview strings
 func Parse(s string) (results string) {
 	results = s
@@ -35,6 +43,7 @@ func Parse(s string) (results string) {
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
 	s = fixQuotes(s)
 
+<<<<<<< HEAD
 	var builder strings.Builder
 
 	node := md.Parse([]byte(s), ps.NewWithExtensions(extensions))
@@ -112,4 +121,12 @@ func Parse(s string) (results string) {
 	})
 
 	return strings.TrimSuffix(builder.String(), "\n")
+=======
+	r := &tviewMarkdown{}
+	return string(bf.Run([]byte(s),
+		bf.WithNoExtensions(),
+		bf.WithRenderer(r),
+		bf.WithExtensions(mdExtensions),
+	))
+>>>>>>> 866c761006edf24709e9114e9e1d87df0fe203b4
 }
