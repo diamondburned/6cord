@@ -116,6 +116,10 @@ func init() {
 			s.Clear()
 		}
 
+		if redrawDisabled {
+			return true
+		}
+
 		return false
 	})
 

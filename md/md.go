@@ -3,9 +3,19 @@ package md
 import (
 	"log"
 	"regexp"
+	"strings"
 
-	bf "github.com/russross/blackfriday"
+	md "github.com/diamondburned/markdown"
+	"github.com/diamondburned/markdown/ast"
+	ps "github.com/diamondburned/markdown/parser"
 )
+
+const extensions = 0 |
+	ps.NoIntraEmphasis |
+	ps.FencedCode |
+	ps.Strikethrough |
+	ps.NoIndentCodeBlock |
+	ps.HardLineBreak
 
 // HighlightStyle determines the syntax highlighting colorstyle:
 // https://xyproto.github.io/splash/docs/all.html
@@ -25,6 +35,81 @@ func Parse(s string) (results string) {
 	s = trashyCodeBlockMatching.ReplaceAllString(s, "$1\n```")
 	s = fixQuotes(s)
 
-	r := &tviewMarkdown{}
-	return string(bf.Run([]byte(s), bf.WithRenderer(r)))
+	var builder strings.Builder
+
+	node := md.Parse([]byte(s), ps.NewWithExtensions(extensions))
+	ast.WalkFunc(node, func(node ast.Node, entering bool) ast.WalkStatus {
+		switch node := node.(type) {
+		case *ast.Text:
+			builder.Write(node.Literal)
+		case *ast.Softbreak:
+			println("")
+		case *ast.Hardbreak:
+			println("")
+		case *ast.Und:
+			if entering {
+				builder.Write([]byte("[::u]"))
+			} else {
+				builder.Write([]byte("[::-]"))
+			}
+		case *ast.Emph:
+			if entering {
+				builder.Write([]byte("[::i]"))
+			} else {
+				builder.Write([]byte("[::-]"))
+			}
+		case *ast.Strong:
+			if entering {
+				builder.Write([]byte("[::b]"))
+			} else {
+				builder.Write([]byte("[::-]"))
+			}
+		case *ast.Del:
+			if entering {
+				builder.Write([]byte("[::s]"))
+			} else {
+				builder.Write([]byte("[::-]"))
+			}
+		case *ast.Code:
+			if entering {
+				builder.Write([]byte("[:#4f4f4f:]"))
+			} else {
+				builder.Write([]byte("[:-:]"))
+			}
+		case *ast.CodeBlock:
+			builder.WriteString(RenderCodeBlock(
+				node.Info, node.Literal,
+			))
+
+			builder.WriteByte('\n')
+		case *ast.BlockQuote:
+			if entering {
+				if _, ok := node.Parent.(*ast.BlockQuote); !ok {
+					builder.Write([]byte("[green]"))
+				}
+
+				builder.Write([]byte(">"))
+			} else {
+				if _, ok := node.Parent.(*ast.BlockQuote); !ok {
+					builder.Write([]byte("[-]\n"))
+				}
+			}
+		case *ast.Paragraph:
+			if !entering {
+				if _, ok := node.Parent.(*ast.BlockQuote); !ok {
+					builder.Write([]byte("\n"))
+				}
+			}
+		default:
+			if l := node.AsLeaf(); l != nil {
+				builder.Write(l.Literal)
+			} else if c := node.AsContainer(); c != nil {
+				builder.Write(c.Literal)
+			}
+		}
+
+		return ast.GoToNext
+	})
+
+	return strings.TrimSuffix(builder.String(), "\n")
 }

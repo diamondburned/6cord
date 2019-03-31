@@ -36,6 +36,8 @@ github.com/diamondburned/mark v0.2.1 h1:nQvLfK/T9rrYV5O9PJD/NY5na/9CbhrKjSg/FsRY
 github.com/diamondburned/mark v0.2.1/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
 github.com/diamondburned/mark v0.2.2 h1:JlflDcQIw5c3fR/s+WxPytoqBqZ/oNAb1H2E0Pias/4=
 github.com/diamondburned/mark v0.2.2/go.mod h1:V/U6KqNSQDY/uGL9KqJ1zKuw9/oN2FDcctYPNMEp5PY=
+github.com/diamondburned/markdown v0.0.0-20190331080637-62687440f648 h1:fftJjByQPPJ/cYelZmvE8N21pl9HO52QdHlPEXjGVu4=
+github.com/diamondburned/markdown v0.0.0-20190331080637-62687440f648/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
 github.com/diamondburned/tcell v1.1.3 h1:xIfffsKVUCaZP8XYhsaA0bv1KHu6HvVCIx9FK3fjVb8=
 github.com/diamondburned/tcell v1.1.3/go.mod h1:twdb5a0XAYUZUgpuD0csV3S7iYlRRmw2KZQ3LQ/TSzg=
 github.com/diamondburned/tcell v1.1.4 h1:RFTP1pwEx3T5v2LKJsEPQOuZcwRgAA3PsBtHpNPJRq0=
@@ -50,6 +52,8 @@ github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e h1:UJoUP+RvhPd
 github.com/diamondburned/tview v0.0.0-20190310011651-0657ad9abd3e/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9 h1:Ld4HKkq2DSO+5trYIWbkZM3etut5UWcgxStXCe8mieA=
 github.com/diamondburned/tview v0.0.0-20190314151909-84ae2ea044c9/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
+github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJMJXc/mA=
+github.com/disintegration/imaging v1.6.0/go.mod h1:xuIt+sRxDFrHS0drzXUlCJthkJ8k7lkkUojDSR247MQ=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=
 github.com/dlclark/regexp2 v1.1.6/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/fsnotify/fsevents v0.1.1/go.mod h1:+d+hS27T6k5J8CRaPLKFgwKYcpS7GwW3Ule9+SC2ZRc=
@@ -159,6 +163,8 @@ golang.org/x/crypto v0.0.0-20190228161510-8dd112bcdc25/go.mod h1:djNgcEr1/C05ACk
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a h1:YX8ljsm6wXlHZO+aRz9Exqr0evNhKRNe5K/gi+zKh4U=
 golang.org/x/crypto v0.0.0-20190313024323-a1f597ede03a/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
+golang.org/x/image v0.0.0-20180708004352-c73c2afc3b81 h1:00VmoueYNlNz/aHIilyyQz/MHSqGoWJzpFv/HW8xpzI=
+golang.org/x/image v0.0.0-20180708004352-c73c2afc3b81/go.mod h1:ux5Hcp/YLpHSI86hEcLt0YII63i6oz57MZXIpbrjZUs=
 golang.org/x/net v0.0.0-20190213061140-3a22650c66bd/go.mod h1:mL1N/T3taQHkDXs73rZJwtUhF3w3ftmwwsq0BUmARs4=
 golang.org/x/net v0.0.0-20190311183353-d8887717615a/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=
 golang.org/x/net v0.0.0-20190313220215-9f648a60d977/go.mod h1:t9HGtf8HONx5eT2rtn7q6eTqICYqUVnKs3thJo3Qplg=

@@ -23,6 +23,10 @@ type Command struct {
 
 var commands = Commands{
 	Command{
+		Command:  "/sixel",
+		Function: commandSixelTest,
+	},
+	Command{
 		Command:     "/goto",
 		Function:    gotoChannel,
 		Description: "[channel name] - jumps to a channel",
