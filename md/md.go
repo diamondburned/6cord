@@ -12,6 +12,7 @@ import (
 
 const extensions = 0 |
 	ps.NoIntraEmphasis |
+	ps.Spoilers |
 	ps.FencedCode |
 	ps.Strikethrough |
 	ps.NoIndentCodeBlock |
@@ -70,10 +71,16 @@ func Parse(s string) (results string) {
 			} else {
 				builder.Write([]byte("[::-]"))
 			}
+		case *ast.Spoiler:
+			if entering {
+				builder.Write([]byte("[::d]"))
+			} else {
+				builder.Write([]byte("[::-]"))
+			}
 		case *ast.Code:
 			if entering {
 				builder.Write([]byte("[:#4f4f4f:]"))
-			} else {
+				builder.Write(node.Literal)
 				builder.Write([]byte("[:-:]"))
 			}
 		case *ast.CodeBlock:
@@ -111,5 +118,5 @@ func Parse(s string) (results string) {
 		return ast.GoToNext
 	})
 
-	return strings.TrimSuffix(builder.String(), "\n")
+	return strings.Trim(builder.String(), "\n")
 }

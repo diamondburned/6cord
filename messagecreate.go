@@ -72,7 +72,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	}
 
 	var lastmsg *discordgo.Message
-	if len(Channel.Messages) >= 2 {
+	if len(Channel.Messages) > 1 {
 		lastmsg = Channel.Messages[len(Channel.Messages)-1]
 	}
 
