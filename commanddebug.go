@@ -17,6 +17,13 @@ func commandDebug(text []string) {
 	fmt.Fprintf(w, "Channel Icon:\t%s\n", Channel.Icon)
 	fmt.Fprintf(w, "Guild ID:\t%d\n", Channel.GuildID)
 
+	if g, _ := d.State.Guild(Channel.GuildID); g != nil {
+		fmt.Fprintf(w,
+			"Guild Icon:\thttps://cdn.discordapp.com/icons/%d/%s.png\n",
+			g.ID, g.Icon,
+		)
+	}
+
 	fmt.Fprintf(w, "Number of goroutines:\t%d\n", runtime.NumGoroutine())
 	fmt.Fprintf(w, "GOMAXPROCS:\t%d\n", runtime.GOMAXPROCS(-1))
 	fmt.Fprintf(w, "GOOS:\t%s\n", runtime.GOOS)
@@ -52,4 +59,6 @@ func commandDebug(text []string) {
 	}
 
 	Message(s.String())
+
+	runtime.GC()
 }

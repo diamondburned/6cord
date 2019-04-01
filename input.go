@@ -100,7 +100,7 @@ RuneWalk:
 var store bool
 
 func handleHistoryItem() {
-	if currentHistoryItem == -1 {
+	if currentHistoryItem < 0 {
 		input.SetText(currentMessage)
 		store = true
 	} else {
@@ -122,7 +122,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case ev.Key() == tcell.KeyDown || ev.Rune() == 'j':
 			currentHistoryItem++
-			if currentHistoryItem != len(cmdHistory) {
+			if currentHistoryItem > len(cmdHistory)-1 {
 				currentHistoryItem = len(cmdHistory) - 1
 			}
 
@@ -131,7 +131,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case ev.Key() == tcell.KeyUp || ev.Rune() == 'k':
 			currentHistoryItem--
-			if currentHistoryItem == -2 {
+			if currentHistoryItem < -1 {
 				currentHistoryItem = -1
 			}
 
