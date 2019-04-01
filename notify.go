@@ -14,10 +14,21 @@ func mentionHandler(m *discordgo.MessageCreate) {
 		return
 	}
 
+	var pinged bool
+
+	if m.Author.ID != d.State.User.ID {
+		if heatedChannelsExists(m.ChannelID) {
+			goto Notify
+		}
+	}
+
 	if !messagePingable(m.Message, m.GuildID) {
 		return
 	}
 
+	pinged = true
+
+Notify:
 	var submessage = "mentioned you"
 	var name = m.Author.Username
 
@@ -57,6 +68,11 @@ func mentionHandler(m *discordgo.MessageCreate) {
 			html.EscapeString(m.ContentWithMentionsReplaced()),
 			"",
 		)
+
+		// if it's a heat signal
+		if !pinged {
+			return
+		}
 	}
 
 	// Walk the tree for the sake of a (1)
