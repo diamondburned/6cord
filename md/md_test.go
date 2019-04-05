@@ -7,7 +7,7 @@ import (
 	"github.com/andreyvit/diff"
 )
 
-func TestParseNoEscape(t *testing.T) {
+func TestParse(t *testing.T) {
 	var testSuite = []string{
 		"asdasd\n\nasd\nasdasd\n\n",
 		"*test* **strong** ~~no~~",
@@ -25,43 +25,29 @@ func TestParseNoEscape(t *testing.T) {
 	}
 
 	var result = `asdasd
-
 asd
 asdasd
+[::i]test[::-] [::b]strong[::-] [::s]no[::-]
+__[::u]**[::-]test__**
 
-[::b]test[:-:-] [::b]strong[:-:-] [::d]no[:-:-]
-
-[::b]__**[:-:-]test__**
-
-
-[grey]┃[-] console[-].[-]log[-]([-][#af0000]"Your mom gay"[-])[-];[-]
-[grey]┃[-] [-]
+[grey]┃[-] console.log([#af0000]"Your mom gay"[-]);
+[grey]┃[-] 
 
 [green]>be me[-]
 [green]>is retarded[-]
-
 okay homo
-
-[:black:]just normal code[:-:-]
-
-[::u]https://google.com[::-]
-
+[:#4f4f4f:]just normal code[:-:]
+https://google.com
 ### expert mode!
-
 | lol | retard |
 | - | - |
 | | |
-
-![wtf](https://google.com)
-
-[ur mom](https://google.com)
-
+![wtf[](https://google.com)
+[ur mom[](https://google.com)
 - that's
 - bullshit
-
 3. ur mom
-4. gay
-`
+4. gay`
 
 	if p := Parse(strings.Join(testSuite, "\n\n")); p != result {
 		t.Errorf("Test failed---\n%v", diff.LineDiff(p, result))

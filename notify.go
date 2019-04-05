@@ -14,13 +14,25 @@ func mentionHandler(m *discordgo.MessageCreate) {
 		return
 	}
 
+	var (
+		submessage = "said in a heated channel"
+		name       = m.Author.Username
+		pinged     bool
+	)
+
+	if m.Author.ID != d.State.User.ID {
+		if heatedChannelsExists(m.ChannelID) {
+			goto Notify
+		}
+	}
+
 	if !messagePingable(m.Message, m.GuildID) {
 		return
 	}
 
-	var submessage = "mentioned you"
-	var name = m.Author.Username
+	pinged = true
 
+Notify:
 	if c, err := d.State.Channel(m.ChannelID); err == nil {
 		if len(c.Recipients) > 0 {
 			submessage = "messaged you"
@@ -50,13 +62,18 @@ func mentionHandler(m *discordgo.MessageCreate) {
 	}
 
 	// Skip if user is busy
-	if d.State.Settings.Status != discordgo.StatusDoNotDisturb {
+	if d.State.Settings.Status != discordgo.StatusDoNotDisturb || !pinged {
 		// we ignore errors for users without dbus/notify-send
 		beeep.Notify(
 			name+" "+submessage,
 			html.EscapeString(m.ContentWithMentionsReplaced()),
 			"",
 		)
+
+		// if it's a heat signal
+		if !pinged {
+			return
+		}
 	}
 
 	// Walk the tree for the sake of a (1)

@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
 )
 
 // User is used for one user
@@ -13,6 +14,7 @@ type User struct {
 	Name    string
 	Nick    string
 	Color   int
+	Bot     bool
 }
 
 // UserStore stores multiple users
@@ -22,7 +24,7 @@ type UserStore struct {
 }
 
 // UserStoreArray is an array
-type UserStoreArray []User
+type UserStoreArray []*User
 
 var us = &UserStore{
 	Guilds: map[int64]UserStoreArray{},
@@ -64,6 +66,13 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 		return
 	}
 
+	defer func() {
+		n = tview.Escape(n)
+		if m.Author.Bot {
+			n += " [blue::d][BOT[][-::-]"
+		}
+	}()
+
 	if m.GuildID == 0 {
 		channel, err := d.State.Channel(m.ChannelID)
 		if err != nil {
@@ -86,7 +95,8 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	}
 
 	nick, color := getUserData(m.Author, m.ChannelID)
-	s.UpdateUser(
+
+	u := s.UpdateUser(
 		m.GuildID,
 		m.Author.ID,
 		m.Author.Username,
@@ -95,11 +105,11 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 		color,
 	)
 
-	n = m.Author.Username
-	c = color
+	n = u.Name
+	c = u.Color
 
-	if nick != "" {
-		n = nick
+	if u.Nick != "" {
+		n = u.Nick
 	}
 
 	return
@@ -113,7 +123,7 @@ func (s *UserStore) GetUser(guildID, id int64) (int, *User) {
 	if v, ok := s.Guilds[guildID]; ok {
 		for i, u := range v {
 			if u.ID == id {
-				return i, &u
+				return i, u
 			}
 		}
 	}
@@ -147,9 +157,9 @@ Remove:
 }
 
 // UpdateUser updates an user
-func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, color int) {
+func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, color int) *User {
 	if s == nil {
-		return
+		return nil
 	}
 
 	if i, u := s.GetUser(guildID, id); u != nil {
@@ -172,17 +182,21 @@ func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, co
 		s.Lock()
 		defer s.Unlock()
 
-		s.Guilds[guildID][i] = *u
-	} else {
-		s.Lock()
-		defer s.Unlock()
-
-		s.Guilds[guildID] = append(s.Guilds[guildID], User{
-			ID:      id,
-			Discrim: discrim,
-			Name:    name,
-			Nick:    nick,
-			Color:   color,
-		})
+		s.Guilds[guildID][i] = u
+		return u
 	}
+
+	s.Lock()
+	defer s.Unlock()
+
+	u := &User{
+		ID:      id,
+		Discrim: discrim,
+		Name:    name,
+		Nick:    nick,
+		Color:   color,
+	}
+
+	s.Guilds[guildID] = append(s.Guilds[guildID], u)
+	return u
 }

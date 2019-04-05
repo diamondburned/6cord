@@ -11,7 +11,7 @@ import (
 var (
 	// EmojiRegex to get emoji IDs
 	// thanks ym
-	EmojiRegex = regexp.MustCompile(`<(.*?):(.*?):(\d+)>`)
+	EmojiRegex = regexp.MustCompile(`<(a?):(.+?):(\d+)>`)
 )
 
 // returns map[ID][]{name, url}

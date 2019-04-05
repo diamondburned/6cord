@@ -6,28 +6,14 @@ import (
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
-	"github.com/diamondburned/mark"
 )
 
 // RenderCodeBlock renders the node to a syntax
 // highlighted code
-func RenderCodeBlock(n mark.Node) (s string) {
-	c, _ := n.(*mark.CodeNode)
-
-	content := strings.TrimFunc(
-		c.Text,
-		func(r rune) bool {
-			return r == '\n'
-		},
-	)
-
-	if content == "" {
-		content = c.Lang
-	}
-
+func RenderCodeBlock(lang, literal []byte) (s string) {
 	var lexer = lexers.Fallback
-	if c.Lang != "" {
-		if l := lexers.Get(c.Lang); l != nil {
+	if lang := string(lang); lang != "" {
+		if l := lexers.Get(lang); l != nil {
 			lexer = l
 		}
 	}
@@ -42,15 +28,22 @@ func RenderCodeBlock(n mark.Node) (s string) {
 		style = styles.Fallback
 	}
 
+	content := strings.TrimFunc(
+		string(literal),
+		func(r rune) bool {
+			return r == '\n'
+		},
+	)
+
 	iterator, err := lexer.Tokenise(nil, content)
 	if err != nil {
-		return c.Text
+		return string(literal)
 	}
 
-	code := strings.Builder{}
+	var code strings.Builder
 
 	if err := fmtter.Format(&code, style, iterator); err != nil {
-		return c.Text
+		return string(literal)
 	}
 
 	for _, l := range strings.Split(code.String(), "\n") {

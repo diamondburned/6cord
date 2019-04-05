@@ -22,6 +22,7 @@ type Command struct {
 }
 
 var commands = Commands{
+
 	Command{
 		Command:     "/goto",
 		Function:    gotoChannel,
@@ -63,6 +64,11 @@ var commands = Commands{
 		Description: "[file path] - uploads file",
 	},
 	Command{
+		Command:     "/heated",
+		Function:    cmdHeated,
+		Description: "warns you when a message is sent, regardless of settings",
+	},
+	Command{
 		Command:     "/copy",
 		Function:    matchCopyMessage,
 		Description: "[n:int] - copies the entire last n message",
@@ -86,6 +92,11 @@ var commands = Commands{
 		Command:     "/unblock",
 		Function:    unblockUser,
 		Description: "[@mention] - unblocks someone",
+	},
+	Command{
+		Command:     "/debug",
+		Function:    commandDebug,
+		Description: "prints extra debug info",
 	},
 	Command{
 		Command:     "/quit",
