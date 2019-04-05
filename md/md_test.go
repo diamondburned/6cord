@@ -42,16 +42,14 @@ https://google.com
 | lol | retard |
 | - | - |
 | | |
-![wtf](https://google.com)
-[ur mom](https://google.com)
+![wtf[](https://google.com)
+[ur mom[](https://google.com)
 - that's
 - bullshit
 3. ur mom
 4. gay`
 
 	if p := Parse(strings.Join(testSuite, "\n\n")); p != result {
-		println(p)
-		println()
 		t.Errorf("Test failed---\n%v", diff.LineDiff(p, result))
 	}
 }

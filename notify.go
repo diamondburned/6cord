@@ -14,7 +14,11 @@ func mentionHandler(m *discordgo.MessageCreate) {
 		return
 	}
 
-	var pinged bool
+	var (
+		submessage = "said in a heated channel"
+		name       = m.Author.Username
+		pinged     bool
+	)
 
 	if m.Author.ID != d.State.User.ID {
 		if heatedChannelsExists(m.ChannelID) {
@@ -29,9 +33,6 @@ func mentionHandler(m *discordgo.MessageCreate) {
 	pinged = true
 
 Notify:
-	var submessage = "mentioned you"
-	var name = m.Author.Username
-
 	if c, err := d.State.Channel(m.ChannelID); err == nil {
 		if len(c.Recipients) > 0 {
 			submessage = "messaged you"
@@ -61,7 +62,7 @@ Notify:
 	}
 
 	// Skip if user is busy
-	if d.State.Settings.Status != discordgo.StatusDoNotDisturb {
+	if d.State.Settings.Status != discordgo.StatusDoNotDisturb || !pinged {
 		// we ignore errors for users without dbus/notify-send
 		beeep.Notify(
 			name+" "+submessage,

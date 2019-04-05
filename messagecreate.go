@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
 )
 
 const (
@@ -83,14 +82,11 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 		msg := fmt.Sprintf(
 			authorFormat,
-			color, tview.Escape(username),
+			color, username,
 			sentTime.Local().Format(time.Stamp),
 		)
 
-		app.QueueUpdate(func() {
-			messagesView.Write([]byte(msg))
-		})
-
+		messagesView.Write([]byte(msg))
 		messageStore = append(messageStore, msg)
 	}
 

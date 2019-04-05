@@ -24,6 +24,7 @@ require (
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/rivo/tview v0.0.0-20190213202703-b373355e9db4
 	github.com/russross/blackfriday v2.0.0+incompatible
+	github.com/rylio/ytdl v0.5.1 // indirect
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/saibing/bingo v0.0.0-20190314132233-9b5abfe83c95 // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect

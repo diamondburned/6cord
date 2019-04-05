@@ -6,9 +6,10 @@ import (
 	"strings"
 	"time"
 
+	md "github.com/diamondburned/markdown"
 	"github.com/diamondburned/markdown/ast"
 	ps "github.com/diamondburned/markdown/parser"
-	md "github.com/diamondburned/markdown"
+	"github.com/diamondburned/tview"
 )
 
 const extensions = 0 |
@@ -27,6 +28,7 @@ var trashyCodeBlockMatching = regexp.MustCompile("(.)```")
 
 // Parse parses md into tview strings
 func Parse(s string) (results string) {
+	s = tview.Escape(s)
 	results = s
 	defer func() {
 		if r := recover(); r != nil {

@@ -159,7 +159,7 @@ func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {
 	}
 
 	vcNode := tview.NewTreeNode(
-		"[::" + color + "]" + name + "[::-]" + suffix,
+		"[::" + color + "]" + tview.Escape(name) + "[::-]" + suffix,
 	)
 
 	vcNode.SetSelectable(false)

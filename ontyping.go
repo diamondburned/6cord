@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -180,7 +179,6 @@ func (tu *TypingUsers) Reset() {
 func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 	defer func() {
 		if r := recover(); r != nil {
-			Message(fmt.Sprintf("%+v", r))
 			return
 		}
 	}()

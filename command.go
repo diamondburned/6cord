@@ -22,10 +22,7 @@ type Command struct {
 }
 
 var commands = Commands{
-	Command{
-		Command:  "/sixel",
-		Function: commandSixelTest,
-	},
+
 	Command{
 		Command:     "/goto",
 		Function:    gotoChannel,
@@ -65,6 +62,11 @@ var commands = Commands{
 		Command:     "/upload",
 		Function:    uploadFile,
 		Description: "[file path] - uploads file",
+	},
+	Command{
+		Command:     "/heated",
+		Function:    cmdHeated,
+		Description: "warns you when a message is sent, regardless of settings",
 	},
 	Command{
 		Command:     "/copy",
