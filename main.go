@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"runtime/debug"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -86,6 +87,9 @@ func parse(f string) {
 }
 
 func init() {
+	// less aggressive garbage collector
+	debug.SetGCPercent(200)
+
 	parse("6cord.toml")
 	if cfg.Config != "" {
 		// hack to make it parse -c
@@ -112,6 +116,10 @@ func init() {
 			s.Clear()
 		}
 
+		if redrawDisabled {
+			return true
+		}
+
 		return false
 	})
 
@@ -136,6 +144,11 @@ func main() {
 	tview.Borders.BottomRight = ' '
 
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+		if ev.Rune() == '/' {
+			app.SetFocus(input)
+			input.SetText("/")
+		}
+
 		// workaround to prevent crash when no root in tree
 		return nil
 	})
@@ -362,10 +375,8 @@ func main() {
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyF5:
-			go func() {
-				app.Stop()
-				app.Run()
-			}()
+			print("\033[2J")
+			app.ForceDraw()
 
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() < 1 {

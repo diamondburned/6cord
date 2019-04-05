@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"sync"
 	"time"
 
@@ -144,7 +143,7 @@ func renderCallback() {
 			text += " are typing" + anim
 		}
 
-		if text != input.GetPlaceholder() || !messagesView.HasFocus() {
+		if text != input.GetPlaceholder() && !messagesView.HasFocus() {
 			input.SetPlaceholder(text)
 			app.Draw()
 		}
@@ -180,7 +179,6 @@ func (tu *TypingUsers) Reset() {
 func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 	defer func() {
 		if r := recover(); r != nil {
-			Message(fmt.Sprintf("%+v", r))
 			return
 		}
 	}()

@@ -4,8 +4,6 @@ import (
 	"log"
 	"sort"
 
-	"github.com/diamondburned/tview"
-
 	"github.com/diamondburned/discordgo"
 )
 
@@ -33,8 +31,9 @@ func safeAuthor(u *discordgo.User) (string, int64) {
 }
 
 func getUserData(u *discordgo.User, chID int64) (name string, color int) {
+	var id int64
 	color = 16711422
-	name, id := safeAuthor(u)
+	name, id = safeAuthor(u)
 
 	if d == nil {
 		return
@@ -60,10 +59,7 @@ func getUserData(u *discordgo.User, chID int64) (name string, color int) {
 		}
 	}
 
-	if member.Nick != "" {
-		name = tview.Escape(member.Nick)
-	}
-
+	name = member.Nick
 	color = getUserColor(channel.GuildID, member.Roles)
 
 	return
