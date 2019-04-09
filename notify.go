@@ -34,8 +34,13 @@ func mentionHandler(m *discordgo.MessageCreate) {
 
 Notify:
 	if c, err := d.State.Channel(m.ChannelID); err == nil {
-		if len(c.Recipients) > 0 {
+		switch {
+		case !pinged:
+			submessage = "said in a heated channel"
+		case len(c.Recipients) > 0:
 			submessage = "messaged you"
+		default:
+			submessage = "mentioned you"
 		}
 
 		if c.Name != "" {
