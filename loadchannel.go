@@ -54,20 +54,18 @@ func actualLoadChannel(channelID int64) {
 		return
 	}
 
-	if len(msgs) < 1 {
-		// Drop out early if no messages
-		messagesView.SetText("")
-		return
-	}
-
 	sort.Slice(msgs, func(i, j int) bool {
 		return msgs[i].ID < msgs[j].ID
 	})
 
-	go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-		ackMe(msgs[len(msgs)-1])
-		checkReadState(msgs[0].ChannelID)
-	}(ch, msgs)
+	if len(msgs) > 0 {
+		go func(c *discordgo.Channel, msgs []*discordgo.Message) {
+			ackMe(msgs[len(msgs)-1])
+			checkReadState(msgs[0].ChannelID)
+		}(ch, msgs)
+	}
+
+	messagesView.Clear()
 
 	//var wg sync.WaitGroup
 	messageStore = []string{}
@@ -88,7 +86,7 @@ func actualLoadChannel(channelID int64) {
 			sentTime = time.Now()
 		}
 
-		if i > 0 && (msgs[i-1].Author.ID != m.Author.ID || messageisOld(m, msgs[i-1])) {
+		if i == 0 || (i > 0 && (msgs[i-1].Author.ID != m.Author.ID) || messageisOld(m, msgs[i-1])) {
 			username, color := us.DiscordThis(m)
 
 			messageStore = append(messageStore, fmt.Sprintf(
@@ -106,13 +104,17 @@ func actualLoadChannel(channelID int64) {
 		d.State.MessageAdd(m)
 	}
 
-	setLastAuthor(msgs[len(msgs)-1].Author.ID)
+	if len(msgs) > 0 {
+		setLastAuthor(msgs[len(msgs)-1].Author.ID)
 
-	app.QueueUpdateDraw(func() {
-		messagesView.SetText(
-			strings.Join(messageStore, ""),
-		)
-	})
+		app.QueueUpdateDraw(func() {
+			messagesView.SetText(
+				strings.Join(messageStore, ""),
+			)
+		})
+	} else {
+		Message("There's nothing here!")
+	}
 
 	messagesView.ScrollToEnd()
 

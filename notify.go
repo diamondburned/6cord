@@ -15,7 +15,7 @@ func mentionHandler(m *discordgo.MessageCreate) {
 	}
 
 	var (
-		submessage string
+		submessage = "said in a heated channel"
 		name       = m.Author.Username
 		pinged     bool
 	)

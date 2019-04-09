@@ -24,7 +24,7 @@ func cleanupBuffer() {
 }
 
 func scrollChat() {
-	if !messagesView.HasFocus() {
+	if !messagesView.HasFocus() && !autocomp.HasFocus() {
 		messagesView.ScrollToEnd()
 		cleanupBuffer()
 	}

@@ -48,7 +48,7 @@ func Parse(s string) (results string) {
 		ast.WalkFunc(node, func(node ast.Node, entering bool) ast.WalkStatus {
 			switch node := node.(type) {
 			case *ast.Text:
-				builder.Write(node.Literal)
+				builder.WriteString(tview.Escape(string(node.Literal)))
 			case *ast.Softbreak:
 				builder.WriteByte('\n')
 			case *ast.Hardbreak:
@@ -86,7 +86,7 @@ func Parse(s string) (results string) {
 			case *ast.Code:
 				if entering {
 					builder.Write([]byte("[:#4f4f4f:]"))
-					builder.Write(node.Literal)
+					builder.WriteString(tview.Escape(string(node.Literal)))
 					builder.Write([]byte("[:-:]"))
 				}
 			case *ast.CodeBlock:
