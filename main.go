@@ -475,6 +475,7 @@ func main() {
 	defer d.Close()
 	defer app.Stop()
 
+	go messageRenderer()
 	go renderCallback()
 
 	log.Println("Storing token inside keyring...")

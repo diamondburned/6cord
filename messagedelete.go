@@ -23,8 +23,8 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 
 			prev := 0
 
-			if i > 0 {
-				if strings.HasPrefix(messageStore[i-1], "\n\n[#") {
+			if i > 0 && i != len(messageStore)-1 {
+				if strings.HasPrefix(messageStore[i-1], authorFormat[:4]) && !strings.HasPrefix(messageStore[i+1], messageFormat[:3]) {
 					prev = 1
 					setLastAuthor(0)
 				}
@@ -35,7 +35,7 @@ func messageDelete(s *discordgo.Session, rm *discordgo.MessageDelete) {
 				messageStore[i+1:]...,
 			)
 
-			app.QueueUpdate(func() {
+			app.QueueUpdateDraw(func() {
 				messagesView.SetText(strings.Join(messageStore, ""))
 			})
 
