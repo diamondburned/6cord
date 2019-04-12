@@ -11,10 +11,19 @@ import (
 // RenderCodeBlock renders the node to a syntax
 // highlighted code
 func RenderCodeBlock(lang, literal []byte) (s string) {
+	content := strings.TrimFunc(
+		string(literal),
+		func(r rune) bool {
+			return r == '\n'
+		},
+	)
+
 	var lexer = lexers.Fallback
 	if lang := string(lang); lang != "" {
 		if l := lexers.Get(lang); l != nil {
 			lexer = l
+		} else {
+			content = lang + "\n" + content
 		}
 	}
 
@@ -27,13 +36,6 @@ func RenderCodeBlock(lang, literal []byte) (s string) {
 	if style == nil {
 		style = styles.Fallback
 	}
-
-	content := strings.TrimFunc(
-		string(literal),
-		func(r rune) bool {
-			return r == '\n'
-		},
-	)
 
 	iterator, err := lexer.Tokenise(nil, content)
 	if err != nil {
