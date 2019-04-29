@@ -8,6 +8,7 @@ import (
 	"github.com/atotto/clipboard"
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
+	"gitlab.com/diamondburned/6cord/antitele"
 )
 
 var toReplaceRuneMap = map[byte]string{
@@ -94,7 +95,7 @@ RuneWalk:
 		output.WriteByte(input[i])
 	}
 
-	return output.String()
+	return antitele.Insert(output.String())
 }
 
 var store bool
