@@ -6,12 +6,22 @@ import (
 
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
+	"gitlab.com/diamondburned/6cord/antitele"
 )
 
 var chatPadding string
 
 func fmtMessage(m *discordgo.Message) string {
 	ct, emojiMap := ParseAll(m)
+	ct = strings.Map(func(r rune) rune {
+		for _, z := range antitele.ZeroWidthRunes {
+			if z == r {
+				return -1
+			}
+		}
+
+		return r
+	}, ct)
 
 	if m.Content == "¯\\_(ツ)_/¯" {
 		ct = "¯\\_(ツ)_/¯"

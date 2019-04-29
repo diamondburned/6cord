@@ -14,22 +14,80 @@ import (
 // Rules: [0, n) 0 > n >= +Inf
 var Probability = 5
 
+// ZeroWidthRunes is the array containing all invisible runes.
+// U+200B is used for obfuscating.
+var ZeroWidthRunes = []rune{
+	'\u200b', '\u200c', '\u200d', '\ufeff',
+}
+
 func init() {
 	rand.Seed(time.Now().UnixNano())
 }
 
 // Insert works its magic
 func Insert(s string) string {
+	var words = strings.Fields(s)
+
+	var amount = max(0, 2048-len(s))
+	var needle int
+
+	for i, w := range words {
+		needle++
+		if amount < needle {
+			break
+		}
+
+		// Skip over links for them to be clickable
+		if strings.HasPrefix(w, "http") {
+			continue
+		}
+
+		// Probably a codeblock, skip it
+		if strings.Contains(w, "`") {
+			continue
+		}
+
+		// Checks if it's a mention
+		if containsRunes(w, '<', '>') {
+			continue
+		}
+
+		// Words too short probably doens't need
+		// to be obfuscated
+		if len(w) < 3 {
+			continue
+		}
+
+		words[i] = obf(w)
+	}
+
+	return strings.Join(words, " ")
+}
+
+func obf(s string) string {
 	var r = []rune(s)
-	var b strings.Builder
+	var i = rand.Intn(len(r))
 
-	for _, r := range r {
-		b.WriteRune(r)
+	return string(r[:i]) + "\u200b" + string(r[i:])
+}
 
-		if rand.Intn(Probability) == 0 {
-			b.WriteRune('\u200d')
+func max(i, j int) int {
+	if i > j {
+		return i
+	}
+
+	return j
+}
+
+func containsRunes(s string, trs ...rune) bool {
+	var i int
+	for _, r := range []rune(s) {
+		for _, tr := range trs {
+			if tr == r {
+				i++
+			}
 		}
 	}
 
-	return b.String()
+	return i == len(trs)
 }
