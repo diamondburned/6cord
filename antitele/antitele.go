@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // Probability modifies the probability of an invisible character appearing.
@@ -42,13 +43,10 @@ func Insert(s string) string {
 			continue
 		}
 
-		// Probably a codeblock, skip it
-		if strings.Contains(w, "`") {
-			continue
-		}
-
-		// Checks if it's a mention
-		if containsRunes(w, '<', '>') {
+		// Skip if it's not a word
+		if strings.IndexFunc(w, func(c rune) bool {
+			return !unicode.IsLetter(c)
+		}) != -1 {
 			continue
 		}
 
