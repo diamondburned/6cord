@@ -27,7 +27,16 @@ var HighlightStyle = "vs"
 var trashyCodeBlockMatching = regexp.MustCompile("(.)```")
 
 // Parse parses md into tview strings
-func Parse(s string) (results string) {
+func Parse(s string) string {
+	return parse(s, true)
+}
+
+// ParseNoInsert parses md without inserting no-width spaces
+func ParseNoInsert(s string) string {
+	return parse(s, false)
+}
+
+func parse(s string, obf bool) (results string) {
 	results = s
 	defer func() {
 		if r := recover(); r != nil {

@@ -22,7 +22,6 @@ type Command struct {
 }
 
 var commands = Commands{
-
 	Command{
 		Command:     "/goto",
 		Function:    gotoChannel,
@@ -47,6 +46,11 @@ var commands = Commands{
 		Command:     "/edit",
 		Function:    editMessage,
 		Description: "[n:int optional] - edits the latest n message of yours",
+	},
+	Command{
+		Command:     "/delete",
+		Function:    deleteMessage,
+		Description: "[messageID:int] - deletes the message",
 	},
 	Command{
 		Command:     "/presence",
