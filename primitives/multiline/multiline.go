@@ -15,6 +15,8 @@ type Multiline struct {
 	buffer  []rune
 	current int // current line
 
+	isEnter bool
+
 	bg tcell.Style
 
 	done func(key tcell.EventKey, content string)
@@ -76,7 +78,10 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 		}
 
 		if r := event.Rune(); r != 0 {
-			if r == 79 {
+			// Hack for Shift+Enter, which sends 'O' + 'M'
+			if r == 'O' && event.Modifiers() == 4 {
+				m.isEnter = true
+			} else if r == 'M' && m.isEnter {
 				m.buffer = append(m.buffer, '\n')
 			} else {
 				m.buffer = append(m.buffer, r)
