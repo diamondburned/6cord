@@ -1,3 +1,5 @@
+github.com/Bios-Marcel/tview v0.0.0-20190421121204-3de0aae5073a h1:C2fpP5PPuII2woCLQ7LpwtP+Mi2xvFHiizZkOrmeQeI=
+github.com/Bios-Marcel/tview v0.0.0-20190421121204-3de0aae5073a/go.mod h1:GMXdWTT0HANfXLSKD86y+L0ZNzigLVtZB76T01m3VvI=
 github.com/BurntSushi/toml v0.3.1 h1:WXkYYl6Yr3qBf1K79EBnL4mak0OimBfB0XUf9Vl28OQ=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/alecthomas/assert v0.0.0-20170929043011-405dbfeb8e38 h1:smF2tmSOzy2Mm+0dGI2AIUHY+w0BUc+4tn40djz7+6U=
@@ -13,6 +15,8 @@ github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883 h1:bvNMNQO63//z+xNg
 github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883/go.mod h1:rCTlJbsFo29Kk6CurOXKm700vrz8f0KW0JNfpkRJY/8=
 github.com/atotto/clipboard v0.1.1 h1:WSoEbAS70E5gw8FbiqFlp69MGsB6dUb4l+0AGGLiVGw=
 github.com/atotto/clipboard v0.1.1/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
+github.com/bbrks/wrap v2.3.0+incompatible h1:9ebLuiUC/fBSu6OeOdD6XG8WRjf3G+wSJO1YZPU2O9I=
+github.com/bbrks/wrap v2.3.0+incompatible/go.mod h1:rc//8Fguf02+4sm0fBMyG1TrAaEhe6VTYM35MY10oO4=
 github.com/bwmarrin/discordgo v0.18.0 h1:XopVQXCIFy7Cr2eT7NcYcm4k0l2PYX+AP5RUbIWX2/8=
 github.com/bwmarrin/discordgo v0.18.0/go.mod h1:5NIvFv5Z7HddYuXbuQegZ684DleQaCFqChP2iuBivJ8=
 github.com/bwmarrin/discordgo v0.19.0 h1:kMED/DB0NR1QhRcalb85w0Cu3Ep2OrGAqZH1R5awQiY=
@@ -75,6 +79,8 @@ github.com/hashicorp/go-retryablehttp v0.5.2 h1:AoISa4P4IsW0/m4T6St8Yw38gTl5GtBA
 github.com/hashicorp/go-retryablehttp v0.5.2/go.mod h1:9B5zBasrRhHXnJnui7y6sL7es7NDiJgTc6Er0maI1Xs=
 github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c h1:iggm24wFUmbWb07KLA9jZe/yX/PDrNqRITTfa6SLj1g=
 github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c/go.mod h1:DrKdm6EIKwapt2eot+PWytCfUFshMmT9NERfEUFkv9c=
+github.com/k0kubun/pp v3.0.1+incompatible h1:3tqvf7QgUnZ5tXO6pNAZlrvHgl6DvifjDrd9g2S9Z40=
+github.com/k0kubun/pp v3.0.1+incompatible/go.mod h1:GWse8YhT0p8pT4ir3ZgBbfZild3tgzSScAn6HmfYukg=
 github.com/kr/pretty v0.1.0 h1:L/CwN0zerZDmRFUapSPitk6f+Q3+0za1rQkzVuMiMFI=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
@@ -98,6 +104,9 @@ github.com/pelletier/go-toml v1.2.0 h1:T5zMGML61Wp+FlcbWjRDT7yAxhJNAiPPLOFECq181
 github.com/pelletier/go-toml v1.2.0/go.mod h1:5z9KED0ma1S8pY6P1sdut58dfprrGBbd/94hg7ilaic=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
+github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c h1:g/UvEDB8RutkfYbTULmcCUpN0uQCVeh6j4bHt+Te8yM=
+github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c/go.mod h1:J4W+hErFfITUbyFAEXizpmkuxX7ZN56dopxHB4XQhMw=
+github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340/go.mod h1:SOLvOL4ybwgLJ6TYoX/rtaJ8EGOulH4XU7E9/TLrTCE=
 github.com/rumblefrog/discordgo v1.0.3 h1:7xaQhVSebGTDoatsGWyGKiHUBaBzDNBBdtQ+LsbSehA=
 github.com/rumblefrog/discordgo v1.0.3/go.mod h1:pci+kabDGw9VXmzgBSCMIUB5Voek7PyMWxCjOtSIA5s=
 github.com/sahilm/fuzzy v0.1.0 h1:FzWGaw2Opqyu+794ZQ9SYifWv2EIXpwP4q8dY1kDAwI=

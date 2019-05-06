@@ -1,0 +1,35 @@
+package multiline
+
+import (
+	"github.com/gdamore/tcell"
+	"github.com/rivo/tview"
+)
+
+// Multiline holds stuff
+type Multiline struct {
+	tv *tview.TextView
+
+	Height int
+}
+
+// NewMultiline makes a new Multiline
+func NewMultiline() (*Multiline, error) {
+	tv := tview.NewTextView()
+	tv.SetDynamicColors(false)
+	tv.SetRegions(false)
+	tv.SetScrollable(true)
+	m := &Multiline{
+		tv: tv,
+	}
+
+	tv.SetInputCapture(m.getHandler)
+
+	return m, nil
+}
+
+func (m *Multiline) getHandler(ev *tcell.EventKey) *tcell.EventKey {
+	if ev.Rune() != 0 {
+
+	}
+	return ev
+}

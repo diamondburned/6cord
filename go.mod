@@ -3,9 +3,11 @@ module gitlab.com/diamondburned/6cord
 go 1.12
 
 require (
+	github.com/Bios-Marcel/tview v0.0.0-20190421121204-3de0aae5073a
 	github.com/alecthomas/chroma v0.6.2
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.1
+	github.com/bbrks/wrap v2.3.0+incompatible
 	github.com/bwmarrin/discordgo v0.19.0
 	github.com/danieljoos/wincred v1.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1
@@ -15,16 +17,20 @@ require (
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v1.0.0
 	github.com/disintegration/imaging v1.6.0
+	github.com/gdamore/tcell v1.1.1
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
+	github.com/k0kubun/pp v3.0.1+incompatible
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
+	github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c
+	github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340 // indirect
 	github.com/rumblefrog/discordgo v1.0.3 // indirect
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/soniakeys/quant v1.0.0 // indirect
