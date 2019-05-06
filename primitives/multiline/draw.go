@@ -20,27 +20,39 @@ func (m *Multiline) Draw(s tcell.Screen) {
 		), "\n")
 	*/
 
-	lines := strings.Split(string(m.buffer), "\n")
+	lines := make([]string, 0, len(m.Buffer)*2)
+	if len(m.Buffer) > 0 {
+		m.state = strings.Split(string(m.Buffer), "\n")
+	} else {
+		m.state = strings.Split(m.Placeholder, "\n")
+	}
 
 	for y := 0; y < m.height; y++ {
-		if len(m.buffer) != 0 && y < len(lines) {
-			runes := []rune(lines[y])
+		if y < len(m.state) {
+			runes := []rune(m.state[y])
 
 			for i, r := range runes {
-				s.SetContent(m.x+i, m.y+y, r, nil, m.bg)
+				s.SetContent(m.x+i, m.y+y, r, nil, m.Style)
 			}
 
 			for i := len(runes); i < m.width; i++ {
-				s.SetContent(m.x+i, m.y+y, ' ', nil, m.bg)
+				s.SetContent(m.x+i, m.y+y, ' ', nil, m.Style)
 			}
 		} else {
 			for x := 0; x < m.width; x++ {
-				s.SetContent(m.x+x, m.y+y, ' ', nil, m.bg)
+				s.SetContent(m.x+x, m.y+y, ' ', nil, m.Style)
 			}
 		}
 	}
 
 	if m.focusB {
-		s.ShowCursor(len([]rune(lines[len(lines)-1])), len(lines)-1)
+		if len(m.Buffer) > 0 {
+			s.ShowCursor(
+				m.x+m.cursorX,
+				m.y+m.cursorY,
+			)
+		} else {
+			s.ShowCursor(m.x, m.y)
+		}
 	}
 }

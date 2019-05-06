@@ -106,6 +106,7 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c h1:g/UvEDB8RutkfYbTULmcCUpN0uQCVeh6j4bHt+Te8yM=
 github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c/go.mod h1:J4W+hErFfITUbyFAEXizpmkuxX7ZN56dopxHB4XQhMw=
+github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340 h1:nOZbL5f2xmBAHWYrrHbHV1xatzZirN++oOQ3g83Ypgs=
 github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340/go.mod h1:SOLvOL4ybwgLJ6TYoX/rtaJ8EGOulH4XU7E9/TLrTCE=
 github.com/rumblefrog/discordgo v1.0.3 h1:7xaQhVSebGTDoatsGWyGKiHUBaBzDNBBdtQ+LsbSehA=
 github.com/rumblefrog/discordgo v1.0.3/go.mod h1:pci+kabDGw9VXmzgBSCMIUB5Voek7PyMWxCjOtSIA5s=

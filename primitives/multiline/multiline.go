@@ -1,6 +1,8 @@
 package multiline
 
 import (
+	"strings"
+
 	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 )
@@ -12,12 +14,18 @@ type Multiline struct {
 	focus  tview.Focusable
 	focusB bool
 
-	buffer  []rune
-	current int // current line
+	Placeholder      string
+	PlaceholderColor tcell.Style
+
+	cursorX, cursorY int
+
+	Buffer  [][]rune
+	current int      // current line
+	state   []string // populated on last drawn
 
 	isEnter bool
 
-	bg tcell.Style
+	Style tcell.Style
 
 	done func(key tcell.EventKey, content string)
 }
@@ -25,11 +33,11 @@ type Multiline struct {
 // NewMultiline makes a new picture
 func NewMultiline() (*Multiline, error) {
 	p := &Multiline{
-		buffer: []rune{},
+		Buffer: [][]rune{},
 	}
 
 	p.focus = p
-	p.SetBackgroundColor(tcell.ColorBlack)
+	p.Style = tcell.Style(0).Background(tcell.ColorBlack)
 
 	return p, nil
 }
@@ -54,27 +62,46 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 
 		if event.Modifiers() != 0 && m.done != nil {
 			if key == tcell.KeyEnter {
-				m.buffer = append(m.buffer, '\n')
+				m.newLine()
 			}
 
 			return
 		}
 
-		if key == tcell.KeyDEL && len(m.buffer) > 0 {
-			m.buffer = m.buffer[:len(m.buffer)-1]
-			return
-		}
+		switch key {
+		case tcell.KeyDEL:
+			if len(m.Buffer) > 0 {
+				m.addRune(-1)
+				m.cursorX--
+			}
 
-		if key == tcell.KeyEscape || key == tcell.KeyEnter {
+			return
+
+		case tcell.KeyEscape, tcell.KeyEnter:
 			if m.done != nil {
-				m.done(*event, string(m.buffer))
+				var s = make([]string, 0, len(m.Buffer))
+				for _, l := range m.Buffer {
+					s = append(s, string(l))
+				}
+
+				m.done(*event, strings.Join(s, "\n"))
 			}
 
 			if key == tcell.KeyEnter {
-				m.buffer = append(m.buffer, '\n')
+				m.newLine()
 			}
 
 			return
+
+		case tcell.KeyLeft:
+			if m.cursorX > 0 {
+				m.cursorX--
+			}
+
+		case tcell.KeyRight:
+			if m.cursorX < len(m.state[m.cursorY]) {
+				m.cursorX++
+			}
 		}
 
 		if r := event.Rune(); r != 0 {
@@ -82,9 +109,9 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 			if r == 'O' && event.Modifiers() == 4 {
 				m.isEnter = true
 			} else if r == 'M' && m.isEnter {
-				m.buffer = append(m.buffer, '\n')
+				m.newLine()
 			} else {
-				m.buffer = append(m.buffer, r)
+				m.addRune(r)
 			}
 
 			return
@@ -92,9 +119,23 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 	}
 }
 
-// SetBackgroundColor sets the background color
-func (m *Multiline) SetBackgroundColor(c tcell.Color) {
-	m.bg = tcell.Style(0).Background(c)
+func (m *Multiline) newLine() {
+	m.Buffer = append(m.Buffer, []rune{})
+	m.cursorX = 0
+	m.cursorY++
+}
+
+func (m *Multiline) addRune(r rune) {
+	m.cursorX++
+
+	last := m.Buffer[m.cursorY][m.cursorX:]
+
+	if r > 0 {
+		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY][:m.cursorX], r)
+		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY], last...)
+	} else {
+		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY][:m.cursorX], last...)
+	}
 }
 
 // Focus does nothing, really.
