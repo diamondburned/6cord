@@ -71,8 +71,13 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 		}
 
 		switch key {
-		case tcell.KeyDEL:
-			m.delRune()
+		case tcell.KeyDEL: // backspace
+			m.delRune(false)
+			return
+
+		case tcell.KeyDelete: // delete
+			m.delRune(true)
+
 			return
 
 		case tcell.KeyEscape, tcell.KeyEnter:
@@ -95,6 +100,25 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 			if m.cursorX < len(m.state[m.cursorY]) {
 				m.cursorX++
 			}
+
+		case tcell.KeyUp, tcell.KeyDown:
+			switch key {
+			case tcell.KeyUp:
+				if m.cursorY > 0 {
+					m.cursorY--
+				}
+
+			case tcell.KeyDown:
+				if m.cursorY < len(m.state)-1 {
+					m.cursorY++
+				}
+			}
+
+			if m.cursorX > len(m.state[m.cursorY]) {
+				m.cursorX = len(m.state[m.cursorY])
+			}
+
+			return
 		}
 
 		if r := event.Rune(); r != 0 {
@@ -128,11 +152,13 @@ func (m *Multiline) newLine() {
 }
 
 func (m *Multiline) addRune(r rune) {
-	newBuf := make([]rune, 0, len(m.Buffer[m.cursorY])+1)
-	newBuf = append(m.Buffer[m.cursorY][:m.cursorX-1], r)
+	newBuf := m.Buffer[m.cursorY]
 
-	if len(m.Buffer[m.cursorY]) > 0 {
-		newBuf = append(newBuf, m.Buffer[m.cursorY][m.cursorX:]...)
+	if m.cursorX < len(newBuf) {
+		newBuf = append(newBuf[:m.cursorX+1], newBuf[m.cursorX:]...)
+		newBuf[m.cursorX] = r
+	} else {
+		newBuf = append(newBuf, r)
 	}
 
 	m.Buffer[m.cursorY] = newBuf
@@ -140,7 +166,17 @@ func (m *Multiline) addRune(r rune) {
 	m.cursorX++
 }
 
-func (m *Multiline) delRune() {
+func (m *Multiline) delRune(reverse bool) {
+	if reverse {
+		if m.cursorX < len(m.Buffer[m.cursorY]) {
+			m.Buffer[m.cursorY] = append(
+				m.Buffer[m.cursorY][:m.cursorX], m.Buffer[m.cursorY][m.cursorX+1:]...,
+			)
+		}
+
+		return
+	}
+
 	if len(m.Buffer[m.cursorY]) > 0 {
 		m.Buffer[m.cursorY] = append(
 			m.Buffer[m.cursorY][:m.cursorX-1], m.Buffer[m.cursorY][m.cursorX:]...,
