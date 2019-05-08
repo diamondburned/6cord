@@ -20,9 +20,8 @@ func (m *Multiline) Draw(s tcell.Screen) {
 		), "\n")
 	*/
 
-	lines := make([]string, 0, len(m.Buffer)*2)
 	if len(m.Buffer) > 0 {
-		m.state = strings.Split(string(m.Buffer), "\n")
+		m.state = m.getLines()
 	} else {
 		m.state = strings.Split(m.Placeholder, "\n")
 	}

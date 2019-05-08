@@ -33,7 +33,9 @@ type Multiline struct {
 // NewMultiline makes a new picture
 func NewMultiline() (*Multiline, error) {
 	p := &Multiline{
-		Buffer: [][]rune{},
+		Buffer: [][]rune{
+			[]rune{},
+		},
 	}
 
 	p.focus = p
@@ -70,21 +72,12 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 
 		switch key {
 		case tcell.KeyDEL:
-			if len(m.Buffer) > 0 {
-				m.addRune(-1)
-				m.cursorX--
-			}
-
+			m.delRune()
 			return
 
 		case tcell.KeyEscape, tcell.KeyEnter:
 			if m.done != nil {
-				var s = make([]string, 0, len(m.Buffer))
-				for _, l := range m.Buffer {
-					s = append(s, string(l))
-				}
-
-				m.done(*event, strings.Join(s, "\n"))
+				m.done(*event, strings.Join(m.getLines(), "\n"))
 			}
 
 			if key == tcell.KeyEnter {
@@ -119,6 +112,15 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 	}
 }
 
+func (m *Multiline) getLines() []string {
+	var s = make([]string, 0, len(m.Buffer))
+	for _, l := range m.Buffer {
+		s = append(s, string(l))
+	}
+
+	return s
+}
+
 func (m *Multiline) newLine() {
 	m.Buffer = append(m.Buffer, []rune{})
 	m.cursorX = 0
@@ -126,15 +128,25 @@ func (m *Multiline) newLine() {
 }
 
 func (m *Multiline) addRune(r rune) {
+	newBuf := make([]rune, 0, len(m.Buffer[m.cursorY])+1)
+	newBuf = append(m.Buffer[m.cursorY][:m.cursorX-1], r)
+
+	if len(m.Buffer[m.cursorY]) > 0 {
+		newBuf = append(newBuf, m.Buffer[m.cursorY][m.cursorX:]...)
+	}
+
+	m.Buffer[m.cursorY] = newBuf
+
 	m.cursorX++
+}
 
-	last := m.Buffer[m.cursorY][m.cursorX:]
+func (m *Multiline) delRune() {
+	if len(m.Buffer[m.cursorY]) > 0 {
+		m.Buffer[m.cursorY] = append(
+			m.Buffer[m.cursorY][:m.cursorX-1], m.Buffer[m.cursorY][m.cursorX:]...,
+		)
 
-	if r > 0 {
-		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY][:m.cursorX], r)
-		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY], last...)
-	} else {
-		m.Buffer[m.cursorY] = append(m.Buffer[m.cursorY][:m.cursorX], last...)
+		m.cursorX--
 	}
 }
 
