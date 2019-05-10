@@ -167,22 +167,46 @@ func (m *Multiline) addRune(r rune) {
 }
 
 func (m *Multiline) delRune(reverse bool) {
-	if reverse {
-		if m.cursorX < len(m.Buffer[m.cursorY]) {
-			m.Buffer[m.cursorY] = append(
-				m.Buffer[m.cursorY][:m.cursorX], m.Buffer[m.cursorY][m.cursorX+1:]...,
-			)
+	if len(m.Buffer[m.cursorY]) > 0 {
+		if reverse {
+			if m.cursorX < len(m.Buffer[m.cursorY]) {
+				m.Buffer[m.cursorY] = append(
+					m.Buffer[m.cursorY][:m.cursorX], m.Buffer[m.cursorY][m.cursorX+1:]...,
+				)
+			}
+
+			return
 		}
 
-		return
-	}
-
-	if len(m.Buffer[m.cursorY]) > 0 {
 		m.Buffer[m.cursorY] = append(
 			m.Buffer[m.cursorY][:m.cursorX-1], m.Buffer[m.cursorY][m.cursorX:]...,
 		)
 
 		m.cursorX--
+	} else if len(m.Buffer) > 1 {
+		// Delete the empty new line
+		m.cursorY--
+		m.Buffer = m.Buffer[:m.cursorY]
+		m.cursorX = len(m.Buffer[m.cursorY-1]) // wrap cursor to EOL
+	}
+}
+
+func (m *Multiline) Insert(s string) {
+	lines := strings.Split(s, "\n")
+	if len(lines) > 0 {
+		for _, r := range []rune(lines[0]) {
+			m.addRune(r)
+		}
+	}
+
+	if len(lines) > 1 {
+		for _, l := range lines[1:] {
+			m.newLine()
+
+			for _, r := range []rune(l) {
+				m.addRune(r)
+			}
+		}
 	}
 }
 
