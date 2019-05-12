@@ -27,20 +27,23 @@ func (m *Multiline) Draw(s tcell.Screen) {
 		m.state = m.getLines()
 	}
 
-	for y := 0; y < m.height; y++ {
+	start := min(m.cursorY, max(0, len(m.state)-m.height))
+
+	for y := start; y < start+m.height; y++ {
 		if y < len(m.state) {
 			runes := []rune(m.state[y])
 
-			for i, r := range runes {
-				s.SetContent(m.x+i, m.y+y, r, nil, m.Style)
+			for i := 0; i < len(runes); i++ {
+				r := runes[i]
+				s.SetContent(m.x+i, m.y+y-start, r, nil, m.Style)
 			}
 
 			for i := len(runes); i < m.width; i++ {
-				s.SetContent(m.x+i, m.y+y, ' ', nil, m.Style)
+				s.SetContent(m.x+i, m.y+y-start, ' ', nil, m.Style)
 			}
 		} else {
 			for x := 0; x < m.width; x++ {
-				s.SetContent(m.x+x, m.y+y, ' ', nil, m.Style)
+				s.SetContent(m.x+x, m.y+y-start, ' ', nil, m.Style)
 			}
 		}
 	}
@@ -49,7 +52,7 @@ func (m *Multiline) Draw(s tcell.Screen) {
 		if len(m.Buffer) > 0 {
 			s.ShowCursor(
 				m.x+m.cursorX,
-				m.y+m.cursorY,
+				m.y-start+m.cursorY,
 			)
 		} else {
 			s.ShowCursor(m.x, m.y)

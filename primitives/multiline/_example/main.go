@@ -6,13 +6,18 @@ import (
 )
 
 func main() {
-	m, _ := multiline.NewMultiline()
-	m.Placeholder = "Placeholder test"
-	m.Insert(`Something
-extra---
-ordinary!`)
+	tv := tview.NewTextView()
+	tv.SetText(`heavy test`)
 
-	if err := tview.NewApplication().SetRoot(m, true).SetFocus(m).Run(); err != nil {
+	m := multiline.NewMultiline()
+	m.Placeholder = "Placeholder test"
+
+	f := tview.NewFlex()
+	f.SetDirection(tview.FlexRow)
+	f.AddItem(tv, 0, 1, false)
+	f.AddItem(m, 1, 1, true)
+
+	if err := tview.NewApplication().SetRoot(f, true).SetFocus(f).Run(); err != nil {
 		panic(err)
 	}
 }

@@ -27,6 +27,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
+	github.com/mattn/go-runewidth v0.0.4
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c
@@ -42,6 +43,7 @@ require (
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
 	golang.org/x/sys v0.0.0-20190424175732-18eb32c0e2f0 // indirect
 	golang.org/x/text v0.3.1 // indirect
+	golang.org/x/tools v0.0.0-20190511041617-99f201b6807e // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/toast.v1 v1.0.0-20180812000517-0a84660828b2 // indirect
 )

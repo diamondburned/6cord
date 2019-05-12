@@ -31,7 +31,7 @@ type Multiline struct {
 }
 
 // NewMultiline makes a new picture
-func NewMultiline() (*Multiline, error) {
+func NewMultiline() *Multiline {
 	p := &Multiline{
 		Buffer: [][]rune{
 			[]rune{},
@@ -41,7 +41,7 @@ func NewMultiline() (*Multiline, error) {
 	p.focus = p
 	p.Style = tcell.Style(0).Background(tcell.ColorBlack)
 
-	return p, nil
+	return p
 }
 
 // GetRect returns the rectangle dimensions
