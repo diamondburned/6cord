@@ -20,10 +20,11 @@ func (m *Multiline) Draw(s tcell.Screen) {
 		), "\n")
 	*/
 
-	if len(m.Buffer) > 0 {
-		m.state = m.getLines()
-	} else {
+	// Conditions for drawing the placeholder
+	if len(m.Buffer) == 1 && len(m.Buffer[0]) == 0 {
 		m.state = strings.Split(m.Placeholder, "\n")
+	} else {
+		m.state = m.getLines()
 	}
 
 	for y := 0; y < m.height; y++ {

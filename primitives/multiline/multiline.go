@@ -186,8 +186,8 @@ func (m *Multiline) delRune(reverse bool) {
 	} else if len(m.Buffer) > 1 {
 		// Delete the empty new line
 		m.cursorY--
-		m.Buffer = m.Buffer[:m.cursorY]
-		m.cursorX = len(m.Buffer[m.cursorY-1]) // wrap cursor to EOL
+		m.Buffer = m.Buffer[:m.cursorY+1]
+		m.cursorX = len(m.Buffer[m.cursorY]) // wrap cursor to EOL
 	}
 }
 
