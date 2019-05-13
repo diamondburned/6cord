@@ -24,4 +24,5 @@ token = ""
 	default-status = "Send a message or input a command"
 	syntax-highlight-colorscheme = "emacs"
 	show-emoji-urls = true
+	obfuscate-words = false
 

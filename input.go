@@ -95,7 +95,11 @@ RuneWalk:
 		output.WriteByte(input[i])
 	}
 
-	return antitele.Insert(output.String())
+	if cfg.Prop.ObfuscateWords {
+		return antitele.Insert(output.String())
+	}
+
+	return output.String()
 }
 
 var store bool

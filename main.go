@@ -58,6 +58,7 @@ type Properties struct {
 	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar"`
 	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
 	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs"`
+	ObfuscateWords             bool   `id:"obfuscate-words"  default:"false" desc:"Insert a zero-width space to obfuscate word-logging telemetry"`
 }
 
 type Config struct {
