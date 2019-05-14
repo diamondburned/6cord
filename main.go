@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"runtime/debug"
@@ -11,7 +12,6 @@ import (
 	keyring "github.com/diamondburned/go-keyring"
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
-	"github.com/stevenroose/gonfig"
 	"github.com/valyala/fasttemplate"
 	"gitlab.com/diamondburned/6cord/md"
 )
@@ -41,60 +41,16 @@ var (
 
 	d *discordgo.Session
 
-	cfg Config
-
 	prefixTpl *fasttemplate.Template
 )
-
-// Properties ..
-type Properties struct {
-	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup"`
-	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side"`
-	HideBlocked                bool   `id:"hide-blocked"     default:"true"  desc:"Ignore all blocked users"`
-	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients"`
-	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white"`
-	BackgroundColor            int    `id:"background-color" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)"`
-	CommandPrefix              string `id:"command-prefix"   default:"[${GUILD}${CHANNEL}] " desc:"The prefix of the input box"`
-	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar"`
-	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
-	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs"`
-	ObfuscateWords             bool   `id:"obfuscate-words"  default:"false" desc:"Insert a zero-width space to obfuscate word-logging telemetry"`
-}
-
-type Config struct {
-	Username string `id:"username" short:"u" default:"" desc:"Used when token is empty, avoid if 2FA"`
-	Password string `id:"password" short:"p" default:"" desc:"Used when token is empty"`
-	Token    string `id:"token" short:"t" default:"" desc:"Authentication Token, recommended way of using"`
-
-	Prop Properties `id:"properties"`
-
-	Debug bool `id:"debug" short:"d" default:"false" desc:"Enables debug mode"`
-
-	Config string `short:"c"`
-}
-
-func parse(f string) {
-	err := gonfig.Load(&cfg, gonfig.Conf{
-		ConfigFileVariable:  "config",
-		FileDefaultFilename: f,
-		FileDecoder:         gonfig.DecoderTOML,
-		EnvPrefix:           "sixcord_",
-	})
-
-	if err != nil {
-		println(err.Error())
-		os.Exit(1)
-	}
-}
 
 func init() {
 	// less aggressive garbage collector
 	debug.SetGCPercent(200)
 
-	parse("6cord.toml")
-	if cfg.Config != "" {
-		// hack to make it parse -c
-		parse(cfg.Config)
+	if err := loadCfg(); err != nil {
+		fmt.Println(err.Error())
+		panic(err)
 	}
 
 	for i := 0; i < cfg.Prop.ChatPadding; i++ {
@@ -106,8 +62,8 @@ func init() {
 
 	t, err := fasttemplate.NewTemplate(cfg.Prop.CommandPrefix, "${", "}")
 	if err != nil {
-		println(err.Error())
-		os.Exit(1)
+		fmt.Println(err.Error())
+		panic(err)
 	}
 
 	prefixTpl = t
@@ -192,8 +148,8 @@ func main() {
 	default:
 		k, err := keyring.Get(AppName, "token")
 		if err != nil {
-			println("Token OR username + password missing! Refer to -h")
-			log.Fatalln()
+			fmt.Println(err.Error())
+			panic(err)
 		}
 
 		login = append(login, k)
@@ -201,6 +157,7 @@ func main() {
 
 	d, err = discordgo.New(login...)
 	if err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 
@@ -402,6 +359,7 @@ func main() {
 	)
 
 	if err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 
@@ -470,6 +428,7 @@ func main() {
 	d.State.TrackPresences = true
 
 	if err := d.Open(); err != nil {
+		fmt.Println(err.Error())
 		panic(err)
 	}
 
@@ -488,6 +447,7 @@ func main() {
 	syscallSilenceStderr(logFile)
 
 	if err := app.Run(); err != nil {
-		log.Panicln(err)
+		fmt.Println(err.Error())
+		panic(err)
 	}
 }

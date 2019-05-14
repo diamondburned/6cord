@@ -31,6 +31,7 @@
 - Templating for `command-prefix`
 	- This can be templated, for example: "`[${GUILD}@${CHANNEL}] `"
 	- Avaiable variables are `CHANNEL`, `GUILD`, `USERNAME` and `DISCRIM`
+- To install the config, move  `6cord.toml` to `$HOME/.config/6cord/`
 
 ## Todo
 
