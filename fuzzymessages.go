@@ -6,9 +6,14 @@ import (
 	"time"
 
 	"github.com/sahilm/fuzzy"
+	"gitlab.com/diamondburned/6cord/image"
 )
 
 var allMessages []string
+
+var (
+	imageState image.Backend
+)
 
 func fuzzyMessages(text string) {
 	var fuzzied []string
@@ -91,10 +96,9 @@ func fuzzyMessages(text string) {
 	app.Draw()
 
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
-		messagesView.Highlight(
-			strings.Split(t, " - ")[0],
-		)
+		ID := strings.Split(t, " - ")[0]
 
+		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()
 	})
 }
