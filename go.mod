@@ -33,6 +33,8 @@ require (
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	github.com/valyala/fasttemplate v1.0.0
 	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 // indirect
+	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
+	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
 	golang.org/x/sys v0.0.0-20190424175732-18eb32c0e2f0 // indirect
 	golang.org/x/text v0.3.1 // indirect
