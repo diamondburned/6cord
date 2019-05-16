@@ -14,6 +14,7 @@ type Properties struct {
 	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
 	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
 	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
+	SidebarIndent              int    `id:"sidebar-indent"   default:"2"     desc:"Width in spaces each indentation level on the sidebar adds."`
 	HideBlocked                bool   `id:"hide-blocked"     default:"true"  desc:"Ignore all blocked users."`
 	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients."`
 	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white."`

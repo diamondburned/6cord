@@ -107,6 +107,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			chNode.SetReference(ch.ID)
 			chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 			chNode.SetSelectedColor(tcell.ColorBlack)
+			chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
 
 			this.AddChild(chNode)
 		}
@@ -166,6 +167,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode.SetSelectable(false)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
+				chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
 
 				this.AddChild(chNode)
 
@@ -175,8 +177,10 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
 
-				if ch.ParentID != 0 {
-					chNode.SetIndent(4)
+				if ch.ParentID == 0 {
+					chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
+				} else {
+					chNode.SetIndent(cfg.Prop.SidebarIndent*2 - 1)
 				}
 
 				this.AddChild(chNode)
@@ -196,8 +200,10 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
 
-				if ch.ParentID != 0 {
-					chNode.SetIndent(4)
+				if ch.ParentID == 0 {
+					chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
+				} else {
+					chNode.SetIndent(cfg.Prop.SidebarIndent*2 - 1)
 				}
 
 				this.AddChild(chNode)

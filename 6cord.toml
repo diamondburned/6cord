@@ -17,6 +17,7 @@ token = ""
 	show-channels = true
 	chat-padding = 2
 	sidebar-ratio = 3
+	sidebar-indent = 2
 	hide-blocked = true
 	trigger-typing = true
 	foreground-color = 15

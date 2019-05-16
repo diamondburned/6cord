@@ -116,6 +116,7 @@ Notify:
 		)
 
 		pingNode.SetSelectable(false)
+		pingNode.SetIndent(cfg.Prop.SidebarIndent - 1)
 
 		node.AddChild(pingNode)
 		node.Expand()
