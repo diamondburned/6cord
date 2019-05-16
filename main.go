@@ -352,6 +352,7 @@ func main() {
 			app.ForceDraw()
 
 		case tcell.KeyCtrlC:
+			image.Close()
 			app.Stop()
 
 		case tcell.KeyTab:

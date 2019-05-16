@@ -13,7 +13,7 @@ require (
 	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.6
-	github.com/diamondburned/tview v1.0.0
+	github.com/diamondburned/tview v1.1.1
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect

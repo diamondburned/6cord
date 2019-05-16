@@ -15,9 +15,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	guildNode := tview.NewTreeNode("Guilds")
 	guildNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+	guildNode.SetSelectedColor(tcell.ColorBlack)
 
 	guildView.SetRoot(guildNode)
-	guildView.SetCurrentNode(guildNode)
 	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
 		reference := node.GetReference()
 		if reference == nil {
@@ -75,6 +75,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this.SetReference("Direct Messages")
 		this.Collapse()
 		this.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+		this.SetSelectedColor(tcell.ColorBlack)
 
 		// https://github.com/Bios-Marcel/cordless
 		sort.Slice(r.PrivateChannels, func(a, b int) bool {
@@ -105,11 +106,13 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			chNode := tview.NewTreeNode(display)
 			chNode.SetReference(ch.ID)
 			chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+			chNode.SetSelectedColor(tcell.ColorBlack)
 
 			this.AddChild(chNode)
 		}
 
 		guildNode.AddChild(this)
+		guildView.SetCurrentNode(this)
 	}
 
 	// https://github.com/Bios-Marcel/cordless
@@ -135,6 +138,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		this.SetReference(g.Name)
 		this.Collapse()
 		this.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+		this.SetSelectedColor(tcell.ColorBlack)
 
 		sorted := SortChannels(g.Channels)
 
@@ -161,6 +165,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode := tview.NewTreeNode(ch.Name)
 				chNode.SetSelectable(false)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+				chNode.SetSelectedColor(tcell.ColorBlack)
 
 				this.AddChild(chNode)
 
@@ -168,6 +173,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+				chNode.SetSelectedColor(tcell.ColorBlack)
 
 				if ch.ParentID != 0 {
 					chNode.SetIndent(4)
@@ -188,6 +194,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
 				chNode.SetReference(ch.ID)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+				chNode.SetSelectedColor(tcell.ColorBlack)
 
 				if ch.ParentID != 0 {
 					chNode.SetIndent(4)
