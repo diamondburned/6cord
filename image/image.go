@@ -3,6 +3,8 @@ package image
 import (
 	"errors"
 	"image"
+
+	"gitlab.com/diamondburned/ueberzug-go"
 )
 
 // Backend is the interface for various image
@@ -68,4 +70,6 @@ func Close() {
 	if t != nil {
 		t.Close()
 	}
+
+	ueberzug.Close()
 }

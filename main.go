@@ -229,6 +229,20 @@ func main() {
 
 				return ev
 
+			case tcell.KeyLeft:
+				if lastImgCtx != nil {
+					lastImgCtx.prevImage()
+				}
+
+				return nil
+
+			case tcell.KeyRight:
+				if lastImgCtx != nil {
+					lastImgCtx.nextImage()
+				}
+
+				return nil
+
 			case tcell.KeyEnter:
 				return ev
 			}
@@ -358,6 +372,11 @@ func main() {
 
 	// image
 	defer image.Close()
+	defer func() {
+		if lastImgCtx != nil {
+			lastImgCtx.Delete()
+		}
+	}()
 
 	logFile, err := os.OpenFile(
 		os.TempDir()+"/6cord.log",

@@ -128,5 +128,4 @@ Notify:
 	})
 
 	app.Draw()
-
 }

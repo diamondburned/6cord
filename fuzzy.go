@@ -11,6 +11,10 @@ func stateResetter() {
 	allMessages = []string{}
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()
+
+	if lastImgCtx != nil {
+		lastImgCtx.Delete()
+	}
 }
 
 func clearList() {

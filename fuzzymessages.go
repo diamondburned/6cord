@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/sahilm/fuzzy"
 )
 
 var allMessages []string
@@ -44,18 +42,14 @@ func fuzzyMessages(text string) {
 	}
 
 	if len(text) > 1 {
-		matches := fuzzy.Find(
-			strings.TrimPrefix(text, "~"),
-			allMessages,
-		)
+		text := strings.TrimPrefix(text, "~")
+		fuzzied = make([]string, 0, len(allMessages))
 
-		for _, m := range matches {
-			fuzzied = append(
-				fuzzied,
-				m.Str,
-			)
+		for _, m := range allMessages {
+			if strings.Contains(m, text) {
+				fuzzied = append(fuzzied, m)
+			}
 		}
-
 	} else {
 		fuzzied = allMessages
 	}
@@ -63,12 +57,14 @@ func fuzzyMessages(text string) {
 	clearList()
 
 	if len(fuzzied) > 0 {
-		for i, u := range fuzzied {
+		for _, u := range fuzzied {
 			autocomp.InsertItem(
-				i, u,
+				0, u,
 				"", 0, nil,
 			)
 		}
+
+		autocomp.SetCurrentItem(-1)
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
@@ -115,15 +111,7 @@ func fuzzyMessages(text string) {
 				return
 			}
 
-			if len(m.Attachments) == 0 {
-				return
-			}
-
-			lastImgCtx = newDiscordImageContext(
-				m.Attachments[0].ProxyURL,
-				m.Attachments[0].Width,
-				m.Attachments[0].Height,
-			)
+			lastImgCtx = newDiscordImageContext(m)
 		}()
 
 		messagesView.Highlight(ID)
