@@ -1,7 +1,13 @@
 <h1 align="center">6cord</h1>
-<a align="center" href="https://liberapay.com/diamondburned/donate"><img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg"></a>
-<p align="center"><img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" /></p>
-<p align="center"><img src="https://u.cubeupload.com/diamondburned/MCz9fP.png" /></p>
+
+<p align="center">
+	<a href="https://liberapay.com/diamondburned/donate">
+		<img alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">
+	</a>
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" />
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/img.png" />
+	<img src="https://u.cubeupload.com/diamondburned/MCz9fP.png" />
+</p>
 
 ## Installation
 
@@ -104,13 +110,13 @@
 
 ## Screenshots
 
-	<p align="center">
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/highlight.png" />
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/reactions.png" />
-	</p>
+<p align="center">
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/highlight.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/reactions.png" />
+</p>
 
 ## Credits
 
