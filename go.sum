@@ -40,8 +40,6 @@ github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c h1:DGqR/HqE
 github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
 github.com/diamondburned/tcell v1.1.6 h1:JXshIZGGkhdVk8Uv+yjlccxwNJA3eGHV6XwzLIFk4Ow=
 github.com/diamondburned/tcell v1.1.6/go.mod h1:Q49Y5+5hLvqARodOKBj/7iiuUrG8kRIuUNgdc1f4AWE=
-github.com/diamondburned/tview v0.0.0-20190426221806-f7e25ff24103 h1:T5dQ5ZwzhCuQN0X3inH4mE7P1f5VGbyzbkyBbuSCN4w=
-github.com/diamondburned/tview v0.0.0-20190426221806-f7e25ff24103/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/diamondburned/tview v1.0.0 h1:SeB3EE5J/JnqV4tweyDShIaKj5tjLp2ddCYb+K1VDH4=
 github.com/diamondburned/tview v1.0.0/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJMJXc/mA=
@@ -138,8 +136,6 @@ github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 h1:U5I57s4ISLpe
 github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07/go.mod h1:XlXBIfkGawHNVOHlenOaBW7zlfCh8LovwjOgjamYnkQ=
 gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023 h1:Ppq7B7ykPx0CunPrdr+cCgduczCC7Y88odRn6R30AWY=
 gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023/go.mod h1:71n9IRtUkft7iBh3/pRsrFITTQwRlEZtxZVaZH/8rKk=
-gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777 h1:bCrVnNkzIF6hbkUE6br1J9FP3A2sRZGI9Hjy7ZFhCoU=
-gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777/go.mod h1:UKSsoWKXcGQXxWYkXFB4z/UqJtIF3pZT6fHm6beLPKM=
 gitlab.com/diamondburned/ueberzug-go v0.0.0-20190516033950-90f1c96a632f h1:0zv0E9dy9hlFnPZ1fQqU6i+mxPsyGUnYNoOweUrUoYQ=
 gitlab.com/diamondburned/ueberzug-go v0.0.0-20190516033950-90f1c96a632f/go.mod h1:UKSsoWKXcGQXxWYkXFB4z/UqJtIF3pZT6fHm6beLPKM=
 golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac h1:7d7lG9fHOLdL6jZPtnV4LpI41SbohIJ1Atq7U991dMg=
