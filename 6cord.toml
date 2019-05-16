@@ -16,6 +16,8 @@ token = ""
 	# Keys are optional.
 	show-channels = true
 	chat-padding = 2
+	sidebar-ratio = 3
+	sidebar-indent = 2
 	hide-blocked = true
 	trigger-typing = true
 	foreground-color = 15
@@ -25,4 +27,7 @@ token = ""
 	syntax-highlight-colorscheme = "emacs"
 	show-emoji-urls = true
 	obfuscate-words = false
+	image-fetch-timeout = 1
+	image-width = 400
+	image-height = 400
 

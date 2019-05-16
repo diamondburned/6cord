@@ -12,7 +12,7 @@ import (
 var chatPadding string
 
 func fmtMessage(m *discordgo.Message) string {
-	ct, emojiMap := ParseAll(m)
+	ct, emojiMap := parseMessageContent(m)
 	ct = strings.Map(func(r rune) rune {
 		for _, z := range antitele.ZeroWidthRunes {
 			if z == r {

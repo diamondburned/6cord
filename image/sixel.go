@@ -1,11 +1,6 @@
 package image
 
-import (
-	"image"
-
-	ueberzug "gitlab.com/diamondburned/ueberzug-go"
-)
-
+/*
 // Ueberzug is the backend for ueberzug-go:
 // https://gitlab.com/diamondburned/ueberzug-go
 type Ueberzug struct {
@@ -31,3 +26,4 @@ func (u *Ueberzug) Delete() error {
 	u.i.Destroy()
 	return nil
 }
+*/

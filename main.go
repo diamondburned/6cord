@@ -13,6 +13,7 @@ import (
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
 	"github.com/valyala/fasttemplate"
+	"gitlab.com/diamondburned/6cord/image"
 	"gitlab.com/diamondburned/6cord/md"
 )
 
@@ -228,6 +229,20 @@ func main() {
 
 				return ev
 
+			case tcell.KeyLeft:
+				if lastImgCtx != nil {
+					lastImgCtx.prevImage()
+				}
+
+				return nil
+
+			case tcell.KeyRight:
+				if lastImgCtx != nil {
+					lastImgCtx.nextImage()
+				}
+
+				return nil
+
 			case tcell.KeyEnter:
 				return ev
 			}
@@ -336,6 +351,10 @@ func main() {
 			print("\033[2J")
 			app.ForceDraw()
 
+		case tcell.KeyCtrlC:
+			image.Close()
+			app.Stop()
+
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() < 1 {
 				toggleChannels()
@@ -351,6 +370,14 @@ func main() {
 	app.SetRoot(appflex, true)
 
 	toggleChannels()
+
+	// image
+	defer image.Close()
+	defer func() {
+		if lastImgCtx != nil {
+			lastImgCtx.Delete()
+		}
+	}()
 
 	logFile, err := os.OpenFile(
 		os.TempDir()+"/6cord.log",

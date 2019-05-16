@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
-
-	"github.com/sahilm/fuzzy"
 )
 
 var allMessages []string
+
+var lastImgCtx *imageCtx
 
 func fuzzyMessages(text string) {
 	var fuzzied []string
@@ -41,18 +42,14 @@ func fuzzyMessages(text string) {
 	}
 
 	if len(text) > 1 {
-		matches := fuzzy.Find(
-			strings.TrimPrefix(text, "~"),
-			allMessages,
-		)
+		text := strings.TrimPrefix(text, "~")
+		fuzzied = make([]string, 0, len(allMessages))
 
-		for _, m := range matches {
-			fuzzied = append(
-				fuzzied,
-				m.Str,
-			)
+		for _, m := range allMessages {
+			if strings.Contains(m, text) {
+				fuzzied = append(fuzzied, m)
+			}
 		}
-
 	} else {
 		fuzzied = allMessages
 	}
@@ -60,12 +57,14 @@ func fuzzyMessages(text string) {
 	clearList()
 
 	if len(fuzzied) > 0 {
-		for i, u := range fuzzied {
+		for _, u := range fuzzied {
 			autocomp.InsertItem(
-				i, u,
+				0, u,
 				"", 0, nil,
 			)
 		}
+
+		autocomp.SetCurrentItem(-1)
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
 
@@ -91,10 +90,31 @@ func fuzzyMessages(text string) {
 	app.Draw()
 
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
-		messagesView.Highlight(
-			strings.Split(t, " - ")[0],
-		)
+		ID := strings.Split(t, " - ")[0]
 
+		go func() {
+			if lastImgCtx != nil {
+				lastImgCtx.Delete()
+			}
+
+			if Channel == nil {
+				return
+			}
+
+			id, _ := strconv.ParseInt(ID, 10, 64)
+			if id == 0 {
+				return
+			}
+
+			m, err := d.State.Message(Channel.ID, id)
+			if err != nil {
+				return
+			}
+
+			lastImgCtx = newDiscordImageContext(m)
+		}()
+
+		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()
 	})
 }

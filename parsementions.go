@@ -6,8 +6,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/diamondburned/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
 	"gitlab.com/diamondburned/6cord/md"
 )
 
@@ -35,8 +35,7 @@ func ParseMentionsFallback(m *discordgo.Message) (content string) {
 	return
 }
 
-// ParseAll parses everything into formatted strings
-func ParseAll(m *discordgo.Message) (content string, emojiMap map[string][]string) {
+func parseMessageContent(m *discordgo.Message) (content string, emojiMap map[string][]string) {
 	channel, err := d.State.Channel(m.ChannelID)
 	if err != nil {
 		content = ParseMentionsFallback(m)

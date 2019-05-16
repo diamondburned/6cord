@@ -11,17 +11,22 @@ var cfg Config
 
 // Properties ..
 type Properties struct {
-	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup"`
-	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side"`
-	HideBlocked                bool   `id:"hide-blocked"     default:"true"  desc:"Ignore all blocked users"`
-	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients"`
-	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white"`
-	BackgroundColor            int    `id:"background-color" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)"`
+	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
+	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
+	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
+	SidebarIndent              int    `id:"sidebar-indent"   default:"2"     desc:"Width in spaces each indentation level on the sidebar adds."`
+	HideBlocked                bool   `id:"hide-blocked"     default:"true"  desc:"Ignore all blocked users."`
+	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients."`
+	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white."`
+	BackgroundColor            int    `id:"background-color" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)."`
 	CommandPrefix              string `id:"command-prefix"   default:"[${GUILD}${CHANNEL}] " desc:"The prefix of the input box"`
-	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar"`
-	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html"`
-	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs"`
-	ObfuscateWords             bool   `id:"obfuscate-words"  default:"false" desc:"Insert a zero-width space to obfuscate word-logging telemetry"`
+	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar."`
+	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html."`
+	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs."`
+	ObfuscateWords             bool   `id:"obfuscate-words"  default:"false" desc:"Insert a zero-width space to obfuscate word-logging telemetry."`
+	ImageFetchTimeout          int    `id:"image-fetch-timeout" default:"1"  desc:"The timeout to fetch images, in seconds."`
+	ImageWidth                 int    `id:"image-width"      default:"400"   desc:"The maximum width for an image."`
+	ImageHeight                int    `id:"image-height"     default:"400"   desc:"The maximum height for an image."`
 }
 
 type Config struct {

@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/diamondburned/tview"
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
 )
 
 func voiceStateUpdate(s *discordgo.Session, vsu *discordgo.VoiceStateUpdate) {
@@ -164,6 +164,7 @@ func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {
 
 	vcNode.SetSelectable(false)
 	vcNode.SetReference(vc.UserID)
+	vcNode.SetIndent(cfg.Prop.SidebarIndent - 1)
 
 	return vcNode
 }
