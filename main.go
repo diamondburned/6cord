@@ -13,6 +13,7 @@ import (
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
 	"github.com/valyala/fasttemplate"
+	"gitlab.com/diamondburned/6cord/image"
 	"gitlab.com/diamondburned/6cord/md"
 )
 
@@ -336,6 +337,9 @@ func main() {
 			print("\033[2J")
 			app.ForceDraw()
 
+		case tcell.KeyCtrlC:
+			app.Stop()
+
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() < 1 {
 				toggleChannels()
@@ -351,6 +355,9 @@ func main() {
 	app.SetRoot(appflex, true)
 
 	toggleChannels()
+
+	// image
+	defer image.Close()
 
 	logFile, err := os.OpenFile(
 		os.TempDir()+"/6cord.log",

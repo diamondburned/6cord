@@ -100,6 +100,9 @@ github.com/mattn/go-runewidth v0.0.4 h1:2BvfKmzob6Bmd4YsL0zygOqfdFnK7GR4QL06Do4/
 github.com/mattn/go-runewidth v0.0.4/go.mod h1:LwmH8dsx7+W8Uxz3IHJYH5QSwggIsqBzpuz5H//U1FU=
 github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1 h1:NfGNsA+XbC0putTeXrWUj1vSxgnolHwgry6uAsmW7tM=
 github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1/go.mod h1:zlzhYSuMbLdRdrxfutExxGpC+Pf2uUTJ6GpVQ4LB5dc=
+github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859 h1:smQbSzmT3EHl4EUwtFwFGmGIpiYgIiiPeVv1uguIQEE=
+github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859/go.mod h1:XPvLUNfbS4fJH25nqRHfWLMa1ONC8Amw+mIA639KxkE=
+github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
 github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
 github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d h1:VhgPp6v9qf9Agr/56bj7Y/xa04UccTW04VP0Qed4vnQ=
 github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d/go.mod h1:YUTz3bUH2ZwIWBy3CJBeOBEugqcmXREj14T+iG/4k4U=
@@ -137,6 +140,8 @@ gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023 h1:Ppq7B7ykPx
 gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023/go.mod h1:71n9IRtUkft7iBh3/pRsrFITTQwRlEZtxZVaZH/8rKk=
 gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777 h1:bCrVnNkzIF6hbkUE6br1J9FP3A2sRZGI9Hjy7ZFhCoU=
 gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777/go.mod h1:UKSsoWKXcGQXxWYkXFB4z/UqJtIF3pZT6fHm6beLPKM=
+gitlab.com/diamondburned/ueberzug-go v0.0.0-20190516033950-90f1c96a632f h1:0zv0E9dy9hlFnPZ1fQqU6i+mxPsyGUnYNoOweUrUoYQ=
+gitlab.com/diamondburned/ueberzug-go v0.0.0-20190516033950-90f1c96a632f/go.mod h1:UKSsoWKXcGQXxWYkXFB4z/UqJtIF3pZT6fHm6beLPKM=
 golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac h1:7d7lG9fHOLdL6jZPtnV4LpI41SbohIJ1Atq7U991dMg=
 golang.org/x/crypto v0.0.0-20180820150726-614d502a4dac/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20181030102418-4d3f4d9ffa16/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=

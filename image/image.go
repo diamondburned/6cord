@@ -32,7 +32,17 @@ var (
 )
 
 // New finds a backend and spawns the image
-func New(i image.Image, x, y int) (backend Backend, err error) {
+func New(i image.Image) (backend Backend, err error) {
+	if t == nil {
+		if err := Listen(); err != nil {
+			return nil, err
+		}
+	}
+
+	if PixelW < 1 || PixelH < 1 {
+		return nil, ErrNoBackend
+	}
+
 	for _, b := range PossibleBackends {
 		if b.Available() == nil {
 			backend = b
@@ -44,9 +54,18 @@ func New(i image.Image, x, y int) (backend Backend, err error) {
 		return nil, ErrNoBackend
 	}
 
-	if err := backend.Spawn(i, x, y); err != nil {
+	w := i.Bounds().Dx()
+
+	if err := backend.Spawn(i, PixelW/2-w/2, 0); err != nil {
 		return nil, err
 	}
 
 	return backend, nil
+}
+
+// Close has to be ran on exit!
+func Close() {
+	if t != nil {
+		t.Close()
+	}
 }

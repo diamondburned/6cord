@@ -24,6 +24,7 @@ require (
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
+	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/rumblefrog/discordgo v1.0.3 // indirect
 	github.com/sahilm/fuzzy v0.1.0
@@ -34,7 +35,7 @@ require (
 	github.com/valyala/fasttemplate v1.0.0
 	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 // indirect
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
-	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190514220019-ea31b64c3777
+	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190516033950-90f1c96a632f
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
 	golang.org/x/sys v0.0.0-20190424175732-18eb32c0e2f0 // indirect
 	golang.org/x/text v0.3.1 // indirect

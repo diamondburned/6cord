@@ -25,4 +25,5 @@ token = ""
 	syntax-highlight-colorscheme = "emacs"
 	show-emoji-urls = true
 	obfuscate-words = false
+	image-fetch-timeout = 1
 

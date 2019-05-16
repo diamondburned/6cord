@@ -2,18 +2,16 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/sahilm/fuzzy"
-	"gitlab.com/diamondburned/6cord/image"
 )
 
 var allMessages []string
 
-var (
-	imageState image.Backend
-)
+var lastImgCtx *imageCtx
 
 func fuzzyMessages(text string) {
 	var fuzzied []string
@@ -97,6 +95,36 @@ func fuzzyMessages(text string) {
 
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
 		ID := strings.Split(t, " - ")[0]
+
+		go func() {
+			if lastImgCtx != nil {
+				lastImgCtx.Delete()
+			}
+
+			if Channel == nil {
+				return
+			}
+
+			id, _ := strconv.ParseInt(ID, 10, 64)
+			if id == 0 {
+				return
+			}
+
+			m, err := d.State.Message(Channel.ID, id)
+			if err != nil {
+				return
+			}
+
+			if len(m.Attachments) == 0 {
+				return
+			}
+
+			lastImgCtx = newDiscordImageContext(
+				m.Attachments[0].ProxyURL,
+				m.Attachments[0].Width,
+				m.Attachments[0].Height,
+			)
+		}()
 
 		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()
