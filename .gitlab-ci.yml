@@ -1,8 +1,9 @@
 image: golang:alpine
 
 variables:
+  GO111MODULE: "on"
   REPO_NAME: gitlab.com/diamondburned/6cord
-  GO111MODULE: on
+
 
 before_script:
   - apk add git upx
