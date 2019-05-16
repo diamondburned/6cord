@@ -134,7 +134,7 @@ func renderCallback() {
 		text := HumanizeStrings(mems)
 		switch {
 		case len(mems) < 1:
-			text = "Send a message or input a command"
+			text = cfg.Prop.DefaultStatus
 		case len(mems) > 3:
 			text = "Several people are typing" + anim
 		case len(mems) == 1:
