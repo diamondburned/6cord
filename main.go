@@ -148,7 +148,7 @@ func main() {
 	default:
 		k, err := keyring.Get(AppName, "token")
 		if err != nil {
-			fmt.Println(err.Error())
+			fmt.Println("Missing token OR username and password!")
 			panic(err)
 		}
 
