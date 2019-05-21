@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"runtime/debug"
 	"strings"
 
 	"github.com/davecgh/go-spew/spew"
@@ -47,7 +46,7 @@ var (
 
 func init() {
 	// less aggressive garbage collector
-	debug.SetGCPercent(200)
+	// debug.SetGCPercent(200)
 
 	if err := loadCfg(); err != nil {
 		fmt.Println(err.Error())

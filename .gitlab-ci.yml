@@ -1,7 +1,9 @@
 image: golang:alpine
 
 variables:
+  GO111MODULE: "on"
   REPO_NAME: gitlab.com/diamondburned/6cord
+
 
 before_script:
   - apk add git upx
@@ -17,7 +19,7 @@ compile:
     script:
       - time go get 
       # compiles 6cord without cgo so that it's statically linked 
-      # may affect performance
+      # may affect performance - disabled for ueberzug + xorg
       - export CGO_ENABLED=0
       - time go build -ldflags -w -ldflags -s -o $CI_PROJECT_DIR/6cord
       - upx -q --8086 -9 $CI_PROJECT_DIR/6cord

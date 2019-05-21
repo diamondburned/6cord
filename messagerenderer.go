@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"time"
 	"sync"
+	"time"
 
 	"github.com/diamondburned/discordgo"
 )
@@ -36,7 +36,7 @@ func messageRenderer() {
 				color, username,
 				sentTime.Local().Format(time.Stamp),
 			)
-			
+
 			messagesView.Write([]byte(msg))
 			messageStore = append(messageStore, msg)
 		}
