@@ -2,14 +2,11 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"time"
 )
 
 var allMessages []string
-
-var lastImgCtx *imageCtx
 
 func fuzzyMessages(text string) {
 	var fuzzied []string
@@ -92,27 +89,7 @@ func fuzzyMessages(text string) {
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
 		ID := strings.Split(t, " - ")[0]
 
-		go func() {
-			if lastImgCtx != nil {
-				lastImgCtx.Delete()
-			}
-
-			if Channel == nil {
-				return
-			}
-
-			id, _ := strconv.ParseInt(ID, 10, 64)
-			if id == 0 {
-				return
-			}
-
-			m, err := d.State.Message(Channel.ID, id)
-			if err != nil {
-				return
-			}
-
-			lastImgCtx = newDiscordImageContext(m)
-		}()
+		checkForImage(ID)
 
 		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()

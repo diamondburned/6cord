@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"image"
@@ -30,6 +32,38 @@ type imageAsset struct {
 
 var imageClient = &http.Client{
 	Timeout: 30 * time.Second,
+}
+
+var (
+	lastImgCtx *imageCtx
+	lastImgMu  = &sync.Mutex{}
+)
+
+func checkForImage(ID string) {
+	lastImgMu.Lock()
+	defer lastImgMu.Unlock()
+
+	if lastImgCtx != nil {
+		lastImgCtx.Delete()
+	}
+
+	if Channel == nil {
+		return
+	}
+
+	id, _ := strconv.ParseInt(ID, 10, 64)
+	if id == 0 {
+		return
+	}
+
+	m, err := d.State.Message(Channel.ID, id)
+	if err != nil {
+		return
+	}
+
+	go func() {
+		lastImgCtx = newDiscordImageContext(m)
+	}()
 }
 
 func newDiscordImageContext(m *discordgo.Message) *imageCtx {
@@ -88,14 +122,17 @@ func (ctx *imageCtx) showImage(a *imageAsset) error {
 	var (
 		resizeW int
 		resizeH int
+
+		maxW = min(img.PixelW, cfg.Prop.ImageWidth)
+		maxH = min(img.PixelH, cfg.Prop.ImageHeight)
 	)
 
-	if a.w > a.h {
-		resizeH = cfg.Prop.ImageHeight
-		resizeW = cfg.Prop.ImageHeight * a.w / a.h
+	if a.w < a.h {
+		resizeH = maxH
+		resizeW = maxH * a.w / a.h
 	} else {
-		resizeW = cfg.Prop.ImageWidth
-		resizeH = cfg.Prop.ImageWidth * a.h / a.w
+		resizeW = maxW
+		resizeH = maxW * a.h / a.w
 	}
 
 	if a.sizedURL == "" {
@@ -117,9 +154,7 @@ func (ctx *imageCtx) showImage(a *imageAsset) error {
 		return err
 	}
 
-	if ctx.state != nil {
-		ctx.state.Delete()
-	}
+	ctx.Delete()
 
 	c, err := img.New(i)
 	if err != nil {
@@ -132,5 +167,7 @@ func (ctx *imageCtx) showImage(a *imageAsset) error {
 }
 
 func (c *imageCtx) Delete() {
-	c.state.Delete()
+	if c.state != nil {
+		c.state.Delete()
+	}
 }
