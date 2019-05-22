@@ -1,14 +1,9 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
-	"strconv"
-	"strings"
-	"sync"
 	"time"
 
-	"image"
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
@@ -18,163 +13,123 @@ import (
 )
 
 type imageCtx struct {
-	state  img.Backend
-	index  int
-	assets []*imageAsset
+	state img.Backend
+	index int
 }
 
-type imageAsset struct {
-	url  string
-	w, h int
+type imageRendererPipelineStruct struct {
+	event   chan interface{}
+	state   img.Backend
+	message int64
+	index   int
 
-	sizedURL string
+	cache  *imageCacheStruct
+	assets []*imageCacheAsset
 }
 
-var imageClient = &http.Client{
-	Timeout: 30 * time.Second,
-}
-
-var (
-	lastImgCtx *imageCtx
-	lastImgMu  = &sync.Mutex{}
+const (
+	imagePipelineNextEvent int = iota
+	imagePipelinePrevEvent
 )
 
-func checkForImage(ID string) {
-	if lastImgCtx != nil {
-		lastImgMu.Lock()
-		lastImgCtx.Delete()
-		lastImgMu.Unlock()
-	}
+var imageRendererPipeline = startImageRendererPipeline()
 
-	if Channel == nil {
-		return
-	}
-
-	id, _ := strconv.ParseInt(ID, 10, 64)
-	if id == 0 {
-		return
-	}
-
-	m, err := d.State.Message(Channel.ID, id)
-	if err != nil {
-		return
+func startImageRendererPipeline() *imageRendererPipelineStruct {
+	p := &imageRendererPipelineStruct{
+		event: make(chan interface{}, 5),
+		cache: &imageCacheStruct{
+			client: &http.Client{
+				Timeout: 30 * time.Second,
+			},
+		},
 	}
 
 	go func() {
-		lastImgCtx = newDiscordImageContext(m)
-	}()
-}
+		for i := range p.event {
+		Switch:
+			switch i := i.(type) {
+			case *discordgo.Message:
+				p.message = i.ID
 
-func newDiscordImageContext(m *discordgo.Message) *imageCtx {
-	lastImgMu.Lock()
-	defer lastImgMu.Unlock()
+				p.assets = p.cache.get(i.ID)
+				if p.assets == nil {
+					var err error
 
-	ctx := &imageCtx{
-		assets: make([]*imageAsset, 0, len(m.Attachments)+len(m.Embeds)),
-	}
+					p.assets, err = p.cache.set(i)
+					if err != nil {
+						Warn(err.Error())
+						break
+					}
+				}
 
-	for _, a := range m.Attachments {
-		ctx.assets = append(ctx.assets, &imageAsset{
-			url: a.ProxyURL,
-			w:   a.Width,
-			h:   a.Height,
-		})
-	}
+				p.clean()
 
-	for _, e := range m.Embeds {
-		if t := e.Thumbnail; t != nil {
-			ctx.assets = append(ctx.assets, &imageAsset{
-				url: t.ProxyURL,
-				w:   t.Width,
-				h:   t.Height,
-			})
+				if p.assets == nil {
+					break Switch
+				}
+
+				p.show()
+
+			case int:
+				if p.assets == nil {
+					break Switch
+				}
+
+				switch i {
+				case imagePipelineNextEvent:
+					p.index++
+					if p.index >= len(p.assets) {
+						p.index = 0
+					}
+				case imagePipelinePrevEvent:
+					p.index--
+					if p.index < 0 {
+						p.index = len(p.assets) - 1
+					}
+				default:
+					break Switch
+				}
+
+				p.show()
+
+			default:
+				break Switch
+			}
 		}
-	}
+	}()
 
-	if len(ctx.assets) == 0 {
+	return p
+}
+
+func (p *imageRendererPipelineStruct) add(m *discordgo.Message) {
+	p.event <- m
+}
+
+func (p *imageRendererPipelineStruct) next() {
+	p.event <- imagePipelineNextEvent
+}
+
+func (p *imageRendererPipelineStruct) prev() {
+	p.event <- imagePipelinePrevEvent
+}
+
+func (p *imageRendererPipelineStruct) clean() {
+	if p.state != nil {
+		p.state.Delete()
+	}
+}
+
+func (p *imageRendererPipelineStruct) show() (err error) {
+	p.clean()
+
+	if p.assets == nil {
 		return nil
 	}
 
-	if err := ctx.showImage(ctx.assets[0]); err != nil {
-		return nil
-	}
-
-	return ctx
-}
-
-func (ctx *imageCtx) nextImage() error {
-	ctx.index++
-	if ctx.index >= len(ctx.assets) {
-		ctx.index = 0
-	}
-
-	return ctx.showImage(ctx.assets[ctx.index])
-}
-
-func (ctx *imageCtx) prevImage() error {
-	ctx.index--
-	if ctx.index < 0 {
-		ctx.index = len(ctx.assets) - 1
-	}
-
-	return ctx.showImage(ctx.assets[ctx.index])
-}
-
-func (ctx *imageCtx) showImage(a *imageAsset) error {
-	var (
-		resizeW int
-		resizeH int
-
-		maxW = cfg.Prop.ImageWidth
-		maxH = cfg.Prop.ImageHeight
-	)
-
-	if img.PixelW != 0 && img.PixelH != 0 {
-		maxW = min(img.PixelW, cfg.Prop.ImageWidth)
-		maxH = min(img.PixelH, cfg.Prop.ImageHeight)
-	}
-
-	if a.w < a.h {
-		resizeH = maxH
-		resizeW = maxH * a.w / a.h
-	} else {
-		resizeW = maxW
-		resizeH = maxW * a.h / a.w
-	}
-
-	if a.sizedURL == "" {
-		a.sizedURL = strings.Split(a.url, "?")[0] + fmt.Sprintf(
-			"?width=%d&height=%d",
-			resizeW, resizeH,
-		)
-	}
-
-	r, err := imageClient.Get(a.sizedURL)
+	p.state, err = img.New(p.assets[p.index].i)
 	if err != nil {
 		return err
 	}
 
-	defer r.Body.Close()
-
-	i, _, err := image.Decode(r.Body)
-	if err != nil {
-		return err
-	}
-
-	ctx.Delete()
-
-	c, err := img.New(i)
-	if err != nil {
-		return err
-	}
-
-	ctx.state = c
-
-	return err
-}
-
-func (ctx *imageCtx) Delete() {
-	if ctx.state != nil {
-		ctx.state.Delete()
-	}
+	return nil
 }

@@ -209,50 +209,7 @@ func main() {
 		autocomp.SetSelectedTextColor(tcell.Color(15 - cfg.Prop.ForegroundColor))
 		autocomp.SetSelectedBackgroundColor(tcell.Color(cfg.Prop.ForegroundColor))
 		autocomp.SetShortcutColor(tcell.Color(cfg.Prop.ForegroundColor))
-
-		autocomp.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
-			switch ev.Key() {
-			case tcell.KeyDown:
-				if autocomp.GetCurrentItem()+1 == autocomp.GetItemCount() {
-					app.SetFocus(input)
-					return nil
-				}
-
-				return ev
-
-			case tcell.KeyUp:
-				if autocomp.GetCurrentItem() == 0 {
-					app.SetFocus(input)
-					return nil
-				}
-
-				return ev
-
-			case tcell.KeyLeft:
-				if lastImgCtx != nil {
-					lastImgCtx.prevImage()
-				}
-
-				return nil
-
-			case tcell.KeyRight:
-				if lastImgCtx != nil {
-					lastImgCtx.nextImage()
-				}
-
-				return nil
-
-			case tcell.KeyEnter:
-				return ev
-			}
-
-			if ev.Rune() >= 0x31 && ev.Rune() <= 0x122 {
-				return ev
-			}
-
-			app.SetFocus(input)
-			return nil
-		})
+		autocomp.SetInputCapture(autocompHandler)
 
 		resetInputBehavior()
 		input.SetInputCapture(inputKeyHandler)
@@ -372,11 +329,7 @@ func main() {
 
 	// image
 	defer image.Close()
-	defer func() {
-		if lastImgCtx != nil {
-			lastImgCtx.Delete()
-		}
-	}()
+	defer imageRendererPipeline.clean()
 
 	logFile, err := os.OpenFile(
 		os.TempDir()+"/6cord.log",

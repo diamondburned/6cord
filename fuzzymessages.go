@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -89,7 +90,15 @@ func fuzzyMessages(text string) {
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
 		ID := strings.Split(t, " - ")[0]
 
-		checkForImage(ID)
+		if Channel != nil {
+			id, _ := strconv.ParseInt(ID, 10, 64)
+			if id != 0 {
+				m, err := d.State.Message(Channel.ID, id)
+				if err == nil {
+					imageRendererPipeline.add(m)
+				}
+			}
+		}
 
 		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()

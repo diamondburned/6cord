@@ -9,6 +9,8 @@ import (
 	"github.com/diamondburned/tview"
 )
 
+const prefetchMessageCount = 35
+
 func loadChannel(channelID int64) {
 	app.QueueUpdateDraw(func() {
 		wrapFrame.SetTitle("[Loading...[]")
@@ -46,7 +48,11 @@ func actualLoadChannel(channelID int64) {
 		)
 	}
 
-	msgs, err := d.ChannelMessages(Channel.ID, 35, 0, 0, 0)
+	msgs, err := d.ChannelMessages(
+		Channel.ID, prefetchMessageCount,
+		0, 0, 0,
+	)
+
 	if err != nil {
 		Warn(err.Error())
 		return

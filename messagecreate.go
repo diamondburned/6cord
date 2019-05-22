@@ -43,10 +43,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	if !isRegularMessage(m.Message) {
-		return
-	}
-
 	ackMe(m.Message)
 
 	typing.RemoveUser(&discordgo.TypingStart{

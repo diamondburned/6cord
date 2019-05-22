@@ -20,6 +20,10 @@ func messageRenderer() {
 	for i := range messageRender {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
+			if !isRegularMessage(m.Message) {
+				break
+			}
+
 			rendererCreate(m.Message, lastmsg)
 
 			lastmsg = m.Message
@@ -79,7 +83,7 @@ func messageRenderer() {
 
 		case nil:
 			messagesView.Clear()
-			messageStore = []string{}
+			messageStore = make([]string, 0, prefetchMessageCount)
 
 		default:
 			Warn(fmt.Sprintf("Message renderer received event type:\n%T", i))

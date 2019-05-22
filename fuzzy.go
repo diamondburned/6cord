@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tcell"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -12,9 +13,7 @@ func stateResetter() {
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()
 
-	if lastImgCtx != nil {
-		lastImgCtx.Delete()
-	}
+	imageRendererPipeline.clean()
 }
 
 func clearList() {
@@ -59,6 +58,44 @@ func min(i, j int) int {
 	}
 
 	return j
+}
+
+func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
+	switch ev.Key() {
+	case tcell.KeyDown:
+		if autocomp.GetCurrentItem()+1 == autocomp.GetItemCount() {
+			app.SetFocus(input)
+			return nil
+		}
+
+		return ev
+
+	case tcell.KeyUp:
+		if autocomp.GetCurrentItem() == 0 {
+			app.SetFocus(input)
+			return nil
+		}
+
+		return ev
+
+	case tcell.KeyLeft:
+		imageRendererPipeline.prev()
+		return nil
+
+	case tcell.KeyRight:
+		imageRendererPipeline.next()
+		return nil
+
+	case tcell.KeyEnter:
+		return ev
+	}
+
+	if ev.Rune() >= 0x31 && ev.Rune() <= 0x122 {
+		return ev
+	}
+
+	app.SetFocus(input)
+	return nil
 }
 
 // fuck you you fucking tview dev

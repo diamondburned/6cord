@@ -11,7 +11,7 @@ import (
 // while
 func cleanupBuffer() {
 	if len(messageStore) > 512 && !messagesView.HasFocus() {
-		messageStore = messageStore[512:]
+		messageStore = messageStore[:512]
 
 		app.QueueUpdateDraw(func() {
 			messagesView.SetText(
@@ -44,7 +44,7 @@ func isRegularMessage(m *discordgo.Message) bool {
 	case discordgo.MessageTypeChannelNameChange:
 		messageText = "changed the channel name to " + m.Content + "."
 	case discordgo.MessageTypeChannelPinnedMessage:
-		messageText = "pinned a message."
+		messageText = fmt.Sprintf("pinned message %d.", m.ID)
 	case discordgo.MessageTypeRecipientAdd:
 		messageText = "added " + m.Mentions[0].Username + " to the group."
 	case discordgo.MessageTypeRecipientRemove:
@@ -59,11 +59,7 @@ func isRegularMessage(m *discordgo.Message) bool {
 			m.Author.Username, messageText,
 		)
 
-		// Writing it directly for performance
-		app.QueueUpdateDraw(func() {
-			messagesView.Write([]byte(msg))
-		})
-
+		messagesView.Write([]byte(msg))
 		messageStore = append(messageStore, msg)
 
 		return false
