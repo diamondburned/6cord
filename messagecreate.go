@@ -47,9 +47,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	// if m.Author.ID != d.State.User.ID {
 	ackMe(m.Message)
-	// }
 
 	typing.RemoveUser(&discordgo.TypingStart{
 		UserID:    m.Author.ID,
@@ -57,6 +55,6 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 	})
 
 	// messagerenderer.go
-	messageRender <- m.Message
+	messageRender <- m
 	scrollChat()
 }

@@ -2,56 +2,123 @@ package main
 
 import (
 	"fmt"
-	"sync"
+	"log"
+	"strings"
 	"time"
 
 	"github.com/diamondburned/discordgo"
 )
 
 var (
-	messageRender = make(chan *discordgo.Message, 3)
-	msgRenderLock sync.Mutex
+	messageRender = make(chan interface{}, 12)
 )
 
 // Function takes in a messageCreate buffer
-// do NOT use for update+delete (yet)
 func messageRenderer() {
 	var lastmsg *discordgo.Message
-	msgRenderLock.Lock()
-	defer msgRenderLock.Unlock()
 
-	for m := range messageRender {
-		if getLastAuthor() != m.Author.ID || (lastmsg != nil && messageisOld(m, lastmsg)) {
-			sentTime, err := m.Timestamp.Parse()
-			if err != nil {
-				sentTime = time.Now()
+	for i := range messageRender {
+		switch m := i.(type) {
+		case *discordgo.MessageCreate:
+			rendererCreate(m.Message, lastmsg)
+
+			lastmsg = m.Message
+			scrollChat()
+
+		case *discordgo.Message:
+			rendererCreate(m, lastmsg)
+
+			lastmsg = m
+			messagesView.ScrollToEnd()
+
+		case *discordgo.MessageDelete:
+			for i := len(messageStore) - 1; i >= 0; i-- {
+				if ID := getIDfromindex(i); ID != 0 {
+					if m.ID != ID {
+						continue
+					}
+
+					prev := 0
+
+					if (i > 1 && i == len(messageStore)-1 && strings.HasPrefix(messageStore[i-1], authorFormat[:4])) ||
+						(i > 0 &&
+							strings.HasPrefix(messageStore[i-1], authorFormat[:4]) &&
+							!strings.HasPrefix(messageStore[i+1], messageFormat[:3]) &&
+							i != len(messageStore)-1) {
+
+						prev = 1
+						setLastAuthor(0)
+					}
+
+					messageStore = append(
+						messageStore[:i-prev],
+						messageStore[i+1:]...,
+					)
+
+					messagesView.SetText(strings.Join(messageStore, ""))
+
+					break
+				}
 			}
 
-			setLastAuthor(m.Author.ID)
+			lastmsg = nil
 
-			username, color := us.DiscordThis(m)
+		case *discordgo.MessageUpdate:
+			for i, msg := range messageStore {
+				if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
+					msg := fmt.Sprintf(
+						messageFormat+"[::-]",
+						m.ID, fmtMessage(m.Message),
+					)
 
-			msg := fmt.Sprintf(
-				authorFormat,
-				color, username,
-				sentTime.Local().Format(time.Stamp),
-			)
+					messageStore[i] = msg
 
-			messagesView.Write([]byte(msg))
-			messageStore = append(messageStore, msg)
+					break
+				}
+			}
+
+		case nil:
+			messagesView.Clear()
+			messageStore = []string{}
+
+		default:
+			Warn(fmt.Sprintf("Message renderer received event type:\n%T", i))
+			log.Println(fmt.Sprintf("%#v", i))
+
+			continue
 		}
 
+		app.Draw()
+	}
+}
+
+func rendererCreate(m, lastmsg *discordgo.Message) {
+	msgFmt := fmt.Sprintf(
+		messageFormat+"[::-]",
+		m.ID, fmtMessage(m),
+	)
+
+	if getLastAuthor() != m.Author.ID || (lastmsg != nil && messageisOld(m, lastmsg)) {
+		sentTime, err := m.Timestamp.Parse()
+		if err != nil {
+			sentTime = time.Now()
+		}
+
+		setLastAuthor(m.Author.ID)
+
+		username, color := us.DiscordThis(m)
+
 		msg := fmt.Sprintf(
-			messageFormat+"[::-]",
-			m.ID, fmtMessage(m),
+			authorFormat,
+			color, username,
+			sentTime.Local().Format(time.Stamp),
 		)
 
-		app.QueueUpdateDraw(func() {
-			messagesView.Write([]byte(msg))
-		})
+		messagesView.Write([]byte(msg + msgFmt))
+		messageStore = append(messageStore, msg, msgFmt)
 
-		messageStore = append(messageStore, msg)
-
-		lastmsg = m
+	} else {
+		messagesView.Write([]byte(msgFmt))
+		messageStore = append(messageStore, msgFmt)
 	}
 }

@@ -69,6 +69,7 @@ func New(i image.Image) (backend Backend, err error) {
 func Close() {
 	if t != nil {
 		t.Close()
+		t = nil
 	}
 
 	ueberzug.Close()

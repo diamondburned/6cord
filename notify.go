@@ -38,7 +38,7 @@ Notify:
 		case !pinged:
 			submessage = "said in a heated channel"
 		case len(c.Recipients) > 0:
-			submessage = "messaged you"
+			submessage = "messaged"
 		default:
 			submessage = "mentioned you"
 		}

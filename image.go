@@ -40,11 +40,10 @@ var (
 )
 
 func checkForImage(ID string) {
-	lastImgMu.Lock()
-	defer lastImgMu.Unlock()
-
 	if lastImgCtx != nil {
+		lastImgMu.Lock()
 		lastImgCtx.Delete()
+		lastImgMu.Unlock()
 	}
 
 	if Channel == nil {
@@ -67,6 +66,9 @@ func checkForImage(ID string) {
 }
 
 func newDiscordImageContext(m *discordgo.Message) *imageCtx {
+	lastImgMu.Lock()
+	defer lastImgMu.Unlock()
+
 	ctx := &imageCtx{
 		assets: make([]*imageAsset, 0, len(m.Attachments)+len(m.Embeds)),
 	}
@@ -123,9 +125,14 @@ func (ctx *imageCtx) showImage(a *imageAsset) error {
 		resizeW int
 		resizeH int
 
+		maxW = cfg.Prop.ImageWidth
+		maxH = cfg.Prop.ImageHeight
+	)
+
+	if img.PixelW != 0 && img.PixelH != 0 {
 		maxW = min(img.PixelW, cfg.Prop.ImageWidth)
 		maxH = min(img.PixelH, cfg.Prop.ImageHeight)
-	)
+	}
 
 	if a.w < a.h {
 		resizeH = maxH
@@ -166,8 +173,8 @@ func (ctx *imageCtx) showImage(a *imageAsset) error {
 	return err
 }
 
-func (c *imageCtx) Delete() {
-	if c.state != nil {
-		c.state.Delete()
+func (ctx *imageCtx) Delete() {
+	if ctx.state != nil {
+		ctx.state.Delete()
 	}
 }

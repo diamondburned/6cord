@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"sort"
-	"strings"
 	"time"
 
 	"github.com/diamondburned/discordgo"
@@ -65,10 +63,7 @@ func actualLoadChannel(channelID int64) {
 		}(ch, msgs)
 	}
 
-	messagesView.Clear()
-
-	//var wg sync.WaitGroup
-	messageStore = []string{}
+	messageRender <- nil
 
 	for i := 0; i < len(msgs); i++ {
 		m := msgs[i]
@@ -81,42 +76,15 @@ func actualLoadChannel(channelID int64) {
 			continue
 		}
 
-		sentTime, err := m.Timestamp.Parse()
-		if err != nil {
-			sentTime = time.Now()
-		}
-
-		if i == 0 || (i > 0 && (msgs[i-1].Author.ID != m.Author.ID) || messageisOld(m, msgs[i-1])) {
-			username, color := us.DiscordThis(m)
-
-			messageStore = append(messageStore, fmt.Sprintf(
-				authorFormat,
-				color, username,
-				sentTime.Local().Format(time.Stamp),
-			))
-		}
-
-		messageStore = append(messageStore, fmt.Sprintf(
-			messageFormat,
-			m.ID, fmtMessage(m),
-		))
-
+		messageRender <- m
 		d.State.MessageAdd(m)
 	}
 
 	if len(msgs) > 0 {
 		setLastAuthor(msgs[len(msgs)-1].Author.ID)
-
-		app.QueueUpdateDraw(func() {
-			messagesView.SetText(
-				strings.Join(messageStore, ""),
-			)
-		})
 	} else {
 		Message("There's nothing here!")
 	}
-
-	messagesView.ScrollToEnd()
 
 	resetInputBehavior()
 	app.SetFocus(input)
