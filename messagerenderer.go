@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	messageRender = make(chan interface{}, 12)
+	messageRender = make(chan interface{}, 1)
 )
 
 // Function takes in a messageCreate buffer
