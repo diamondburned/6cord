@@ -27,7 +27,7 @@ type Multiline struct {
 
 	Style tcell.Style
 
-	done func(key tcell.EventKey, content string)
+	Done func(key tcell.EventKey, content string)
 }
 
 // NewMultiline makes a new picture
@@ -62,7 +62,7 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 	return func(event *tcell.EventKey, _ func(m tview.Primitive)) {
 		key := event.Key()
 
-		if event.Modifiers() != 0 && m.done != nil {
+		if event.Modifiers() != 0 && m.Done != nil {
 			if key == tcell.KeyEnter {
 				m.newLine()
 			}
@@ -81,8 +81,8 @@ func (m *Multiline) InputHandler() func(event *tcell.EventKey, setFocus func(m t
 			return
 
 		case tcell.KeyEscape, tcell.KeyEnter:
-			if m.done != nil {
-				m.done(*event, strings.Join(m.getLines(), "\n"))
+			if m.Done != nil {
+				m.Done(*event, strings.Join(m.getLines(), "\n"))
 			}
 
 			if key == tcell.KeyEnter {

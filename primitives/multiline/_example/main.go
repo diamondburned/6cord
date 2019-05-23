@@ -15,7 +15,7 @@ func main() {
 	f := tview.NewFlex()
 	f.SetDirection(tview.FlexRow)
 	f.AddItem(tv, 0, 1, false)
-	f.AddItem(m, 1, 1, true)
+	f.AddItem(m, 3, 1, true)
 
 	if err := tview.NewApplication().SetRoot(f, true).SetFocus(f).Run(); err != nil {
 		panic(err)
