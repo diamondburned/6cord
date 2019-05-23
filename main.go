@@ -281,6 +281,10 @@ func main() {
 		case tcell.KeyLeft:
 			app.SetFocus(guildView)
 			return nil
+
+		case tcell.KeyEnd:
+			scrollChat()
+			return nil
 		}
 
 		switch event.Rune() {

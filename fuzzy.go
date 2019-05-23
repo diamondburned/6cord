@@ -13,6 +13,13 @@ func stateResetter() {
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()
 
+	current, total := getLineStatus()
+
+	// If the scroll offset is < 20
+	if total-current < 20 {
+		scrollChat()
+	}
+
 	imageRendererPipeline.clean()
 }
 

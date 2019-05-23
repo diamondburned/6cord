@@ -8,6 +8,8 @@ import (
 	"github.com/diamondburned/tview"
 )
 
+const readChannelColorPrefix = "[#808080::]"
+
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 	// Sets ReadState to the message you read
 	for _, c := range d.State.ReadState {
@@ -26,11 +28,11 @@ func stripFormat(a string) string {
 		return a
 	}
 
-	if strings.HasPrefix(a, "[::") {
-		a = a[5:]
+	if strings.HasPrefix(a, readChannelColorPrefix) {
+		a = a[len(readChannelColorPrefix):]
 	}
 
-	return strings.TrimSuffix(a, "[::-]")
+	return strings.TrimSuffix(a, "[-::-]")
 }
 
 func checkReadState(chID ...int64) {
@@ -84,8 +86,8 @@ func checkReadState(chID ...int64) {
 					node.ClearChildren()
 					g, ok := parent.GetReference().(string)
 					if ok {
-						if !strings.HasPrefix(g, "[::d]") {
-							parent.SetText("[::d]" + g + "[::-]")
+						if !strings.HasPrefix(g, readChannelColorPrefix) {
+							parent.SetText(readChannelColorPrefix + g + "[-::-]")
 						}
 					}
 				}
@@ -108,7 +110,7 @@ func checkReadState(chID ...int64) {
 			originalName = stripFormat(node.GetText())
 		)
 
-		name := "[::d]" + originalName + "[::-]"
+		name := readChannelColorPrefix + originalName + "[-::-]"
 
 		var (
 			chMuted = settingChannelIsMuted(chSettings, guildSettings)
@@ -118,13 +120,13 @@ func checkReadState(chID ...int64) {
 		if isUnread(c) && !chMuted {
 			changed = true
 
-			name = "[::b]" + originalName + "[::-]"
+			name = "[::b]" + originalName + "[-::-]"
 
 			if !guMuted {
 				g, ok := parent.GetReference().(string)
 				if ok {
-					if !strings.HasSuffix(parent.GetText(), " [red](!)[-::-]") {
-						parent.SetText("[::b]" + g + "[::-]")
+					if !strings.HasSuffix(parent.GetText(), " [#DC143C](!)[-::-]") {
+						parent.SetText("[::b]" + g + "[-::-]")
 					}
 				}
 			}

@@ -27,7 +27,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		}
 
 		if name, ok := reference.(string); ok {
-			node.SetText("[::d]" + name + "[::-]")
+			node.SetText(readChannelColorPrefix + name + "[-::-]")
 
 			if !node.IsExpanded() {
 				CollapseAll(guildNode)
@@ -135,7 +135,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	})
 
 	for _, g := range r.Guilds {
-		this := tview.NewTreeNode("[::d]" + g.Name + "[::-]")
+		this := tview.NewTreeNode(readChannelColorPrefix + g.Name + "[-::-]")
 		this.SetReference(g.Name)
 		this.Collapse()
 		this.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
@@ -172,7 +172,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				this.AddChild(chNode)
 
 			case discordgo.ChannelTypeGuildVoice:
-				chNode := tview.NewTreeNode("[::-]v - " + ch.Name + "[::-]")
+				chNode := tview.NewTreeNode("[-::-]v - " + ch.Name + "[-::-]")
 				chNode.SetReference(ch.ID)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
@@ -195,7 +195,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				}
 
 			default:
-				chNode := tview.NewTreeNode("[::d]#" + ch.Name + "[::-]")
+				chNode := tview.NewTreeNode(readChannelColorPrefix + "#" + ch.Name + "[-::-]")
 				chNode.SetReference(ch.ID)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)

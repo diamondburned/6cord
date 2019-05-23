@@ -6,15 +6,24 @@ import (
 )
 
 func handleScroll() {
-	lines := len(
+	current, lines := getLineStatus()
+
+	input.SetPlaceholder(fmt.Sprintf(
+		"%d/%d %d%%",
+		current, lines, min(current*100/lines, 100),
+	))
+}
+
+func getLineStatus() (current, total int) {
+	total = len(
 		strings.Split(
 			strings.Join(messageStore, ""),
 			"\n",
 		),
 	)
 
-	if lines <= 1 {
-		lines = len(messagesView.GetText(false))
+	if total <= 1 {
+		total = len(messagesView.GetText(false))
 	}
 
 	var (
@@ -27,10 +36,7 @@ func handleScroll() {
 		go loadMore()
 	}
 
-	current := toplinepos + height
+	current = toplinepos + height
 
-	input.SetPlaceholder(fmt.Sprintf(
-		"%d/%d %d%%",
-		current, lines, min(current*100/lines, 100),
-	))
+	return
 }

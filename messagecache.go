@@ -77,6 +77,10 @@ func (c *imageCacheStruct) set(m *discordgo.Message) ([]*imageCacheAsset, error)
 	)
 
 	for _, a := range m.Attachments {
+		if a.Width == 0 || a.Height == 0 {
+			continue
+		}
+
 		a := &imageCacheAsset{
 			url: a.ProxyURL,
 			w:   a.Width,
