@@ -43,7 +43,7 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 		return
 	}
 
-	ackMe(m.ChannelID, m.ID)
+	// ackMe(m.ChannelID, m.ID)
 
 	typing.RemoveUser(&discordgo.TypingStart{
 		UserID:    m.Author.ID,

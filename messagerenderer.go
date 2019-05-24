@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	messageRender = make(chan interface{}, 1)
+	messageRender = make(chan interface{}, 12)
 )
 
 // Function takes in a messageCreate buffer
@@ -60,7 +60,6 @@ func messageRenderer() {
 					)
 
 					messagesView.SetText(strings.Join(messageStore, ""))
-
 					break
 				}
 			}
@@ -77,6 +76,7 @@ func messageRenderer() {
 
 					messageStore[i] = msg
 
+					messagesView.SetText(strings.Join(messageStore, ""))
 					break
 				}
 			}

@@ -20,7 +20,21 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 		}
 	}
 
-	ackMeUI(a.ChannelID)
+	c, err := d.State.Channel(a.ChannelID)
+	if err != nil {
+		return
+	}
+
+	if c.GuildID == 0 {
+		ackMeUI(c)
+	} else {
+		g, err := d.State.Guild(c.GuildID)
+		if err != nil {
+			return
+		}
+
+		checkGuild(g)
+	}
 }
 
 // "[::b]actual string[::-]"
@@ -138,23 +152,29 @@ func markUnread(m *discordgo.Message) {
 			return true
 		}
 
-		reference := node.GetReference()
-		if reference == nil {
+		switch reference := node.GetReference().(type) {
+		case *discordgo.Guild:
+			if reference.ID != m.GuildID {
+				return false
+			}
+		case *discordgo.Channel:
+			if reference.ID != m.ChannelID {
+				return false
+			}
+
+			if reference.GuildID == 0 {
+				node.SetText(unreadChannelColorPrefix + reference.Name + "[-::-]")
+			} else {
+				node.SetText(unreadChannelColorPrefix + "#" + reference.Name + "[-::-]")
+			}
+		default:
 			return true
 		}
 
-		ch, ok := reference.(*discordgo.Channel)
-		if !ok {
-			return true
-		}
-
-		if ch.ID != m.ChannelID {
-			return true
-		}
-
-		node.SetText(unreadChannelColorPrefix + ch.Name + "[-::-]")
-		return false
+		return true
 	})
+
+	app.Draw()
 }
 
 var lastAck string
@@ -178,7 +198,7 @@ func ackMe(chID, ID int64) {
 	}
 
 	if c.GuildID == 0 {
-		ackMeUI(chID)
+		ackMeUI(c)
 	} else {
 		g, err := d.State.Guild(c.GuildID)
 		if err != nil {
@@ -189,7 +209,7 @@ func ackMe(chID, ID int64) {
 	}
 }
 
-func ackMeUI(chID int64) {
+func ackMeUI(ch *discordgo.Channel) {
 	root := guildView.GetRoot()
 	if root == nil {
 		return
@@ -200,27 +220,27 @@ func ackMeUI(chID int64) {
 			return true
 		}
 
-		reference := node.GetReference()
-		if reference == nil {
+		switch reference := node.GetReference().(type) {
+		case *discordgo.Guild:
+			if reference.ID != ch.GuildID {
+				return false
+			}
+		case *discordgo.Channel:
+			if reference.ID != ch.ID {
+				return false
+			}
+
+			var name = makeDMName(reference)
+			if reference.GuildID != 0 {
+				name = "#" + name
+			}
+
+			node.SetText(readChannelColorPrefix + name + "[-::-]")
+		default:
 			return true
 		}
 
-		ch, ok := reference.(*discordgo.Channel)
-		if !ok {
-			return true
-		}
-
-		if ch.ID != chID {
-			return true
-		}
-
-		var name = makeDMName(ch)
-		if ch.GuildID != 0 {
-			name = "#" + name
-		}
-
-		node.SetText(readChannelColorPrefix + name + "[-::-]")
-		return false
+		return true
 	})
 
 	app.Draw()
