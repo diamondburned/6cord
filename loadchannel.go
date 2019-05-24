@@ -64,7 +64,6 @@ func actualLoadChannel(channelID int64) {
 	if len(msgs) > 0 {
 		go func(c *discordgo.Channel, msgs []*discordgo.Message) {
 			ackMe(c.ID, msgs[len(msgs)-1].ID)
-			// 
 		}(ch, msgs)
 	}
 

@@ -177,7 +177,7 @@ func ackMe(chID, ID int64) {
 		lastAck = a.Token
 	}
 
-	if c.GuildID != 0 {
+	if c.GuildID == 0 {
 		ackMeUI(chID)
 	} else {
 		g, err := d.State.Guild(c.GuildID)
@@ -222,6 +222,8 @@ func ackMeUI(chID int64) {
 		node.SetText(readChannelColorPrefix + name + "[-::-]")
 		return false
 	})
+
+	app.Draw()
 }
 
 func checkGuild(g *discordgo.Guild) {
@@ -267,7 +269,6 @@ Main:
 		}
 
 		for _, u := range unreads {
-			log.Println("unreads", len(unreads), u.Name)
 			if u.ID == ch.ID {
 				node.SetText(unreadChannelColorPrefix + "#" + ch.Name + "[-::-]")
 				continue Main

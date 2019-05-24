@@ -21,7 +21,7 @@ func messageRenderer() {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
 			if !isRegularMessage(m.Message) {
-				break
+				continue
 			}
 
 			rendererCreate(m.Message, lastmsg)
@@ -120,7 +120,6 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 
 		messagesView.Write([]byte(msg + msgFmt))
 		messageStore = append(messageStore, msg, msgFmt)
-
 	} else {
 		messagesView.Write([]byte(msgFmt))
 		messageStore = append(messageStore, msgFmt)
