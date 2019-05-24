@@ -164,11 +164,11 @@ func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, co
 
 	if i, u := s.GetUser(guildID, id); u != nil {
 		if name != "" {
-			u.Name = name
+			u.Name = tview.Escape(name)
 		}
 
 		if nick != "" {
-			u.Nick = nick
+			u.Nick = tview.Escape(nick)
 		}
 
 		if discrim != "" {
@@ -192,8 +192,8 @@ func (s *UserStore) UpdateUser(guildID, id int64, name, nick, discrim string, co
 	u := &User{
 		ID:      id,
 		Discrim: discrim,
-		Name:    name,
-		Nick:    nick,
+		Name:    tview.Escape(name),
+		Nick:    tview.Escape(nick),
 		Color:   color,
 	}
 

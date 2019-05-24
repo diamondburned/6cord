@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -13,8 +12,7 @@ func (gm UserStoreArray) String(i int) string {
 	var s = gm[i].Name
 
 	if gm[i].Nick != "" {
-		s += " "
-		s += gm[i].Nick
+		s += " " + gm[i].Nick
 	}
 
 	return s
@@ -60,7 +58,7 @@ func fuzzyMentions(last string) {
 		for i, u := range fuzzied {
 			var username = u.Name + "[::d]#" + u.Discrim + "[::-]"
 			if u.Nick != "" {
-				username += " (" + tview.Escape(u.Nick) + ")"
+				username += " [::d](" + u.Nick + ")[::-]"
 			}
 
 			if g != nil {
