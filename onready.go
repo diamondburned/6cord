@@ -17,104 +17,40 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	guildNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 	guildNode.SetSelectedColor(tcell.ColorBlack)
 
-	guildView.SetRoot(guildNode)
-	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
-		reference := node.GetReference()
-		if reference == nil {
-			CollapseAll(guildNode)
-			node.SetExpanded(!node.IsExpanded())
-			return
-		}
+	pNode := tview.NewTreeNode("Direct Messages")
+	pNode.SetReference("Direct Messages")
+	pNode.Collapse()
+	pNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+	pNode.SetSelectedColor(tcell.ColorBlack)
 
-		if name, ok := reference.(string); ok {
-			node.SetText(readChannelColorPrefix + name + "[-::-]")
+	// https://github.com/Bios-Marcel/cordless
+	sort.Slice(r.PrivateChannels, func(a, b int) bool {
+		channelA := r.PrivateChannels[a]
+		channelB := r.PrivateChannels[b]
 
-			if !node.IsExpanded() {
-				CollapseAll(guildNode)
-				node.SetExpanded(true)
-			} else {
-				node.SetExpanded(false)
-			}
+		return channelA.LastMessageID > channelB.LastMessageID
+	})
 
-			go checkReadState()
+	for _, ch := range r.PrivateChannels {
+		var display string
 
+		if isUnread(ch) {
+			display = unreadChannelColorPrefix + makeDMName(ch) + "[-::-]"
 		} else {
-			if id, ok := reference.(int64); ok {
-				if id == 0 {
-					return
-				}
-
-				loadChannel(id)
-			}
-		}
-	})
-
-	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
-		switch ev.Key() {
-		case tcell.KeyRight:
-			app.SetFocus(input)
-			return nil
-		case tcell.KeyLeft:
-			return nil
-		case tcell.KeyTab:
-			return nil
+			display = readChannelColorPrefix + makeDMName(ch) + "[-::-]"
 		}
 
-		if ev.Rune() == '/' {
-			app.SetFocus(input)
-			input.SetText("/")
+		chNode := tview.NewTreeNode(display)
+		chNode.SetReference(ch)
+		chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
+		chNode.SetSelectedColor(tcell.ColorBlack)
+		chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
 
-			return nil
-		}
-
-		return ev
-	})
-
-	{
-		this := tview.NewTreeNode("Direct Messages")
-		this.SetReference("Direct Messages")
-		this.Collapse()
-		this.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
-		this.SetSelectedColor(tcell.ColorBlack)
-
-		// https://github.com/Bios-Marcel/cordless
-		sort.Slice(r.PrivateChannels, func(a, b int) bool {
-			channelA := r.PrivateChannels[a]
-			channelB := r.PrivateChannels[b]
-
-			return channelA.LastMessageID > channelB.LastMessageID
-		})
-
-		for _, ch := range r.PrivateChannels {
-			var display = ch.Name
-
-			if display == "" {
-				var names = make([]string, len(ch.Recipients))
-				if len(ch.Recipients) == 1 {
-					p := ch.Recipients[0]
-					names[0] = p.Username + "#" + p.Discriminator
-
-				} else {
-					for i, p := range ch.Recipients {
-						names[i] = p.Username
-					}
-				}
-
-				display = HumanizeStrings(names)
-			}
-
-			chNode := tview.NewTreeNode(display)
-			chNode.SetReference(ch.ID)
-			chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
-			chNode.SetSelectedColor(tcell.ColorBlack)
-			chNode.SetIndent(cfg.Prop.SidebarIndent - 1)
-
-			this.AddChild(chNode)
-		}
-
-		guildNode.AddChild(this)
-		guildView.SetCurrentNode(this)
+		pNode.AddChild(chNode)
 	}
+
+	guildNode.AddChild(pNode)
+	guildView.SetCurrentNode(pNode)
 
 	// https://github.com/Bios-Marcel/cordless
 	sort.Slice(r.Guilds, func(a, b int) bool {
@@ -136,7 +72,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	for _, g := range r.Guilds {
 		this := tview.NewTreeNode(readChannelColorPrefix + g.Name + "[-::-]")
-		this.SetReference(g.Name)
+		this.SetReference(g)
 		this.Collapse()
 		this.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 		this.SetSelectedColor(tcell.ColorBlack)
@@ -163,7 +99,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			switch ch.Type {
 			case discordgo.ChannelTypeGuildCategory:
-				chNode := tview.NewTreeNode(ch.Name)
+				chNode := tview.NewTreeNode("[::b]" + ch.Name + "[::-]")
 				chNode.SetSelectable(false)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
@@ -173,7 +109,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			case discordgo.ChannelTypeGuildVoice:
 				chNode := tview.NewTreeNode("[-::-]v - " + ch.Name + "[-::-]")
-				chNode.SetReference(ch.ID)
+				chNode.SetReference(ch)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
 
@@ -196,7 +132,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 			default:
 				chNode := tview.NewTreeNode(readChannelColorPrefix + "#" + ch.Name + "[-::-]")
-				chNode.SetReference(ch.ID)
+				chNode.SetReference(ch)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
 
@@ -210,12 +146,82 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			}
 		}
 
+		checkGuildNode(g, this)
 		guildNode.AddChild(this)
 	}
 
-	app.Draw()
+	guildView.SetRoot(guildNode)
+	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
+		reference := node.GetReference()
+		if reference == nil {
+			CollapseAll(guildNode)
+			node.SetExpanded(!node.IsExpanded())
+			return
+		}
 
-	checkReadState()
+		switch r := reference.(type) {
+		case nil:
+
+		case *discordgo.Channel:
+			loadChannel(r.ID)
+
+		case *discordgo.Guild:
+			node.SetText(readChannelColorPrefix + r.Name + "[-::-]")
+
+			if !node.IsExpanded() {
+				CollapseAll(guildNode)
+				node.SetExpanded(true)
+			} else {
+				node.SetExpanded(false)
+			}
+
+			checkGuildNode(r, node)
+
+		default: // Private Channels
+			children := pNode.GetChildren()
+			n := make([]*tview.TreeNode, 0, len(children))
+			for i, c := range children {
+				if c == node {
+					n = append(n, c)
+					n = append(n, children[:i]...)
+					n = append(n, children[i+1:]...)
+
+					pNode.SetChildren(n)
+					break
+				}
+			}
+
+			if !node.IsExpanded() {
+				CollapseAll(guildNode)
+				node.SetExpanded(true)
+			} else {
+				node.SetExpanded(false)
+			}
+		}
+	})
+
+	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
+		switch ev.Key() {
+		case tcell.KeyRight:
+			app.SetFocus(input)
+			return nil
+		case tcell.KeyLeft:
+			return nil
+		case tcell.KeyTab:
+			return nil
+		}
+
+		if ev.Rune() == '/' {
+			app.SetFocus(input)
+			input.SetText("/")
+
+			return nil
+		}
+
+		return ev
+	})
+
+	app.Draw()
 }
 
 func isValidCh(t discordgo.ChannelType) bool {
@@ -230,4 +236,22 @@ func isSendCh(t discordgo.ChannelType) bool {
 	/**/ return t == discordgo.ChannelTypeGuildText ||
 		/*****/ t == discordgo.ChannelTypeDM ||
 		/*****/ t == discordgo.ChannelTypeGroupDM
+}
+
+func makeDMName(ch *discordgo.Channel) string {
+	if ch.Name != "" {
+		return ch.Name
+	}
+
+	var names = make([]string, len(ch.Recipients))
+	if len(ch.Recipients) == 1 {
+		p := ch.Recipients[0]
+		names[0] = p.Username + "#" + p.Discriminator
+	} else {
+		for i, p := range ch.Recipients {
+			names[i] = p.Username
+		}
+	}
+
+	return HumanizeStrings(names)
 }

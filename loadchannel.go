@@ -16,7 +16,7 @@ func loadChannel(channelID int64) {
 		wrapFrame.SetTitle("[Loading...[]")
 	})
 
-	go actualLoadChannel(channelID)
+	actualLoadChannel(channelID)
 }
 
 func actualLoadChannel(channelID int64) {
@@ -32,7 +32,6 @@ func actualLoadChannel(channelID int64) {
 	switch ch.Type {
 	case discordgo.ChannelTypeGuildVoice:
 		Message("Voice is currently not working D:")
-		//go toggleVoiceJoin(ch.ID)
 		return
 	case discordgo.ChannelTypeGuildCategory:
 		return
@@ -64,11 +63,11 @@ func actualLoadChannel(channelID int64) {
 
 	if len(msgs) > 0 {
 		go func(c *discordgo.Channel, msgs []*discordgo.Message) {
-			ackMe(msgs[len(msgs)-1])
-			checkReadState(msgs[0].ChannelID)
+			ackMe(c.ID, msgs[len(msgs)-1].ID)
 		}(ch, msgs)
 	}
 
+	// Clears the buffer
 	messageRender <- nil
 
 	for i := 0; i < len(msgs); i++ {

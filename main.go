@@ -283,7 +283,7 @@ func main() {
 			return nil
 
 		case tcell.KeyEnd:
-			scrollChat()
+			messagesView.ScrollToEnd()
 			return nil
 		}
 

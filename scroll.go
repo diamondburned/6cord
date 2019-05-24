@@ -8,6 +8,10 @@ import (
 func handleScroll() {
 	current, lines := getLineStatus()
 
+	if current == 0 {
+		go loadMore()
+	}
+
 	input.SetPlaceholder(fmt.Sprintf(
 		"%d/%d %d%%",
 		current, lines, min(current*100/lines, 100),
@@ -33,7 +37,6 @@ func getLineStatus() (current, total int) {
 
 	if toplinepos == 0 {
 		height = 0
-		go loadMore()
 	}
 
 	current = toplinepos + height

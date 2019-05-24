@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	messageRender = make(chan interface{}, 12)
+	messageRender = make(chan interface{}, 1)
 )
 
 // Function takes in a messageCreate buffer
@@ -21,7 +21,7 @@ func messageRenderer() {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
 			if !isRegularMessage(m.Message) {
-				break
+				continue
 			}
 
 			rendererCreate(m.Message, lastmsg)
@@ -83,7 +83,7 @@ func messageRenderer() {
 
 		case nil:
 			messagesView.Clear()
-			messageStore = make([]string, 0, prefetchMessageCount)
+			messageStore = make([]string, 0, prefetchMessageCount*2)
 
 		default:
 			Warn(fmt.Sprintf("Message renderer received event type:\n%T", i))
@@ -120,7 +120,6 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 
 		messagesView.Write([]byte(msg + msgFmt))
 		messageStore = append(messageStore, msg, msgFmt)
-
 	} else {
 		messagesView.Write([]byte(msgFmt))
 		messageStore = append(messageStore, msgFmt)

@@ -3,12 +3,14 @@ package main
 import (
 	"log"
 	"strings"
+	"sync"
 
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
 )
 
 const readChannelColorPrefix = "[#808080::]"
+const unreadChannelColorPrefix = "[::b]"
 
 func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 	// Sets ReadState to the message you read
@@ -18,8 +20,7 @@ func messageAck(s *discordgo.Session, a *discordgo.MessageAck) {
 		}
 	}
 
-	// update
-	checkReadState(a.ChannelID)
+	ackMeUI(a.ChannelID)
 }
 
 // "[::b]actual string[::-]"
@@ -35,22 +36,97 @@ func stripFormat(a string) string {
 	return strings.TrimSuffix(a, "[-::-]")
 }
 
-func checkReadState(chID ...int64) {
-	var guildSettings *discordgo.UserGuildSettings
+var (
+	guildSettingsMuted   = map[int64]bool{}
+	channelSettingsMuted = map[int64]bool{}
+	settingsCacheMutex   = &sync.Mutex{}
+)
 
-	if d.State == nil {
+// true if channelID has unread msgs
+func isUnread(ch *discordgo.Channel) bool {
+	var gs *discordgo.UserGuildSettings
+
+	settingsCacheMutex.Lock()
+
+	chMuted, ok := channelSettingsMuted[ch.ID]
+	if !ok {
+		if gs == nil {
+			gs = getGuildFromSettings(ch.GuildID)
+		}
+
+		cs := getChannelFromGuildSettings(ch.ID, gs)
+
+		chMuted = settingChannelIsMuted(cs, gs)
+		channelSettingsMuted[ch.ID] = chMuted
+	}
+
+	var guMuted = false
+
+	if ch.GuildID != 0 {
+		guMuted, ok = guildSettingsMuted[ch.GuildID]
+		if !ok {
+			if gs == nil {
+				gs = getGuildFromSettings(ch.GuildID)
+			}
+
+			guMuted = settingGuildIsMuted(gs)
+			guildSettingsMuted[ch.GuildID] = guMuted
+		}
+	}
+
+	settingsCacheMutex.Unlock()
+
+	if guMuted || chMuted {
+		return false
+	}
+
+	if ch.LastMessageID == 0 {
+		return false
+	}
+
+	for _, c := range d.State.ReadState {
+		if c.ID == ch.ID {
+			return c.LastMessageID != ch.LastMessageID
+		}
+	}
+
+	return false
+}
+
+func markUnread(m *discordgo.Message) {
+	var unread bool
+
+	c, err := d.State.Channel(m.ChannelID)
+	if err != nil {
 		return
 	}
 
-	if d.State.Settings == nil {
-		return
+	if c.GuildID == 0 {
+		// If the latest DM message is not the current message,
+		// it's unread.
+		for _, r := range d.State.ReadState {
+			if r.ID == c.ID {
+				unread = (m.ID != r.LastMessageID)
+				break
+			}
+		}
+	} else {
+		// If neither the channel nor the guild is muted, it's
+		// unread.
+		gs := getGuildFromSettings(c.GuildID)
+		chSettings := getChannelFromGuildSettings(c.ID, gs)
+
+		var (
+			chMuted = settingChannelIsMuted(chSettings, gs)
+			guMuted = settingGuildIsMuted(gs)
+		)
+
+		unread = !(guMuted || chMuted)
 	}
 
-	if guildView == nil {
+	if !unread {
 		return
 	}
-
-	changed := false
 
 	root := guildView.GetRoot()
 	if root == nil {
@@ -67,119 +143,142 @@ func checkReadState(chID ...int64) {
 			return true
 		}
 
-		id, ok := reference.(int64)
+		ch, ok := reference.(*discordgo.Channel)
 		if !ok {
 			return true
 		}
 
-		// This is true when the current node is a voice state
-		// AsÜ the voice state is the channel's children, the channel (parent)
-		// will have an int64 reference
-		_, ok = parent.GetReference().(int64)
-		if ok {
+		if ch.ID != m.ChannelID {
 			return true
 		}
 
-		if len(chID) > 0 {
-			for _, chid := range chID {
-				if chid == id {
-					node.ClearChildren()
-					g, ok := parent.GetReference().(string)
-					if ok {
-						if !strings.HasPrefix(g, readChannelColorPrefix) {
-							parent.SetText(readChannelColorPrefix + g + "[-::-]")
-						}
-					}
-				}
-			}
-
-			return true
-		}
-
-		c, err := d.State.Channel(id)
-		if err != nil {
-			return true
-		}
-
-		if guildSettings == nil || guildSettings.GuildID != c.GuildID {
-			guildSettings = getGuildFromSettings(c.GuildID)
-		}
-
-		var (
-			chSettings   = getChannelFromGuildSettings(c.ID, guildSettings)
-			originalName = stripFormat(node.GetText())
-		)
-
-		name := readChannelColorPrefix + originalName + "[-::-]"
-
-		var (
-			chMuted = settingChannelIsMuted(chSettings, guildSettings)
-			guMuted = settingGuildIsMuted(guildSettings)
-		)
-
-		if isUnread(c) && !chMuted {
-			changed = true
-
-			name = "[::b]" + originalName + "[-::-]"
-
-			if !guMuted {
-				g, ok := parent.GetReference().(string)
-				if ok {
-					if !strings.HasSuffix(parent.GetText(), " [#DC143C](!)[-::-]") {
-						parent.SetText("[::b]" + g + "[-::-]")
-					}
-				}
-			}
-		}
-
-		node.SetText(name)
-
-		return true
-	})
-
-	if changed == true {
-		app.Draw()
-	}
-}
-
-// true if channelID has unread msgs
-func isUnread(ch *discordgo.Channel) bool {
-	if ch.LastMessageID == 0 {
+		node.SetText(unreadChannelColorPrefix + ch.Name + "[-::-]")
 		return false
-	}
-
-	for _, c := range d.State.ReadState {
-		if c.ID != ch.ID {
-			continue
-		}
-
-		if c.LastMessageID != ch.LastMessageID {
-			return true
-		}
-	}
-
-	return false
+	})
 }
 
 var lastAck string
 
-func ackMe(m *discordgo.Message) {
-	c, err := d.State.Channel(m.ChannelID)
+func ackMe(chID, ID int64) {
+	c, err := d.State.Channel(chID)
 	if err != nil {
 		return
 	}
 
-	if !isUnread(c) {
-		return
+	if isUnread(c) {
+		// triggers messageAck
+		a, err := d.ChannelMessageAck(c.ID, ID, lastAck)
+
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		lastAck = a.Token
 	}
 
-	// triggers messageAck
-	a, err := d.ChannelMessageAck(m.ChannelID, m.ID, lastAck)
+	if c.GuildID == 0 {
+		ackMeUI(chID)
+	} else {
+		g, err := d.State.Guild(c.GuildID)
+		if err != nil {
+			return
+		}
 
-	if err != nil {
-		log.Println(err)
-		return
+		checkGuild(g)
 	}
-
-	lastAck = a.Token
 }
+
+func ackMeUI(chID int64) {
+	root := guildView.GetRoot()
+	if root == nil {
+		return
+	}
+
+	root.Walk(func(node, parent *tview.TreeNode) bool {
+		if parent == nil {
+			return true
+		}
+
+		reference := node.GetReference()
+		if reference == nil {
+			return true
+		}
+
+		ch, ok := reference.(*discordgo.Channel)
+		if !ok {
+			return true
+		}
+
+		if ch.ID != chID {
+			return true
+		}
+
+		var name = makeDMName(ch)
+		if ch.GuildID != 0 {
+			name = "#" + name
+		}
+
+		node.SetText(readChannelColorPrefix + name + "[-::-]")
+		return false
+	})
+
+	app.Draw()
+}
+
+func checkGuild(g *discordgo.Guild) {
+	for _, n := range guildView.GetRoot().GetChildren() {
+		gd, ok := n.GetReference().(*discordgo.Guild)
+		if !ok {
+			continue
+		}
+
+		if gd.ID != g.ID {
+			continue
+		}
+
+		checkGuildNode(g, n)
+		return
+	}
+}
+
+func checkGuildNode(g *discordgo.Guild, n *tview.TreeNode) {
+	var unreads = make([]*discordgo.Channel, 0, len(g.Channels))
+	for _, c := range g.Channels {
+		if isUnread(c) {
+			unreads = append(unreads, c)
+		}
+	}
+
+	if len(unreads) == 0 {
+		n.SetText(readChannelColorPrefix + g.Name + "[-::-]")
+	} else {
+		n.SetText(unreadChannelColorPrefix + g.Name + "[-::-]")
+	}
+
+Main:
+	for _, node := range n.GetChildren() {
+		reference := node.GetReference()
+		if reference == nil {
+			continue
+		}
+
+		ch, ok := reference.(*discordgo.Channel)
+		if !ok {
+			continue
+		}
+
+		for _, u := range unreads {
+			if u.ID == ch.ID {
+				node.SetText(unreadChannelColorPrefix + "#" + ch.Name + "[-::-]")
+				continue Main
+			}
+		}
+
+		node.SetText(readChannelColorPrefix + "#" + ch.Name + "[-::-]")
+	}
+
+	app.Draw()
+}
+
+// TODO: Check if guild has unread channel

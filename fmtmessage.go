@@ -23,10 +23,6 @@ func fmtMessage(m *discordgo.Message) string {
 		return r
 	}, ct)
 
-	if m.Content == "¯\\_(ツ)_/¯" {
-		ct = "¯\\_(ツ)_/¯"
-	}
-
 	if m.EditedTimestamp != "" {
 		ct += " [::d](edited)[::-]"
 

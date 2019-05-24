@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	authorFormat  = "\n\n[#%06X::][\"\"]%s[-::] [::d]%s[::-]"
+	authorFormat  = "\n\n" + `[#%06X::]["author"]%s[-::] [::d]%s[::-]`
 	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
 )
 
@@ -38,12 +38,12 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 			log.Println(err)
 		}
 
-		checkReadState()
+		markUnread(m.Message)
 
 		return
 	}
 
-	ackMe(m.Message)
+	ackMe(m.ChannelID, m.ID)
 
 	typing.RemoveUser(&discordgo.TypingStart{
 		UserID:    m.Author.ID,

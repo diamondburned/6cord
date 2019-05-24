@@ -40,7 +40,7 @@ func getIDfromindex(i int) int64 {
 	}
 
 	var (
-		idRune string
+		idRune strings.Builder
 		msg    = messageStore[i]
 	)
 
@@ -49,10 +49,10 @@ func getIDfromindex(i int) int64 {
 			break
 		}
 
-		idRune += string(msg[i])
+		idRune.WriteByte(msg[i])
 	}
 
-	r, _ := strconv.ParseInt(idRune, 10, 64)
+	r, _ := strconv.ParseInt(idRune.String(), 10, 64)
 	return r
 }
 
@@ -91,12 +91,12 @@ func loadMore() {
 		return
 	}
 
-	if len(msgs) < 1 {
+	if len(msgs) == 0 {
 		// Drop out early if no messages
 		return
 	}
 
-	var reversed []string
+	var reversed = make([]string, 0, len(msgs)*2)
 
 	for i := len(msgs) - 1; i >= 0; i-- {
 		m := msgs[i]
