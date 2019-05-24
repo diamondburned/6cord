@@ -1,9 +1,12 @@
 package main
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+)
 
 func deleteMessage(text []string) {
-	toDelete := make([]int64, 0, len(text)-1)
+	toDelete := make([]int64, 0, len(text))
 
 	if len(text) < 2 {
 		lastMsg := matchMyMessage(0)
@@ -14,14 +17,20 @@ func deleteMessage(text []string) {
 
 		toDelete = append(toDelete, lastMsg.ID)
 	} else {
-		for _, a := range text[1:] {
-			m, err := strconv.ParseInt(a, 10, 64)
+		for i, a := range text[1:] {
+			m, err := strconv.Atoi(a)
 			if err != nil {
-				Message("Failed to find the message.")
+				Message(fmt.Sprintf("Failed to parse argument %d", i-1))
 				return
 			}
 
-			toDelete = append(toDelete, m)
+			lastMsg := matchMyMessage(m)
+			if lastMsg == nil {
+				Message("Can't find your last message :(")
+				return
+			}
+
+			toDelete = append(toDelete, lastMsg.ID)
 		}
 	}
 

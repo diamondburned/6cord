@@ -83,7 +83,7 @@ func messageRenderer() {
 
 		case nil:
 			messagesView.Clear()
-			messageStore = make([]string, 0, prefetchMessageCount)
+			messageStore = make([]string, 0, prefetchMessageCount*2)
 
 		default:
 			Warn(fmt.Sprintf("Message renderer received event type:\n%T", i))

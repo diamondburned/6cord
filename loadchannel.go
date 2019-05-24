@@ -67,6 +67,7 @@ func actualLoadChannel(channelID int64) {
 		}(ch, msgs)
 	}
 
+	// Clears the buffer
 	messageRender <- nil
 
 	for i := 0; i < len(msgs); i++ {
