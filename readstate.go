@@ -167,6 +167,8 @@ func markUnread(m *discordgo.Message) {
 			} else {
 				node.SetText(unreadChannelColorPrefix + "#" + reference.Name + "[-::-]")
 			}
+
+			return false
 		default:
 			return true
 		}
