@@ -6,8 +6,11 @@ func cmdHeated(text []string) {
 		return
 	}
 
-	heatedChannelsAdd(Channel.ID)
-	Message("Added this channel. We'll warn you when there's a message.")
+	if heatedChannelsToggle(Channel.ID) {
+		Message("Added this channel. We'll warn you when there's a message.")
+	} else {
+		Message("Removed this channel.")
+	}
 
 	// Heated servers are checked in notify.go
 	// Check function is in heated.go

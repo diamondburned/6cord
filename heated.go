@@ -4,33 +4,35 @@ import "sync"
 
 var (
 	heatedChannels = struct {
-		sync.RWMutex
+		sync.Mutex
 		buffer map[int64]struct{}
 	}{
 		buffer: map[int64]struct{}{},
 	}
 )
 
-func heatedChannelsAdd(channelID int64) {
+// true == added, false == removed
+func heatedChannelsToggle(channelID int64) bool {
 	heatedChannels.Lock()
 	defer heatedChannels.Unlock()
 
+	if _, ok := heatedChannels.buffer[channelID]; ok {
+		delete(heatedChannels.buffer, channelID)
+		return false
+	}
+
 	heatedChannels.buffer[channelID] = struct{}{}
+	return true
 }
 
 func heatedChannelsExists(channelID int64) bool {
-	heatedChannels.RLock()
+	heatedChannels.Lock()
+	defer heatedChannels.Unlock()
 
 	if _, ok := heatedChannels.buffer[channelID]; ok {
-		heatedChannels.RUnlock()
-		heatedChannels.Lock()
-		defer heatedChannels.Unlock()
-
 		delete(heatedChannels.buffer, channelID)
-
 		return true
 	}
 
-	heatedChannels.RUnlock()
 	return false
 }
