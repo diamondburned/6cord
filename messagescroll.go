@@ -5,8 +5,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/diamondburned/tview"
 )
 
 func messageGetTopID() int64 {
@@ -123,7 +121,7 @@ func loadMore() {
 
 			reversed = append(reversed, fmt.Sprintf(
 				authorFormat,
-				color, tview.Escape(username),
+				color, username,
 				sentTime.Format(time.Stamp),
 			))
 		}
