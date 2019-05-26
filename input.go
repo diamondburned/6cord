@@ -202,8 +202,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			} else {
 				input.SetText(input.GetText() + cb)
 			}
-
-		case tcell.KeyLeft:
+		case tcell.KeyLeft, tcell.KeyCtrlH:
 			if input.GetText() != "" {
 				return ev
 			}
