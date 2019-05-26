@@ -16,7 +16,7 @@ func loadChannel(channelID int64) {
 		wrapFrame.SetTitle("[Loading...[]")
 	})
 
-	actualLoadChannel(channelID)
+	go actualLoadChannel(channelID)
 }
 
 func actualLoadChannel(channelID int64) {

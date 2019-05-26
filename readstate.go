@@ -249,7 +249,12 @@ func ackMeUI(ch *discordgo.Channel) {
 }
 
 func checkGuild(g *discordgo.Guild) {
-	for _, n := range guildView.GetRoot().GetChildren() {
+	root := guildView.GetRoot()
+	if root == nil {
+		return
+	}
+
+	for _, n := range root.GetChildren() {
 		gd, ok := n.GetReference().(*discordgo.Guild)
 		if !ok {
 			continue

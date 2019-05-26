@@ -67,7 +67,6 @@ func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	}
 
 	defer func() {
-		n = tview.Escape(n)
 		if m.Author.Bot {
 			n += " [#7289da][BOT[][-::-]"
 		}
