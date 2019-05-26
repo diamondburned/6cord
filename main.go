@@ -118,8 +118,8 @@ func main() {
 	messagesView.SetTextColor(tcell.Color(cfg.Prop.ForegroundColor))
 	messagesView.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 	messagesView.SetText(` [::b]Quick Start[::-]
-    - Right arrow from guild list to focus to input
-    - Left arrow from input to focus to guild list
+    - Right arrow or C-l from guild list to focus to input
+    - Left arrow or C-h from input to focus to guild list
     - Up arrow from input to go to autocomplete/message scrollback
     - Tab to show/hide channels
     - /goto [#channel] jumps to that channel`)

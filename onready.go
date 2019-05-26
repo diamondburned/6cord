@@ -202,7 +202,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	guildView.SetInputCapture(func(ev *tcell.EventKey) *tcell.EventKey {
 		switch ev.Key() {
-		case tcell.KeyRight:
+		case tcell.KeyRight, tcell.KeyCtrlL:
 			app.SetFocus(input)
 			return nil
 		case tcell.KeyLeft:
