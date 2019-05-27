@@ -209,6 +209,76 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return nil
 		case tcell.KeyTab:
 			return nil
+
+		case tcell.KeyCtrlJ, tcell.KeyCtrlK,
+			tcell.KeyPgDn, tcell.KeyPgUp:
+
+			// Get all guild nodes
+			children := guildNode.GetChildren()
+
+			fn := func(i int) {
+				// Change fn to up/down functions accordingly
+				switch ev.Key() {
+				case tcell.KeyCtrlK, tcell.KeyPgUp:
+					// If we're not the last guild
+					if i > 0 {
+						// Collapse all nodes
+						CollapseAll(guildNode)
+						// Set the next node as expanded
+						children[i-1].SetExpanded(true)
+						// Set the current node focus `
+						guildView.SetCurrentNode(children[i-1])
+					}
+				case tcell.KeyCtrlJ, tcell.KeyPgDn:
+					// If we're not the last guild
+					if i != len(children)-1 {
+						// Collapse all nodes
+						CollapseAll(guildNode)
+						// Set the next node as expanded
+						children[i+1].SetExpanded(true)
+						// Set the current node focus
+						guildView.SetCurrentNode(children[i+1])
+					}
+				}
+			}
+
+			if n := guildView.GetCurrentNode(); n != nil {
+				switch r := n.GetReference().(type) {
+				// If the reference is a channel, we know the cursor is over a
+				// guild's children
+				case *discordgo.Channel:
+					// Iterate over guild nodes
+					for i, gNode := range children {
+						// Get the dgo guild reference
+						rg, ok := gNode.GetReference().(*discordgo.Guild)
+						if !ok {
+							// Probably not what we're looking for, next
+							continue
+						}
+
+						// Not the guild we're in
+						if rg.ID != r.GuildID {
+							continue // next
+						}
+
+						fn(i)
+					}
+
+				// If the reference is a guild or the direct message thing
+				case *discordgo.Guild, string:
+					// Iterate over guild nodes
+					for i, gNode := range children {
+						// If the guild node is not the node we're on
+						if gNode != n {
+							continue // skip
+						}
+
+						fn(i)
+					}
+				}
+			}
+
+			return nil
 		}
 
 		if ev.Rune() == '/' {
