@@ -209,24 +209,46 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 			return nil
 		case tcell.KeyTab:
 			return nil
+		case tcell.KeyCtrlD, tcell.KeyCtrlU:
+			children := guildNode.GetChildren()
+			_, _, _, height := messagesView.GetInnerRect()
 
+			hop(children, func(i int) {
+				// Change fn to up/down functions accordingly
+				switch ev.Key() {
+				case tcell.KeyCtrlU:
+					// Make sure we can scroll up by the desired amount
+					if i-height/2 >= 0 {
+						guildView.SetCurrentNode(children[i-height/2])
+					} else {
+						guildView.SetCurrentNode(children[0])
+					}
+				case tcell.KeyCtrlD:
+					// Make sure we can scroll down by the desired amount
+					if i+height/2 < len(children) {
+						guildView.SetCurrentNode(children[i+height/2])
+					} else {
+						guildView.SetCurrentNode(children[len(children)-1])
+					}
+				}
+			})
+
+			return nil
 		case tcell.KeyCtrlJ, tcell.KeyCtrlK,
 			tcell.KeyPgDn, tcell.KeyPgUp:
-
-			// Get all guild nodes
 			children := guildNode.GetChildren()
 
-			fn := func(i int) {
+			hop(children, func(i int) {
 				// Change fn to up/down functions accordingly
 				switch ev.Key() {
 				case tcell.KeyCtrlK, tcell.KeyPgUp:
-					// If we're not the last guild
+					// If we're not the first guild
 					if i > 0 {
 						// Collapse all nodes
 						CollapseAll(guildNode)
 						// Set the next node as expanded
 						children[i-1].SetExpanded(true)
-						// Set the current node focus `
+						// Set the current node focus
 						guildView.SetCurrentNode(children[i-1])
 					}
 				case tcell.KeyCtrlJ, tcell.KeyPgDn:
@@ -234,49 +256,13 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 					if i != len(children)-1 {
 						// Collapse all nodes
 						CollapseAll(guildNode)
-						// Set the next node as expanded
+						// Set the previous node as expanded
 						children[i+1].SetExpanded(true)
 						// Set the current node focus
 						guildView.SetCurrentNode(children[i+1])
 					}
 				}
-			}
-
-			if n := guildView.GetCurrentNode(); n != nil {
-				switch r := n.GetReference().(type) {
-				// If the reference is a channel, we know the cursor is over a
-				// guild's children
-				case *discordgo.Channel:
-					// Iterate over guild nodes
-					for i, gNode := range children {
-						// Get the dgo guild reference
-						rg, ok := gNode.GetReference().(*discordgo.Guild)
-						if !ok {
-							// Probably not what we're looking for, next
-							continue
-						}
-
-						// Not the guild we're in
-						if rg.ID != r.GuildID {
-							continue // next
-						}
-
-						fn(i)
-					}
-
-				// If the reference is a guild or the direct message thing
-				case *discordgo.Guild, string:
-					// Iterate over guild nodes
-					for i, gNode := range children {
-						// If the guild node is not the node we're on
-						if gNode != n {
-							continue // skip
-						}
-
-						fn(i)
-					}
-				}
-			}
+			})
 
 			return nil
 		}
@@ -292,6 +278,44 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	})
 
 	app.Draw()
+}
+
+func hop(children []*tview.TreeNode, fn func(i int)) {
+	if n := guildView.GetCurrentNode(); n != nil {
+		switch r := n.GetReference().(type) {
+		// If the reference is a channel, we know the cursor is over a
+		// guild's children
+		case *discordgo.Channel:
+			// Iterate over guild nodes
+			for i, gNode := range children {
+				// Get the dgo guild reference
+				rg, ok := gNode.GetReference().(*discordgo.Guild)
+				if !ok {
+					// Probably not what we're looking for, next
+					continue
+				}
+
+				// Not the guild we're in
+				if rg.ID != r.GuildID {
+					continue // next
+				}
+
+				fn(i)
+			}
+
+		// If the reference is a guild or the direct message thing
+		case *discordgo.Guild, string:
+			// Iterate over guild nodes
+			for i, gNode := range children {
+				// If the guild node is not the node we're on
+				if gNode != n {
+					continue // skip
+				}
+
+				fn(i)
+			}
+		}
+	}
 }
 
 func isValidCh(t discordgo.ChannelType) bool {
