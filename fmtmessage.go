@@ -25,7 +25,7 @@ func fmtMessage(m *discordgo.Message) string {
 	}, ct)
 
 	if m.EditedTimestamp != "" {
-		ct += " [::d](edited)[::-]"
+		ct += " " + readChannelColorPrefix + "(edited)[-::-]"
 
 		// Prevent cases where the message is empty
 		// " (edited)"
@@ -209,12 +209,13 @@ func fmtMessage(m *discordgo.Message) string {
 			embedPadding = chatPadding[:len(chatPadding)-2]
 		}
 
+		c.WriteByte('\n')
 		for i, l := range embed {
+			c.WriteString(embedPadding + fmt.Sprintf("[#%06X]", e.Color) + "┃[-::] " + l)
+
 			if i != len(embed)-1 {
 				c.WriteByte('\n')
 			}
-
-			c.WriteString(embedPadding + fmt.Sprintf("[#%06X]", e.Color) + "┃[-::] " + l)
 		}
 	}
 

@@ -28,6 +28,7 @@ require (
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
+	github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c
 	github.com/rumblefrog/discordgo v1.0.3 // indirect
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/soniakeys/quant v1.0.0 // indirect

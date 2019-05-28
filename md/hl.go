@@ -6,13 +6,16 @@ import (
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
+	"github.com/rivo/tview"
 )
 
 // RenderCodeBlock renders the node to a syntax
 // highlighted code
-func RenderCodeBlock(lang, literal []byte) (s string) {
+func RenderCodeBlock(lang, literal []byte) string {
+	var s strings.Builder
+
 	content := strings.TrimFunc(
-		string(literal),
+		tview.Escape(string(literal)),
 		func(r rune) bool {
 			return r == '\n'
 		},
@@ -48,15 +51,17 @@ func RenderCodeBlock(lang, literal []byte) (s string) {
 		return string(literal)
 	}
 
-	for _, l := range strings.Split(code.String(), "\n") {
+	wrapped := tview.WordWrap(code.String(), 80)
+
+	for _, l := range wrapped {
 		if l != "[-]" {
-			s += "\n[grey]┃[-] " + l
+			s.WriteString("\n[grey]┃[-] " + l)
 		}
 	}
 
-	if !strings.HasSuffix(s, "\n") {
-		s += "\n"
+	if !strings.HasSuffix(s.String(), "\n") {
+		return s.String() + "\n"
 	}
 
-	return
+	return s.String()
 }

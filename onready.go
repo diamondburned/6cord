@@ -163,6 +163,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 		case nil:
 
 		case *discordgo.Channel:
+			node.SetChildren(nil)
 			loadChannel(r.ID)
 
 		case *discordgo.Guild:

@@ -2,11 +2,14 @@ package main
 
 import (
 	"html"
+	"strings"
 
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
 	"github.com/gen2brain/beeep"
 )
+
+const pingHighlightNode = " [#ED2939](!)[-]"
 
 func mentionHandler(m *discordgo.MessageCreate) {
 	// Crash-prevention
@@ -97,22 +100,17 @@ Notify:
 			return true
 		}
 
-		reference := node.GetReference()
-		if reference == nil {
-			return true
-		}
-
-		id, ok := reference.(int64)
+		reference, ok := node.GetReference().(*discordgo.Channel)
 		if !ok {
 			return true
 		}
 
-		if id != m.ChannelID {
-			return true
+		if reference.ID != m.ChannelID {
+			return false
 		}
 
 		pingNode := tview.NewTreeNode(
-			"[red]" + tview.Escape(name) + "[-] mentioned you",
+			"[#ED2939]" + tview.Escape(name) + "[-] mentioned you",
 		)
 
 		pingNode.SetSelectable(false)
@@ -121,8 +119,10 @@ Notify:
 		node.AddChild(pingNode)
 		node.Expand()
 
-		if g, ok := parent.GetReference().(string); ok {
-			parent.SetText("[::b]" + g + " [red](!)[-::-]")
+		if _, ok := parent.GetReference().(*discordgo.Guild); ok {
+			if !strings.HasSuffix(parent.GetText(), pingHighlightNode) {
+				parent.SetText(parent.GetText() + pingHighlightNode)
+			}
 		}
 
 		return false
