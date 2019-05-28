@@ -55,9 +55,13 @@ func fuzzyMessages(text string) {
 	clearList()
 
 	if len(fuzzied) > 0 {
-		for _, u := range fuzzied {
+		for i, j := 0, len(fuzzied)-1; i < j; i, j = i+1, j-1 {
+			fuzzied[i], fuzzied[j] = fuzzied[j], fuzzied[i]
+		}
+
+		for i, u := range fuzzied {
 			autocomp.InsertItem(
-				0, u,
+				i, u,
 				"", 0, nil,
 			)
 		}
