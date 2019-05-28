@@ -1,10 +1,10 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 
 	"github.com/diamondburned/discordgo"
+	"github.com/jonas747/gojay"
 )
 
 const mentionsEndpoint = "https://discordapp.com/api/v6/users/@me/mentions?limit=%d&roles=true&everyone=true"
@@ -20,6 +20,6 @@ func getMentions() (ms []*discordgo.Message, err error) {
 		return
 	}
 
-	err = json.Unmarshal(resp, &ms)
+	err = gojay.Unmarshal(resp, &ms)
 	return
 }

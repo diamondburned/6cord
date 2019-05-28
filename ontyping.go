@@ -1,7 +1,6 @@
 package main
 
 import (
-	"sync"
 	"time"
 
 	"github.com/diamondburned/discordgo"
@@ -9,7 +8,6 @@ import (
 
 // TypingUsers is a store for all typing users
 type TypingUsers struct {
-	sync.RWMutex
 	Store []*typingEvent
 }
 
@@ -50,31 +48,33 @@ func getTypingMeta(typing *discordgo.TypingStart) *typingMeta {
 			typing.GuildID, typing.UserID,
 		)
 
-		var name string
+		m := &typingMeta{
+			Time: time.Now(),
+		}
 
-		if user != nil {
-			if user.Nick == "" {
-				name = user.Name
-			} else {
-				name = user.Nick
-			}
-		} else {
+		if user == nil {
 			m, err := d.State.Member(typing.GuildID, typing.UserID)
 			if err != nil {
 				return nil
 			}
 
-			if m.Nick == "" {
-				name = m.User.Username
-			} else {
-				name = m.Nick
-			}
+			user = us.UpdateUser(
+				m.GuildID,
+				m.User.ID,
+				m.User.Username,
+				m.Nick,
+				m.User.Discriminator,
+				getUserColor(m.GuildID, m.Roles),
+			)
 		}
 
-		return &typingMeta{
-			Name: name,
-			Time: time.Now(),
+		if user.Nick == "" {
+			m.Name = user.Name
+		} else {
+			m.Name = user.Nick
 		}
+
+		return m
 	}
 
 	ch, err := d.State.Channel(Channel.ID)
@@ -97,31 +97,29 @@ func getTypingMeta(typing *discordgo.TypingStart) *typingMeta {
 func renderCallback() {
 	var (
 		animation uint
-		tick      = time.Tick(time.Millisecond * 500)
+		tick      = time.Tick(time.Second)
+		dots      = [6]string{
+			"   ", "·  ", "·· ",
+			"···", " ··", "  ·",
+		}
 	)
 
 	for {
-		var (
-			mems []string
-			anim string
-		)
+		var mems = make([]string, 0, len(typing.Store))
 
 		select { // 500ms or instant
 		case <-updateTyping:
 		case <-tick:
-			if len(typing.Store) < 1 {
-				animation = 0
-			} else {
-				animation++
-				if animation > 5 {
-					animation = 0
-				}
-
-				anim = getAnimation(animation)
-			}
 		}
 
-		typing.RLock()
+		if len(typing.Store) < 1 {
+			animation = 0
+		} else {
+			animation++
+			if animation > 5 {
+				animation = 0
+			}
+		}
 
 		for _, t := range typing.Store {
 			if t.Meta != nil {
@@ -129,18 +127,15 @@ func renderCallback() {
 			}
 		}
 
-		typing.RUnlock()
+		text := cfg.Prop.DefaultStatus
 
-		text := HumanizeStrings(mems)
 		switch {
-		case len(mems) < 1:
-			text = cfg.Prop.DefaultStatus
 		case len(mems) > 3:
-			text = "Several people are typing" + anim
+			text = "Several people are typing" + dots[animation]
 		case len(mems) == 1:
-			text += " is typing" + anim
+			text = HumanizeStrings(mems) + " is typing" + dots[animation]
 		case len(mems) > 1:
-			text += " are typing" + anim
+			text = HumanizeStrings(mems) + " are typing" + dots[animation]
 		}
 
 		if text != input.GetPlaceholder() && !messagesView.HasFocus() {
@@ -183,24 +178,19 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 		}
 	}()
 
-	tu.Lock()
 	for _, s := range tu.Store {
 		if s.UserID == ts.UserID && s.Meta != nil {
 			s.Meta.Time = time.Now()
-			tu.Unlock()
 			return
 		}
 	}
-	tu.Unlock()
 
 	ev := &typingEvent{
 		TypingStart: ts,
 		Meta:        getTypingMeta(ts),
 	}
 
-	tu.Lock()
 	tu.Store = append(tu.Store, ev)
-	tu.Unlock()
 
 	updateTyping <- struct{}{}
 
@@ -222,9 +212,6 @@ func (tu *TypingUsers) AddUser(ts *discordgo.TypingStart) {
 // RemoveUser removes a user from a store array
 // true is returned when a user is found and removed
 func (tu *TypingUsers) RemoveUser(ts *discordgo.TypingStart) bool {
-	tu.Lock()
-	defer tu.Unlock()
-
 	for i, d := range tu.Store {
 		if d.UserID == ts.UserID {
 			tu.Store = append(

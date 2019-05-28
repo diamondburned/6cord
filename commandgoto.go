@@ -4,6 +4,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
 )
 
@@ -45,13 +46,13 @@ func gotoChannel(text []string) {
 				return true
 			}
 
-			refr, ok := node.GetReference().(int64)
+			refr, ok := node.GetReference().(*discordgo.Guild)
 			if !ok {
 				return true
 			}
 
-			if id != refr {
-				return true
+			if id != refr.ID {
+				return false
 			}
 
 			node.Expand()

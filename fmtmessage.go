@@ -7,6 +7,7 @@ import (
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
 	"gitlab.com/diamondburned/6cord/antitele"
+	"gitlab.com/diamondburned/6cord/md"
 )
 
 var chatPadding string
@@ -32,7 +33,7 @@ func fmtMessage(m *discordgo.Message) string {
 	}
 
 	var (
-		c []string
+		c strings.Builder
 		l = strings.Split(ct, "\n")
 
 		attachments         = m.Attachments
@@ -41,7 +42,11 @@ func fmtMessage(m *discordgo.Message) string {
 
 	if ct != "" {
 		for i := 0; i < len(l); i++ {
-			c = append(c, chatPadding+l[i])
+			c.WriteString(chatPadding + l[i])
+
+			if i != len(l)-1 {
+				c.WriteByte('\n')
+			}
 		}
 	}
 
@@ -60,7 +65,7 @@ func fmtMessage(m *discordgo.Message) string {
 	}
 
 	for _, e := range m.Embeds {
-		var embed = []string{""}
+		var embed = make([]string, 0, 5)
 
 		if e.URL != "" {
 			attachments = append(
@@ -111,7 +116,7 @@ func fmtMessage(m *discordgo.Message) string {
 
 			embed = append(
 				embed,
-				splitEmbedLine(desc)...,
+				splitEmbedLine(md.Parse(desc))...,
 			)
 
 			for _, arr := range emojis {
@@ -204,31 +209,29 @@ func fmtMessage(m *discordgo.Message) string {
 			embedPadding = chatPadding[:len(chatPadding)-2]
 		}
 
-		c = append(
-			c,
-			strings.Join(
-				embed, fmt.Sprintf("\n"+embedPadding+"[#%06X]┃[-::] ", e.Color),
-			),
-			"", // newline between attacments
-		)
-	}
+		for i, l := range embed {
+			if i != len(embed)-1 {
+				c.WriteByte('\n')
+			}
 
-	if len(attachments) > 0 {
-		for _, a := range attachments {
-			c = append(
-				c,
-				chatPadding+"[::d]"+tview.Escape(
-					fmt.Sprintf("[%s]: %s", a.Filename, a.URL),
-				)+"[::-]",
-			)
+			c.WriteString(embedPadding + fmt.Sprintf("[#%06X]", e.Color) + "┃[-::] " + l)
 		}
 	}
 
 	if len(m.Reactions) > 0 { // Reactions
-		c = append(c,
-			chatPadding+chatPadding+reactions,
-		)
+		c.WriteString("\n" + chatPadding + chatPadding + reactions)
 	}
 
-	return strings.Join(c, "\n")
+	if len(attachments) > 0 {
+		for _, a := range attachments {
+			c.WriteString(fmt.Sprintf(
+				"\n%s[::d][%s[]: %s[::-]",
+				chatPadding,
+				tview.Escape(a.Filename),
+				a.URL,
+			))
+		}
+	}
+
+	return c.String()
 }

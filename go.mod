@@ -20,6 +20,8 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
+	github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c
+	github.com/jondot/goweight v1.0.5 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
