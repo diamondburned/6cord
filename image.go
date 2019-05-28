@@ -39,7 +39,7 @@ func startImageRendererPipeline() *imageRendererPipelineStruct {
 		event: make(chan interface{}, 5),
 		cache: &imageCacheStruct{
 			client: &http.Client{
-				Timeout: 30 * time.Second,
+				Timeout: 5 * time.Second,
 			},
 		},
 	}
