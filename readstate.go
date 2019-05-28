@@ -56,6 +56,25 @@ var (
 	settingsCacheMutex   = &sync.Mutex{}
 )
 
+func guildMuted(g *discordgo.Guild) bool {
+	if g == nil {
+		return false
+	}
+
+	settingsCacheMutex.Lock()
+	defer settingsCacheMutex.Unlock()
+
+	guMuted, ok := guildSettingsMuted[g.ID]
+	if !ok {
+		gs := getGuildFromSettings(g.ID)
+
+		guMuted = settingGuildIsMuted(gs)
+		guildSettingsMuted[g.ID] = guMuted
+	}
+
+	return guMuted
+}
+
 // true if channelID has unread msgs
 func isUnread(ch *discordgo.Channel) bool {
 	var gs *discordgo.UserGuildSettings
@@ -90,7 +109,7 @@ func isUnread(ch *discordgo.Channel) bool {
 
 	settingsCacheMutex.Unlock()
 
-	if guMuted || chMuted {
+	if chMuted {
 		return false
 	}
 
@@ -279,7 +298,7 @@ func checkGuildNode(g *discordgo.Guild, n *tview.TreeNode) {
 
 	if len(unreads) == 0 {
 		n.SetText(readChannelColorPrefix + g.Name + "[-::-]")
-	} else {
+	} else if !guildMuted(g) {
 		n.SetText(unreadChannelColorPrefix + g.Name + "[-::-]")
 	}
 
