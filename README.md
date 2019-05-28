@@ -12,102 +12,94 @@
 
 ## Installation
 
-### 1. [From CI (only when the tick-mark is green)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=compile)
+### Method 1. (recommended)
 
-### 2. `go get -u gitlab.com/diamondburned/6cord`
+Download https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=compile
 
-## Behaviors (possibly outdated)
+Only do this if the CI passed (a green tick in the commit bar)
 
-- From input, hit arrow up to go to autocompletion. Arrow up again to go to the message box.
-- In the message box
-- Arrow up/down and Page up/down will be used for scrolling
-- Any other key focuses back to input
-- Tab to hide channels, focusing on input
-- Tab again to show channels, focusing on the channel list
-- To clear the keyring, feed `6cord` a new token with `-t`
-- Plans:
-	- Disable focus on the message view and use Alt+Arrows instead (considering)
+### Method 2. 
 
-## Stuff
+```sh
+git clone https://gitlab.com/diamondburned/6cord
+cd 6cord && go build
+./6cord
 
-- Sample config is in `6cord.toml`, use with `-c`
-- Command history is cycled through with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>/<kbd>j</kbd>/<kbd>k</kbd>
-- To get the following colors, use the variable
-- Monochrome: `TERM=xtermm`
-- Terminal colors: `TERM=xterm-basic`
-- Templating for `command-prefix`
-	- This can be templated, for example: "`[${GUILD}@${CHANNEL}] `"
-	- Avaiable variables are `CHANNEL`, `GUILD`, `USERNAME` and `DISCRIM`
-- To install the config, move  `6cord.toml` to `$HOME/.config/6cord/`
+# Optional
+mkdir -p ~/bin/
+mv ./6cord ~/bin/
+echo PATH="$HOME/bin:$PATH" > ~/.bashrc && . ~/.bashrc # or any shellrc
+```
 
-## Todo
+## Getting the token
 
-- [x] [Fix paste not working](https://github.com/rivo/tview/issues/133) (workaround: Ctrl + V)
-	- [x] Better paste library with image support (Linux only)
-- [x] Syntax highlighting, better markdown parsing
-- [x] Message Delete and Edit
-- [x] Full reaction support
-- [x] Command history (refer to Plans on above section)
-- [ ] A separate user view
-- [ ] Guild member _list_
-	- Should be combined with all guild infos imo
-	- Can also contain pinned messages, though I'm not sure
-	- A method to call this, preferably by
-	- A keybind when on the guild tree
-	- Commands: `/pins` , `/members`, etc
-- [x] Typing events
-	- [x] The client sends the typing event
-	- [x] The client receives and indicates typing events
-- [x] Commands
-	- [x] `/goto`
-	- [x] `/edit`
-	- [x] `s//` with regexp
-	- [x] `/exit`, `/shrug`
-	- [x] Autocompletion for those commands
-		- (refer to the screenshot)
-- [x] Use TextView instead of List for Messages
-	- [x] Consider tv.Write() bytes
-	- [x] Proper inline message edit renders
-	- ~~Split messages into Primitives or find a way to edit them individually (cordless does this, too much effort)~~
-- [x] Fetch nicknames and colors (16-bit hex to 256 cols somehow...)
-	- [x] Async should be for later, when Split messages is done
-	- [x] Add a user store
-- [ ] Implement embed SIXEL images
-	- [ ] Port library to [termui](https://github.com/gizak/termui)
-	- [ ] Work on [issue #213](https://github.com/gizak/termui/issues/213)
-- [x] Implement inline emojis
-- [x] Implement auto-completion popups
-	- Behavior: all keys except Enter and Esc belongs to the Input Field
-	- Esc closes the popup, Enter puts the popup content into the box
-	- When 0 results, hide dialog
-	- Show dialog when: `@`, `#` and potentially `:` (`:` is pointless as I don't plan on adding emoji inputs any time soon)
-	- Auto-completed items:
-		- Mentions `@`
-		- Stock emojis `:`
-		- Commands `/`
-		- Channels `#`
-		- Messages `~`
-- [x] An actual channel browser
-- [x] Message acknowledgements (read/unread)
-	- Isn't fully working yet, channel overrides are still janky
-- [x] Message mentions
-	- Partially working (only counts future mentions)
-	- Past mentions using the endpoint (`/mentions`)
-- [x] Scrolling up gets more messages
-- [ ] Port current user stores into only Discord state caches
-- [ ] Voice support (partially atm)
-	- [x] Show who's in, muted, deafened and ignored
-	- [ ] [Actual microphone handling](https://github.com/gordonklaus/portaudio/blob/master/examples/record.go)
-	- [ ] [Auto volume](https://dsp.stackexchange.com/questions/46147/how-to-get-the-volume-level-from-pcm-audio-data)
-		- Basically, I need to time so that an array of PCM int16s will contain data for 400ms
-		- Then, I'll need to either root-mean-square it or calculate decibels 
-		- Finally, I will compare the calculated value to the one in `config.go`
-		- If it's louder, send it over to the buffer
-- ~~Keyboard event handling~~
-- [x] Fix `discordgo` spasming out when a goroutine panics
-	- A solution could be `./6cord 2> /dev/null`
-- [x] Confirm Windows compatibility
-	- `/upload` fuzzy match doesn't work, wontfix
+This is possible from both the web client and the Electron client.
+
+1. Hit <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd>
+2. Switch to the `Network` tab
+3. Find Discord API requests. This is usually called `messages`, `ack`, `typing`, etc
+4. Search for the `Authorization` header. This is the token.
+
+## Running 6cord with the token
+
+`./6cord -t "TOKEN_HERE"`
+
+- If you have Gnome Keyring (usually the case on most DEs), the token would automatically be stored securely. This could be tested by running `./6cord` without any arguments.
+	- To reset the token, override it with a new one using `-t`
+- It is also possible to move the `6cord.toml` file from the root of this Git repository to `~/.config/6cord/`, then run without any arguments.
+
+## Additional things
+
+### Quirks
+
+- The <kbd>~</kbd> key could be used to both preview images and select a message ID
+- `/mentions` is useless at the moment. This is planned to change in the future.
+- There is currently no global emoji support. This is also planned to change, along with emoji previews.
+
+### Additional keybinds
+
+- Refer to the Quick Start section displayed when starting 6cord
+- <kbd>Tab</kbd> to show/hide the server list
+- Input field history is cycled with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>
+- <kbd>PgUp</kbd> and <kbd>PgDn</kbd> can be used to jump between servers in the list
+- There are some Vim binds available
+
+### `command-prefix`
+
+- The following variables are available: `CHANNEL`, `GUILD`, `USERNAME` and `DISCRIM`
+- This follows `tview`'s rich text format:
+	- Coloring text with `[#424242]`
+	- Bold text with `[::b]`
+	- Both can be done with `[#424242::b]`
+	- Reset with `[-]`, `[::-]` or `[-::-]`
+- You need to manually escape square brackets by adding an opening (`[`) bracket before a closing (`]`) bracket
+	- Example: `[${guild}]` to `[${guild}[]`
+
+### Color support
+
+6cord runs in 256 color mode most of the time. To force true color, run:
+
+```sh
+TERM=xterm-truecolor ./6cord`
+```
+
+(`xterm-truecolor` is known to break a lot of applications including `htop`, only use it with `6cord`)
+
+To limit 6cord to strictly 16 colors, run:
+
+```sh
+TERM=xterm-basic ./6cord
+```
+
+To run 6cord in monochrome mode:
+
+```sh
+TERM=xterm ./6cord
+```
+
+### Supported Image backends
+
+Currently, Xorg is the only supported image backend. SIXEL support proved itself to be challenging with how `tcell` and `tview` call redraws. There is no Kitty terminal implementation in Golang that is available as a library yet (`termui` has a PR with Kitty support). There are things in my priority list right now. That said, PRs are welcomed.
 
 ## Screenshots
 
