@@ -8,6 +8,7 @@ import (
 	"github.com/diamondburned/tview"
 	"gitlab.com/diamondburned/6cord/antitele"
 	"gitlab.com/diamondburned/6cord/md"
+	"gitlab.com/diamondburned/6cord/shortener"
 )
 
 var chatPadding string
@@ -229,7 +230,10 @@ func fmtMessage(m *discordgo.Message) string {
 				"\n%s[::d][%s[]: %s[::-]",
 				chatPadding,
 				tview.Escape(a.Filename),
-				a.URL,
+				shortener.ShortenURL(
+					a.URL, "",
+					shortener.GetExtension(a.URL),
+				),
 			))
 		}
 	}

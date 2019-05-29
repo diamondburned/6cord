@@ -14,6 +14,7 @@ import (
 	"github.com/valyala/fasttemplate"
 	"gitlab.com/diamondburned/6cord/image"
 	"gitlab.com/diamondburned/6cord/md"
+	"gitlab.com/diamondburned/6cord/shortener"
 )
 
 const (
@@ -425,6 +426,13 @@ func main() {
 	log.Println("Storing token inside keyring...")
 	if err := keyring.Set(AppName, "token", d.Token); err != nil {
 		log.Println("Failed to set keyring! Continuing anyway...", err.Error())
+	}
+
+	if cfg.Prop.ShortenURL {
+		if err := shortener.StartHTTP("127.0.0.1"); err != nil {
+			fmt.Println(err.Error())
+			panic(err)
+		}
 	}
 
 	// Stored in syscall.go, only does something when target OS is Linux

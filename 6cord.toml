@@ -30,4 +30,5 @@ token = ""
 	image-fetch-timeout = 1
 	image-width = 400
 	image-height = 400
+	shorten-url = true
 

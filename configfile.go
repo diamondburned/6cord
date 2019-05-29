@@ -27,6 +27,7 @@ type Properties struct {
 	ImageFetchTimeout          int    `id:"image-fetch-timeout" default:"1"  desc:"The timeout to fetch images, in seconds."`
 	ImageWidth                 int    `id:"image-width"      default:"400"   desc:"The maximum width for an image."`
 	ImageHeight                int    `id:"image-height"     default:"400"   desc:"The maximum height for an image."`
+	ShortenURL                 bool   `id:"shorten-url"      default:"true"  desc:"Opens a webserver to redirect URLs"`
 }
 
 type Config struct {
