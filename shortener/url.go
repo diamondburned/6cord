@@ -3,7 +3,8 @@ package shortener
 import "strings"
 
 func GetExtension(name string) string {
-	ss := strings.Split(name, ".")
+	parts := strings.Split(name, "/")
+	ss := strings.Split(parts[len(parts)-1], ".")
 
 	if len(ss) < 2 {
 		return ""

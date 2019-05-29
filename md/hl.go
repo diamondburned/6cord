@@ -15,7 +15,7 @@ func RenderCodeBlock(lang, literal []byte) string {
 	var s strings.Builder
 
 	content := strings.TrimFunc(
-		tview.Escape(string(literal)),
+		string(literal),
 		func(r rune) bool {
 			return r == '\n'
 		},

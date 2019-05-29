@@ -106,7 +106,7 @@ func parse(s string, obf bool) (results string) {
 			case *ast.BlockQuote:
 				if entering {
 					if _, ok := node.Parent.(*ast.BlockQuote); !ok {
-						builder.Write([]byte("[green]"))
+						builder.Write([]byte("[#789922]"))
 					}
 
 					builder.Write([]byte(">"))
