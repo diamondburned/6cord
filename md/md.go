@@ -13,7 +13,6 @@ import (
 )
 
 const extensions = 0 |
-	ps.NoIntraEmphasis |
 	ps.Spoilers |
 	ps.FencedCode |
 	ps.Strikethrough |

@@ -12,7 +12,7 @@ require (
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
-	github.com/diamondburned/tcell v1.1.6
+	github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f
 	github.com/diamondburned/tview v1.1.1
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
@@ -21,7 +21,6 @@ require (
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
 	github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c
-	github.com/jondot/goweight v1.0.5 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
