@@ -9,6 +9,11 @@ import (
 	"github.com/diamondburned/discordgo"
 )
 
+const (
+	authorFormat  = "\n\n" + `[#%06X::]["author"]%s[-::] [::d]%s[::-]`
+	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
+)
+
 var (
 	messageRender = make(chan interface{}, 12)
 )
@@ -20,40 +25,6 @@ func messageRenderer() {
 	for i := range messageRender {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
-			var messageText string
-
-			// https://github.com/Bios-Marcel/cordless
-			switch m.Type {
-			case discordgo.MessageTypeGuildMemberJoin:
-				messageText = "joined the server."
-			case discordgo.MessageTypeCall:
-				messageText = "is calling you."
-			case discordgo.MessageTypeChannelIconChange:
-				messageText = "changed the channel icon."
-			case discordgo.MessageTypeChannelNameChange:
-				messageText = "changed the channel name to " + m.Content + "."
-			case discordgo.MessageTypeChannelPinnedMessage:
-				messageText = fmt.Sprintf("pinned message %d.", m.ID)
-			case discordgo.MessageTypeRecipientAdd:
-				messageText = "added " + m.Mentions[0].Username + " to the group."
-			case discordgo.MessageTypeRecipientRemove:
-				messageText = "removed " + m.Mentions[0].Username + " from the group."
-			}
-
-			if messageText != "" {
-				lastmsg = nil
-
-				msg := fmt.Sprintf(
-					"\n\n[::d]%s %s[::-]",
-					m.Author.Username, messageText,
-				)
-
-				messagesView.Write([]byte(msg))
-				messageStore = append(messageStore, msg)
-
-				break
-			}
-
 			rendererCreate(m.Message, lastmsg)
 
 			lastmsg = m.Message
@@ -96,11 +67,17 @@ func messageRenderer() {
 			lastmsg = nil
 
 		case *discordgo.MessageUpdate:
+			message, err := d.State.Message(Channel.ID, m.ID)
+			if err != nil {
+				Warn(err.Error())
+				break
+			}
+
 			for i, msg := range messageStore {
 				if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
 					msg := fmt.Sprintf(
 						messageFormat+"[::-]",
-						m.ID, fmtMessage(m.Message),
+						m.ID, fmtMessage(message),
 					)
 
 					messageStore[i] = msg
@@ -156,6 +133,40 @@ func messageRenderer() {
 }
 
 func rendererCreate(m, lastmsg *discordgo.Message) {
+	if m.Type != discordgo.MessageTypeDefault {
+		var messageText string
+
+		// https://github.com/Bios-Marcel/cordless
+		switch m.Type {
+		case discordgo.MessageTypeGuildMemberJoin:
+			messageText = "joined the server."
+		case discordgo.MessageTypeCall:
+			messageText = "is calling you."
+		case discordgo.MessageTypeChannelIconChange:
+			messageText = "changed the channel icon."
+		case discordgo.MessageTypeChannelNameChange:
+			messageText = "changed the channel name to " + m.Content + "."
+		case discordgo.MessageTypeChannelPinnedMessage:
+			messageText = fmt.Sprintf("pinned message %d.", m.ID)
+		case discordgo.MessageTypeRecipientAdd:
+			messageText = "added " + m.Mentions[0].Username + " to the group."
+		case discordgo.MessageTypeRecipientRemove:
+			messageText = "removed " + m.Mentions[0].Username + " from the group."
+		}
+
+		if messageText != "" {
+			msg := fmt.Sprintf(
+				"\n\n[::d][\"%d\"]%s %s[\"\"][::-]",
+				m.ID, m.Author.Username, messageText,
+			)
+
+			messagesView.Write([]byte(msg))
+			messageStore = append(messageStore, msg)
+		}
+
+		return
+	}
+
 	msgFmt := fmt.Sprintf(
 		messageFormat+"[::-]",
 		m.ID, fmtMessage(m),
