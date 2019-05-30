@@ -20,8 +20,38 @@ func messageRenderer() {
 	for i := range messageRender {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
-			if !isRegularMessage(m.Message) {
-				continue
+			var messageText string
+
+			// https://github.com/Bios-Marcel/cordless
+			switch m.Type {
+			case discordgo.MessageTypeGuildMemberJoin:
+				messageText = "joined the server."
+			case discordgo.MessageTypeCall:
+				messageText = "is calling you."
+			case discordgo.MessageTypeChannelIconChange:
+				messageText = "changed the channel icon."
+			case discordgo.MessageTypeChannelNameChange:
+				messageText = "changed the channel name to " + m.Content + "."
+			case discordgo.MessageTypeChannelPinnedMessage:
+				messageText = fmt.Sprintf("pinned message %d.", m.ID)
+			case discordgo.MessageTypeRecipientAdd:
+				messageText = "added " + m.Mentions[0].Username + " to the group."
+			case discordgo.MessageTypeRecipientRemove:
+				messageText = "removed " + m.Mentions[0].Username + " from the group."
+			}
+
+			if messageText != "" {
+				lastmsg = nil
+
+				msg := fmt.Sprintf(
+					"\n\n[::d]%s %s[::-]",
+					m.Author.Username, messageText,
+				)
+
+				messagesView.Write([]byte(msg))
+				messageStore = append(messageStore, msg)
+
+				break
 			}
 
 			rendererCreate(m.Message, lastmsg)
@@ -51,7 +81,6 @@ func messageRenderer() {
 							i != len(messageStore)-1) {
 
 						prev = 1
-						setLastAuthor(0)
 					}
 
 					messageStore = append(
@@ -81,6 +110,36 @@ func messageRenderer() {
 				}
 			}
 
+		case string:
+			msg := fmt.Sprintf(
+				authorFormat,
+				16777215, "<!6cord bot>",
+				time.Now().Format(time.Stamp),
+			)
+
+			var (
+				l = strings.Split(m, "\n")
+				c []string
+			)
+
+			for i := 0; i < len(l); i++ {
+				c = append(c, chatPadding+l[i])
+			}
+
+			msg += fmt.Sprintf(
+				messageFormat+"[::-]",
+				0, strings.Join(c, "\n"),
+			)
+
+			app.QueueUpdateDraw(func() {
+				messagesView.Write([]byte(msg))
+			})
+
+			messageStore = append(messageStore, msg)
+
+			scrollChat()
+			lastmsg = nil
+
 		case nil:
 			messagesView.Clear()
 			messageStore = make([]string, 0, prefetchMessageCount*2)
@@ -102,13 +161,11 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 		m.ID, fmtMessage(m),
 	)
 
-	if getLastAuthor() != m.Author.ID || (lastmsg != nil && messageisOld(m, lastmsg)) {
+	if lastmsg == nil || (lastmsg.Author.ID != m.Author.ID || messageisOld(m, lastmsg)) {
 		sentTime, err := m.Timestamp.Parse()
 		if err != nil {
 			sentTime = time.Now()
 		}
-
-		setLastAuthor(m.Author.ID)
 
 		username, color := us.DiscordThis(m)
 

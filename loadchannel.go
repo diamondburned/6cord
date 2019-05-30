@@ -77,17 +77,11 @@ func actualLoadChannel(channelID int64) {
 			continue
 		}
 
-		if !isRegularMessage(m) {
-			continue
-		}
-
 		messageRender <- m
 		d.State.MessageAdd(m)
 	}
 
-	if len(msgs) > 0 {
-		setLastAuthor(msgs[len(msgs)-1].Author.ID)
-	} else {
+	if len(msgs) == 0 {
 		Message("There's nothing here!")
 	}
 

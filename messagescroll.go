@@ -107,10 +107,6 @@ func loadMore() {
 			continue
 		}
 
-		if !isRegularMessage(m) {
-			continue
-		}
-
 		sentTime, err := m.Timestamp.Parse()
 		if err != nil {
 			sentTime = time.Now()

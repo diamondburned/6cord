@@ -46,7 +46,7 @@ func gotoChannel(text []string) {
 				return true
 			}
 
-			refr, ok := node.GetReference().(*discordgo.Guild)
+			refr, ok := node.GetReference().(*discordgo.Channel)
 			if !ok {
 				return true
 			}
