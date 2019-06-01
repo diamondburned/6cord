@@ -10,7 +10,7 @@ require (
 	github.com/danieljoos/wincred v1.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.1.2
-	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
+	github.com/diamondburned/go-keyring v0.0.0-20190601233115-a779b54cd177
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.6
 	github.com/diamondburned/tview v1.1.1
@@ -21,7 +21,6 @@ require (
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
 	github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c
-	github.com/jondot/goweight v1.0.5 // indirect
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
 	github.com/mattn/go-isatty v0.0.7 // indirect
@@ -36,7 +35,7 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	github.com/valyala/fasttemplate v1.0.0
-	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 // indirect
+	github.com/zalando/go-keyring v0.0.0-20190531073407-f65c47520c89 // indirect
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
