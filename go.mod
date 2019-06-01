@@ -12,7 +12,7 @@ require (
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/go-keyring v0.0.0-20190601233115-a779b54cd177
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
-	github.com/diamondburned/tcell v1.1.6
+	github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f
 	github.com/diamondburned/tview v1.1.1
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe

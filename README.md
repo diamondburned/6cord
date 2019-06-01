@@ -28,7 +28,7 @@ cd 6cord && go build
 # Optional
 mkdir -p ~/bin/
 mv ./6cord ~/bin/
-echo PATH="$HOME/bin:$PATH" > ~/.bashrc && . ~/.bashrc # or any shellrc
+echo PATH="$HOME/bin:$PATH" >> ~/.bashrc && . ~/.bashrc # or any shellrc
 ```
 
 ## Getting the token

@@ -14,12 +14,7 @@ import (
 func RenderCodeBlock(lang, literal []byte) string {
 	var s strings.Builder
 
-	content := strings.TrimFunc(
-		tview.Escape(string(literal)),
-		func(r rune) bool {
-			return r == '\n'
-		},
-	)
+	content := string(literal)
 
 	var lexer = lexers.Fallback
 	if lang := string(lang); lang != "" {
@@ -59,9 +54,5 @@ func RenderCodeBlock(lang, literal []byte) string {
 		}
 	}
 
-	if !strings.HasSuffix(s.String(), "\n") {
-		return s.String() + "\n"
-	}
-
-	return s.String()
+	return s.String() + "\n"
 }

@@ -40,8 +40,8 @@ github.com/diamondburned/go-keyring v0.0.0-20190601233115-a779b54cd177 h1:YrRKCT
 github.com/diamondburned/go-keyring v0.0.0-20190601233115-a779b54cd177/go.mod h1:7QuKJFuPnAlkgzOWxYU2kVlIalaQx/XzZmxaYloKCsE=
 github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c h1:DGqR/HqEQKAMpSokYCB5LrTf1h1GVxcdVQK5As3MVJ0=
 github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
-github.com/diamondburned/tcell v1.1.6 h1:JXshIZGGkhdVk8Uv+yjlccxwNJA3eGHV6XwzLIFk4Ow=
-github.com/diamondburned/tcell v1.1.6/go.mod h1:Q49Y5+5hLvqARodOKBj/7iiuUrG8kRIuUNgdc1f4AWE=
+github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f h1:1O0+5oPg4s5LR8KKrwkKBBKaHxDoHYPUymhZOAmJfdU=
+github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f/go.mod h1:Q49Y5+5hLvqARodOKBj/7iiuUrG8kRIuUNgdc1f4AWE=
 github.com/diamondburned/tview v1.1.1 h1:ulujQxoCItCQ/xYYAB1AWbU/m7NLFC7SdWRZnjA4hKk=
 github.com/diamondburned/tview v1.1.1/go.mod h1:IFOu7ItopUvZ4D/BqWWg0Mby9j42ClqCDhGxZqvD0uA=
 github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJMJXc/mA=

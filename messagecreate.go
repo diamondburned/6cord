@@ -7,11 +7,6 @@ import (
 	"github.com/diamondburned/discordgo"
 )
 
-const (
-	authorFormat  = "\n\n" + `[#%06X::]["author"]%s[-::] [::d]%s[::-]`
-	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
-)
-
 var (
 	highlightInterval = time.Duration(time.Second * 7)
 	messageStore      []string

@@ -57,6 +57,7 @@ func (c *indexedTTYFormatter) Format(w io.Writer, style *chroma.Style, it chroma
 	lastColor := false
 
 	theme := styleToEscapeSequence(c.table, style)
+
 	for token := it(); token != chroma.EOF; token = it() {
 		color, ok := theme[token.Type]
 		if !ok {

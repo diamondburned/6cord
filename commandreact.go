@@ -1,11 +1,8 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
-
-	"github.com/bwmarrin/discordgo"
 )
 
 func reactMessage(text []string) {
@@ -14,7 +11,7 @@ func reactMessage(text []string) {
 		return
 	}
 
-	if len(text) != 3 {
+	if len(text) < 3 {
 		Message("Invalid arguments! Refer to description.")
 		return
 	}
@@ -32,69 +29,60 @@ func reactMessage(text []string) {
 	}
 
 	var (
-		emoji   string
-		reacted bool
+		emoji   = make([]string, len(text)-2)
+		reacted = make([]bool, len(text)-2)
 	)
 
-	regres := EmojiRegex.FindAllStringSubmatch(text[2], -1)
-	if len(regres) > 0 && len(regres[0]) == 4 {
-		emoji = regres[0][2] + ":" + regres[0][3]
+	for i := 0; i < len(text)-2; i++ {
+		regres := EmojiRegex.FindAllStringSubmatch(text[i+2], -1)
+		if len(regres) > 0 && len(regres[0]) == 4 {
+			emoji[i] = regres[0][2] + ":" + regres[0][3]
 
-		for _, r := range message.Reactions {
-			if r.Emoji == nil {
-				continue
+			for _, r := range message.Reactions {
+				if r.Emoji == nil {
+					continue
+				}
+
+				if strconv.FormatInt(r.Emoji.ID, 10) == regres[0][3] {
+					reacted[i] = r.Me
+					break
+				}
 			}
+		} else {
+			emoji[i] = strings.TrimSpace(text[i+2])
 
-			if strconv.FormatInt(r.Emoji.ID, 10) == regres[0][3] {
-				reacted = r.Me
-				break
-			}
-		}
-	} else {
-		emoji = strings.TrimSpace(text[2])
+			for _, r := range message.Reactions {
+				if r.Emoji == nil {
+					continue
+				}
 
-		for _, r := range message.Reactions {
-			if r.Emoji == nil {
-				continue
-			}
-
-			if r.Emoji.Name == text[2] {
-				reacted = r.Me
-				break
+				if r.Emoji.Name == text[i+2] {
+					reacted[i] = r.Me
+					break
+				}
 			}
 		}
 	}
 
-	if reacted {
-		err = d.MessageReactionRemoveMe(
-			Channel.ID,
-			message.ID,
-			emoji,
-		)
-	} else {
-		err = d.MessageReactionAdd(
-			Channel.ID,
-			message.ID,
-			emoji,
-		)
-	}
+	for i := 0; i < len(emoji); i++ {
+		if reacted[i] {
+			err = d.MessageReactionRemoveMe(
+				Channel.ID,
+				message.ID,
+				emoji[i],
+			)
+		} else {
+			err = d.MessageReactionAdd(
+				Channel.ID,
+				message.ID,
+				emoji[i],
+			)
+		}
 
-	if err != nil {
-		if err, ok := err.(discordgo.RESTError); ok {
-			if err.Message != nil {
-				Message(fmt.Sprintf(
-					"Error sending emoji %s:\n%s",
-					emoji, err.Message.Message,
-				))
-
-				return
-			}
-
+		if err != nil {
 			Warn(err.Error())
 			return
 		}
-
-		Warn(err.Error())
 	}
 
 }

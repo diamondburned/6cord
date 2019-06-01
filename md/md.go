@@ -13,7 +13,6 @@ import (
 )
 
 const extensions = 0 |
-	ps.NoIntraEmphasis |
 	ps.Spoilers |
 	ps.FencedCode |
 	ps.Strikethrough |
@@ -106,7 +105,7 @@ func parse(s string, obf bool) (results string) {
 			case *ast.BlockQuote:
 				if entering {
 					if _, ok := node.Parent.(*ast.BlockQuote); !ok {
-						builder.Write([]byte("[green]"))
+						builder.Write([]byte("[#789922]"))
 					}
 
 					builder.Write([]byte(">"))
