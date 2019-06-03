@@ -134,6 +134,8 @@ github.com/valyala/fasttemplate v1.0.0 h1:MCROMI9ZxNYyLvdmeQErZcgsUjsxARzi1SnHWY
 github.com/valyala/fasttemplate v1.0.0/go.mod h1:KHLXt3tVN2HBp8eijSv/kGJopbvo7S+qRAEEKiv+SiQ=
 github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 h1:U5I57s4ISLpeeLYl8b3MsainSSh9F+mRXauln37b50I=
 github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07/go.mod h1:XlXBIfkGawHNVOHlenOaBW7zlfCh8LovwjOgjamYnkQ=
+github.com/zalando/go-keyring v0.0.0-20190531073407-f65c47520c89 h1:MSNPtxEHZcVtM3jLmK0fZYDnPYBrVGQrh3t1R9nLT4c=
+github.com/zalando/go-keyring v0.0.0-20190531073407-f65c47520c89/go.mod h1:XlXBIfkGawHNVOHlenOaBW7zlfCh8LovwjOgjamYnkQ=
 gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023 h1:Ppq7B7ykPx0CunPrdr+cCgduczCC7Y88odRn6R30AWY=
 gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023/go.mod h1:71n9IRtUkft7iBh3/pRsrFITTQwRlEZtxZVaZH/8rKk=
 gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06 h1:lGu8YGHgq9ABb00JDQewrqhKIvku+/1uFsnq/QUeiU8=

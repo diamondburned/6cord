@@ -34,7 +34,7 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	github.com/valyala/fasttemplate v1.0.0
-	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07
+	github.com/zalando/go-keyring v0.0.0-20190531073407-f65c47520c89 // indirect
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
