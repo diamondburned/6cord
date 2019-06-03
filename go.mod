@@ -6,14 +6,13 @@ require (
 	github.com/alecthomas/chroma v0.6.2
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.1
-	github.com/bwmarrin/discordgo v0.19.0
+	github.com/bwmarrin/discordgo v0.19.0 // indirect
 	github.com/danieljoos/wincred v1.0.1 // indirect
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.1.2
-	github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f
-	github.com/diamondburned/tview v1.1.1
+	github.com/diamondburned/tview v1.1.2-0.20190603173113-c4a2742b73f4
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
@@ -35,7 +34,7 @@ require (
 	github.com/stretchr/objx v0.2.0 // indirect
 	github.com/tadvi/systray v0.0.0-20190226123456-11a2b8fa57af // indirect
 	github.com/valyala/fasttemplate v1.0.0
-	github.com/zalando/go-keyring v0.0.0-20190208082241-fbe81aec3a07 // indirect
+	github.com/zalando/go-keyring v0.0.0-20190531073407-f65c47520c89
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
