@@ -16,6 +16,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	guildNode := tview.NewTreeNode("Guilds")
 	guildNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 	guildNode.SetSelectedColor(tcell.ColorBlack)
+	guildNode.SetSingleClick(true)
 
 	pNode := tview.NewTreeNode("Direct Messages")
 	pNode.SetReference("Direct Messages")

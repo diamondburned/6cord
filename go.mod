@@ -12,7 +12,7 @@ require (
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f
-	github.com/diamondburned/tview v1.1.2-0.20190603173113-c4a2742b73f4
+	github.com/diamondburned/tview v1.1.2-0.20190603181702-ef08083df63c
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
