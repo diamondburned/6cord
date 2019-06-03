@@ -151,6 +151,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	}
 
 	guildView.SetRoot(guildNode)
+	guildView.SetMouseFunc(func(ev *tcell.EventMouse) bool {
+		return false
+	})
 	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
 		reference := node.GetReference()
 		if reference == nil {
