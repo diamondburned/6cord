@@ -34,8 +34,6 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/diamondburned/discordgo v1.1.2 h1:j1XJDMisVea2CzfiX6tHyEB6A1JNrwU5GWY/Hy6bWIA=
 github.com/diamondburned/discordgo v1.1.2/go.mod h1:ARoPji8yedAsk0xiJRHDJ3VKbVAhPC48nY60lIlJMVA=
-github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6 h1:1GUIrx3DrKATbHwjE2fuiq0StCM3fNIYQ6K9uPkqfyo=
-github.com/diamondburned/go-keyring v0.0.0-20190317041914-0cfca17208f6/go.mod h1:7QuKJFuPnAlkgzOWxYU2kVlIalaQx/XzZmxaYloKCsE=
 github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c h1:DGqR/HqEQKAMpSokYCB5LrTf1h1GVxcdVQK5As3MVJ0=
 github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c/go.mod h1:V43Fu178We45NZ3KlFY1Uauio/83NNGDkrr0fDZFTgM=
 github.com/diamondburned/tcell v1.1.7-0.20190530165739-4a85213a023f h1:1O0+5oPg4s5LR8KKrwkKBBKaHxDoHYPUymhZOAmJfdU=
