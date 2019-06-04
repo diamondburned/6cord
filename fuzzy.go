@@ -9,7 +9,7 @@ import (
 func stateResetter() {
 	channelFuzzyCache = allChannels([]fuzzyReadState{})
 	discordEmojis = DiscordEmojis([]*discordgo.Emoji{})
-	allMessages = []string{}
+	allMessages = make([][2]string, 0, len(messageStore))
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()
 
@@ -20,7 +20,9 @@ func stateResetter() {
 		scrollChat()
 	}
 
-	imageRendererPipeline.clean()
+	if imageRendererPipeline != nil {
+		imageRendererPipeline.clean()
+	}
 }
 
 func clearList() {
