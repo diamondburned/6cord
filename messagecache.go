@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"image"
+	"log"
 	"net/http"
 	"strings"
 	"sync"
@@ -12,11 +13,17 @@ import (
 )
 
 type imageCacheStruct struct {
-	sync.Mutex
+	sync.RWMutex
+	Age time.Duration
 
 	client *http.Client
-	store  map[int64][]*imageCacheAsset
+	store  map[int64]*imageCacheStore
 	lastCh int64
+}
+
+type imageCacheStore struct {
+	assets []*imageCacheAsset
+	time   time.Time
 }
 
 type imageCacheAsset struct {
@@ -27,18 +34,12 @@ type imageCacheAsset struct {
 	i image.Image
 }
 
-var imageCache = &imageCacheStruct{
-	client: &http.Client{
-		Timeout: 30 * time.Second,
-	},
-}
-
 func (c *imageCacheStruct) get(m int64) []*imageCacheAsset {
-	c.Lock()
-	defer c.Unlock()
+	c.RLock()
+	defer c.RUnlock()
 
 	if a, ok := c.store[m]; ok {
-		return a
+		return a.assets
 	}
 
 	return nil
@@ -66,15 +67,19 @@ func (c *imageCacheStruct) calcURL(a *imageCacheAsset) {
 	}
 }
 
-func (c *imageCacheStruct) set(m *discordgo.Message) ([]*imageCacheAsset, error) {
-	if c.lastCh != m.ChannelID {
-		c.reset()
+// set checks cache as well
+func (c *imageCacheStruct) upd(m *discordgo.Message) ([]*imageCacheAsset, error) {
+	if assets := c.get(m.ID); assets != nil {
+		return assets, nil
 	}
 
-	assets := make(
-		[]*imageCacheAsset,
-		0, len(m.Attachments)+len(m.Embeds),
-	)
+	s := &imageCacheStore{
+		assets: make(
+			[]*imageCacheAsset,
+			0, len(m.Attachments)+len(m.Embeds),
+		),
+		time: time.Now(),
+	}
 
 	for _, a := range m.Attachments {
 		if a.Width == 0 || a.Height == 0 {
@@ -88,7 +93,7 @@ func (c *imageCacheStruct) set(m *discordgo.Message) ([]*imageCacheAsset, error)
 		}
 
 		c.calcURL(a)
-		assets = append(assets, a)
+		s.assets = append(s.assets, a)
 	}
 
 	for _, e := range m.Embeds {
@@ -100,41 +105,54 @@ func (c *imageCacheStruct) set(m *discordgo.Message) ([]*imageCacheAsset, error)
 			}
 
 			c.calcURL(a)
-			assets = append(assets, a)
+			s.assets = append(s.assets, a)
 		}
 	}
 
-	if len(assets) == 0 {
+	if len(s.assets) == 0 {
 		return nil, nil
 	}
 
-	for _, a := range assets {
+	for _, a := range s.assets {
 		r, err := c.client.Get(a.sizedURL)
 		if err != nil {
 			return nil, err
 		}
 
 		i, _, err := image.Decode(r.Body)
-		if err != nil {
-			r.Body.Close()
-			return nil, err
+		if err == nil {
+			a.i = i
+		} else {
+			// Error is ignored, as skipping a non-supported
+			// image is fine
+			log.Println("Error on", a.sizedURL, "\n"+err.Error())
 		}
 
-		a.i = i
 		r.Body.Close()
 	}
 
 	c.Lock()
 	defer c.Unlock()
 
-	c.store[m.ID] = assets
+	c.store[m.ID] = s
 
-	return assets, nil
+	return s.assets, nil
 }
 
 func (c *imageCacheStruct) reset() {
 	c.Lock()
 	defer c.Unlock()
 
-	c.store = map[int64][]*imageCacheAsset{}
+	c.store = map[int64]*imageCacheStore{}
+}
+
+func (c *imageCacheStruct) gc() {
+	c.Lock()
+	defer c.Unlock()
+
+	for k, store := range c.store {
+		if time.Now().Sub(store.time) > c.Age {
+			delete(c.store, k)
+		}
+	}
 }

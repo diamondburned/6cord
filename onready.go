@@ -13,6 +13,8 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 
 	// loadChannel()
 
+	guildView.SetSingleClick(true)
+
 	guildNode := tview.NewTreeNode("Guilds")
 	guildNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 	guildNode.SetSelectedColor(tcell.ColorBlack)
@@ -151,6 +153,9 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	}
 
 	guildView.SetRoot(guildNode)
+	guildView.SetMouseFunc(func(ev *tcell.EventMouse) bool {
+		return false
+	})
 	guildView.SetSelectedFunc(func(node *tview.TreeNode) {
 		reference := node.GetReference()
 		if reference == nil {
