@@ -13,7 +13,6 @@ import (
 	"github.com/valyala/fasttemplate"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/image"
-	"gitlab.com/diamondburned/6cord/md"
 	"gitlab.com/diamondburned/6cord/shortener"
 )
 
@@ -53,13 +52,6 @@ func init() {
 		fmt.Println(err.Error())
 		panic(err)
 	}
-
-	for i := 0; i < cfg.Prop.ChatPadding; i++ {
-		chatPadding += " "
-	}
-
-	showChannels = cfg.Prop.ShowChannelsOnStartup
-	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
 
 	t, err := fasttemplate.NewTemplate(cfg.Prop.CommandPrefix, "${", "}")
 	if err != nil {

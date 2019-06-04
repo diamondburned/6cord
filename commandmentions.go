@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/diamondburned/tview"
@@ -32,18 +32,18 @@ func commandMentions(text []string) {
 		}
 
 		messagesView.Write([]byte(
-			fmt.Sprintf(
-				authorFormat,
-				color, tview.Escape(username),
-				sentTime.Format(time.Stamp),
-			),
+			authorTmpl.ExecuteString(map[string]interface{}{
+				"color": fmtHex(color),
+				"name":  tview.Escape(username),
+				"time":  sentTime.Format(time.Stamp),
+			}),
 		))
 
 		messagesView.Write([]byte(
-			fmt.Sprintf(
-				messageFormat+"[::-]",
-				m.ID, fmtMessage(m),
-			),
+			messageTmpl.ExecuteString(map[string]interface{}{
+				"ID":      strconv.FormatInt(m.ID, 10),
+				"content": fmtMessage(m),
+			}),
 		))
 	}
 

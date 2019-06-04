@@ -61,14 +61,6 @@ func fuzzyHasNeedle(needle int, haystack []int) bool {
 	return false
 }
 
-func min(i, j int) int {
-	if i < j {
-		return i
-	}
-
-	return j
-}
-
 func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
 	switch ev.Key() {
 	case tcell.KeyDown:

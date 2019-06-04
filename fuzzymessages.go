@@ -96,6 +96,10 @@ func fuzzyMessages(text string) {
 	app.Draw()
 
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
+		if i >= len(fuzzied) {
+			return
+		}
+
 		ID := fuzzied[i][1]
 
 		if Channel != nil {

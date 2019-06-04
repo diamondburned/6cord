@@ -3,15 +3,11 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/diamondburned/discordgo"
-)
-
-const (
-	authorFormat  = "\n\n" + `[#%06X::]["author"]%s[-::] [::d]%s[::-]`
-	messageFormat = "\n" + `["%d"]%s ["ENDMESSAGE"]`
 )
 
 var (
@@ -45,10 +41,10 @@ func messageRenderer() {
 
 					prev := 0
 
-					if (i > 1 && i == len(messageStore)-1 && strings.HasPrefix(messageStore[i-1], authorFormat[:4])) ||
+					if (i > 1 && i == len(messageStore)-1 && strings.HasPrefix(messageStore[i-1], authorPrefix)) ||
 						(i > 0 &&
-							strings.HasPrefix(messageStore[i-1], authorFormat[:4]) &&
-							!strings.HasPrefix(messageStore[i+1], messageFormat[:3]) &&
+							strings.HasPrefix(messageStore[i-1], authorPrefix) &&
+							!strings.HasPrefix(messageStore[i+1], messageRawFormat[:3]) &&
 							i != len(messageStore)-1) {
 
 						prev = 1
@@ -75,10 +71,10 @@ func messageRenderer() {
 
 			for i, msg := range messageStore {
 				if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
-					msg := fmt.Sprintf(
-						messageFormat+"[::-]",
-						m.ID, fmtMessage(message),
-					)
+					msg := messageTmpl.ExecuteString(map[string]interface{}{
+						"ID":      strconv.FormatInt(m.ID, 10),
+						"content": fmtMessage(message),
+					})
 
 					messageStore[i] = msg
 
@@ -88,11 +84,11 @@ func messageRenderer() {
 			}
 
 		case string:
-			msg := fmt.Sprintf(
-				authorFormat,
-				16777215, "<!6cord bot>",
-				time.Now().Format(time.Stamp),
-			)
+			msg := authorTmpl.ExecuteString(map[string]interface{}{
+				"color": fmtHex(16777215),
+				"name":  "Not Clyde",
+				"time":  time.Now().Format(time.Stamp),
+			})
 
 			var (
 				l = strings.Split(m, "\n")
@@ -103,10 +99,10 @@ func messageRenderer() {
 				c = append(c, chatPadding+l[i])
 			}
 
-			msg += fmt.Sprintf(
-				messageFormat+"[::-]",
-				0, strings.Join(c, "\n"),
-			)
+			msg += messageTmpl.ExecuteString(map[string]interface{}{
+				"ID":      "0",
+				"content": strings.Join(c, "\n"),
+			})
 
 			app.QueueUpdateDraw(func() {
 				messagesView.Write([]byte(msg))
@@ -168,10 +164,10 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 		return
 	}
 
-	msgFmt := fmt.Sprintf(
-		messageFormat+"[::-]",
-		m.ID, fmtMessage(m),
-	)
+	msgFmt := messageTmpl.ExecuteString(map[string]interface{}{
+		"ID":      strconv.FormatInt(m.ID, 10),
+		"content": fmtMessage(m),
+	})
 
 	go func() {
 		if _, err := imageRendererPipeline.cache.upd(m); err != nil {
@@ -179,7 +175,9 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 		}
 	}()
 
-	if lastmsg == nil || (lastmsg.Author.ID != m.Author.ID || messageisOld(m, lastmsg)) {
+	if cfg.Prop.CompactMode || (lastmsg == nil ||
+		(lastmsg.Author.ID != m.Author.ID || messageisOld(m, lastmsg))) {
+
 		sentTime, err := m.Timestamp.Parse()
 		if err != nil {
 			sentTime = time.Now()
@@ -187,14 +185,19 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 
 		username, color := us.DiscordThis(m)
 
-		msg := fmt.Sprintf(
-			authorFormat,
-			color, username,
-			sentTime.Local().Format(time.Stamp),
-		)
+		msg := authorTmpl.ExecuteString(map[string]interface{}{
+			"color": fmtHex(color),
+			"name":  username,
+			"time":  sentTime.Format(time.Stamp),
+		})
+
+		if cfg.Prop.CompactMode {
+			msgFmt = " " + msgFmt[1:]
+		}
 
 		messagesView.Write([]byte(msg + msgFmt))
 		messageStore = append(messageStore, msg, msgFmt)
+
 	} else {
 		messagesView.Write([]byte(msgFmt))
 		messageStore = append(messageStore, msgFmt)

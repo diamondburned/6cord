@@ -14,6 +14,7 @@ token = ""
 	# Defaults are rather defined in the code, which is why this
 	# should only be used as a reference on how to configure.
 	# Keys are optional.
+	compact-mode = false
 	show-channels = true
 	chat-padding = 2
 	sidebar-ratio = 3

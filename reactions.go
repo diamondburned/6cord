@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/diamondburned/discordgo"
@@ -37,10 +38,10 @@ func handleReactionEvent(m *discordgo.Message) {
 
 	for i, msg := range messageStore {
 		if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
-			msg := fmt.Sprintf(
-				messageFormat+"[::-]",
-				m.ID, fmtMessage(m),
-			)
+			msg := messageTmpl.ExecuteString(map[string]interface{}{
+				"ID":      strconv.FormatInt(m.ID, 10),
+				"content": fmtMessage(m),
+			})
 
 			messageStore[i] = msg
 

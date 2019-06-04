@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/diamondburned/discordgo"
@@ -11,7 +12,12 @@ import (
 	"gitlab.com/diamondburned/6cord/shortener"
 )
 
-var chatPadding string
+const zeroes = "000000"
+
+func fmtHex(hex int) string {
+	h := zeroes + strconv.FormatInt(int64(hex), 16)
+	return h[len(h)-len(zeroes):]
+}
 
 func fmtMessage(m *discordgo.Message) string {
 	ct, emojiMap := parseMessageContent(m)
@@ -43,7 +49,11 @@ func fmtMessage(m *discordgo.Message) string {
 
 	if ct != "" {
 		for i := 0; i < len(l); i++ {
-			c.WriteString(chatPadding + l[i])
+			if !cfg.Prop.CompactMode || i != 0 {
+				c.WriteString(chatPadding)
+			}
+
+			c.WriteString(l[i])
 
 			if i != len(l)-1 {
 				c.WriteByte('\n')
@@ -63,6 +73,10 @@ func fmtMessage(m *discordgo.Message) string {
 				URL:      arr[1],
 			},
 		)
+	}
+
+	if len(m.Embeds) > 0 && m.Content == "" && cfg.Prop.CompactMode {
+		c.WriteByte('\n')
 	}
 
 	for _, e := range m.Embeds {
@@ -211,6 +225,7 @@ func fmtMessage(m *discordgo.Message) string {
 		}
 
 		c.WriteByte('\n')
+
 		for i, l := range embed {
 			c.WriteString(embedPadding + fmt.Sprintf("[#%06X]", e.Color) + "┃[-::] " + l)
 

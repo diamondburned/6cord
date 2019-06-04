@@ -3,14 +3,18 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"strings"
 
 	"github.com/stevenroose/gonfig"
+	fast "github.com/valyala/fasttemplate"
+	"gitlab.com/diamondburned/6cord/md"
 )
 
 var cfg Config
 
 // Properties ..
 type Properties struct {
+	CompactMode                bool   `id:"compact-mode"     default:"true"  desc:"Compact Mode"`
 	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
 	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
 	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
@@ -42,6 +46,20 @@ type Config struct {
 	Config string `short:"c"`
 }
 
+var (
+	authorRawFormat  string
+	authorPrefix     string
+	messageRawFormat string
+
+	// color, name, time
+	authorTmpl *fast.Template
+
+	// ID, content
+	messageTmpl *fast.Template
+
+	chatPadding string
+)
+
 func loadCfg() error {
 	// Get the XDG paths
 	var xdg = os.Getenv("XDG_CONFIG_HOME")
@@ -68,6 +86,24 @@ func loadCfg() error {
 			EnvPrefix:           "sixcord_",
 		})
 	}
+
+	messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
+
+	if cfg.Prop.CompactMode {
+		authorPrefix = "\n[\"author\"]"
+		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::][""]`
+	} else {
+		authorPrefix = "\n\n[\"author\"]"
+		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::] [::d]{time}[::-][""]`
+	}
+
+	authorTmpl = fast.New(authorRawFormat, "{", "}")
+	messageTmpl = fast.New(messageRawFormat, "{", "}")
+
+	chatPadding = strings.Repeat(" ", cfg.Prop.ChatPadding)
+
+	showChannels = cfg.Prop.ShowChannelsOnStartup
+	md.HighlightStyle = cfg.Prop.SyntaxHighlightColorscheme
 
 	return nil
 }

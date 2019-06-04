@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -99,10 +98,6 @@ func loadMore() {
 	for i := len(msgs) - 1; i >= 0; i-- {
 		m := msgs[i]
 
-		//wg.Add(1)
-		//go func(m *discordgo.Message, i int) {
-		//defer wg.Done()
-
 		if rstore.Check(m.Author, RelationshipBlocked) && cfg.Prop.HideBlocked {
 			continue
 		}
@@ -115,19 +110,21 @@ func loadMore() {
 		if i < len(msgs)-1 && (msgs[i+1].Author.ID != m.Author.ID || messageisOld(m, msgs[i+1])) {
 			username, color := us.DiscordThis(m)
 
-			reversed = append(reversed, fmt.Sprintf(
-				authorFormat,
-				color, username,
-				sentTime.Format(time.Stamp),
-			))
+			reversed = append(reversed,
+				authorTmpl.ExecuteString(map[string]interface{}{
+					"color": fmtHex(color),
+					"name":  username,
+					"time":  sentTime.Format(time.Stamp),
+				}),
+			)
 		}
 
-		reversed = append(reversed, fmt.Sprintf(
-			messageFormat,
-			m.ID, fmtMessage(m),
-		))
-
-		//}(m, i)
+		reversed = append(reversed,
+			messageTmpl.ExecuteString(map[string]interface{}{
+				"ID":      strconv.FormatInt(m.ID, 10),
+				"content": fmtMessage(m),
+			}),
+		)
 	}
 
 	//wg.Wait()
