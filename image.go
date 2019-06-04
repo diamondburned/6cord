@@ -32,15 +32,17 @@ const (
 	imagePipelinePrevEvent
 )
 
-var imageRendererPipeline = startImageRendererPipeline()
+var imageRendererPipeline *imageRendererPipelineStruct
 
 func startImageRendererPipeline() *imageRendererPipelineStruct {
 	p := &imageRendererPipelineStruct{
 		event: make(chan interface{}, 5),
 		cache: &imageCacheStruct{
+			Age: 5 * time.Minute,
 			client: &http.Client{
 				Timeout: 5 * time.Second,
 			},
+			store: map[int64]*imageCacheStore{},
 		},
 	}
 
@@ -51,17 +53,13 @@ func startImageRendererPipeline() *imageRendererPipelineStruct {
 			case *discordgo.Message:
 				p.message = i.ID
 
-				p.assets = p.cache.get(i.ID)
-				if p.assets == nil {
-					var err error
-
-					p.assets, err = p.cache.set(i)
-					if err != nil {
-						Warn(err.Error())
-						break
-					}
+				a, err := p.cache.upd(i)
+				if err != nil {
+					Warn(err.Error())
+					break
 				}
 
+				p.assets = a
 				p.clean()
 
 				if p.assets == nil {
@@ -117,6 +115,8 @@ func (p *imageRendererPipelineStruct) clean() {
 	if p.state != nil {
 		p.state.Delete()
 	}
+
+	p.cache.gc()
 }
 
 func (p *imageRendererPipelineStruct) show() (err error) {

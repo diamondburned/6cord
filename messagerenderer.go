@@ -120,6 +120,7 @@ func messageRenderer() {
 		case nil:
 			messagesView.Clear()
 			messageStore = make([]string, 0, prefetchMessageCount*2)
+			imageRendererPipeline.cache.gc()
 
 		default:
 			Warn(fmt.Sprintf("Message renderer received event type:\n%T", i))
@@ -171,6 +172,12 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 		messageFormat+"[::-]",
 		m.ID, fmtMessage(m),
 	)
+
+	go func() {
+		if _, err := imageRendererPipeline.cache.upd(m); err != nil {
+			Message(err.Error())
+		}
+	}()
 
 	if lastmsg == nil || (lastmsg.Author.ID != m.Author.ID || messageisOld(m, lastmsg)) {
 		sentTime, err := m.Timestamp.Parse()

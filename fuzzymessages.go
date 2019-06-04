@@ -7,10 +7,11 @@ import (
 	"time"
 )
 
-var allMessages []string
+// [0]:format [1]:ID
+var allMessages [][2]string
 
 func fuzzyMessages(text string) {
-	var fuzzied []string
+	var fuzzied [][2]string
 
 	if len(allMessages) == 0 && Channel != nil {
 		for i := len(messageStore) - 1; i >= 0; i-- {
@@ -27,25 +28,31 @@ func fuzzyMessages(text string) {
 					sentTime = time.Now()
 				}
 
-				allMessages = append(
-					allMessages,
+				var fetchedColor = readChannelColorPrefix
+				if imageRendererPipeline.cache.get(m.ID) != nil {
+					fetchedColor = unreadChannelColorPrefix
+				}
+
+				id := strconv.FormatInt(ID, 10)
+
+				allMessages = append(allMessages, [2]string{
 					fmt.Sprintf(
-						"%d - [#%06X]%s[-] [::d]- %s[::-]",
-						ID, color, username,
+						"%s%s[-::] - [#%06X]%s[-] [::d]- %s[::-]",
+						fetchedColor, id, color, username,
 						sentTime.Local().Format(time.Stamp),
-					),
-				)
+					), id,
+				})
 			}
 		}
 	}
 
 	if len(text) > 1 {
 		text := strings.TrimPrefix(text, "~")
-		fuzzied = make([]string, 0, len(allMessages))
+		fuzzied = make([][2]string, 0, len(allMessages))
 
 		for _, m := range allMessages {
-			if strings.Contains(m, text) {
-				fuzzied = append(fuzzied, m)
+			if strings.Contains(m[0], text) {
+				fuzzied = append(fuzzied)
 			}
 		}
 	} else {
@@ -61,7 +68,7 @@ func fuzzyMessages(text string) {
 
 		for i, u := range fuzzied {
 			autocomp.InsertItem(
-				i, u,
+				i, u[0],
 				"", 0, nil,
 			)
 		}
@@ -74,10 +81,7 @@ func fuzzyMessages(text string) {
 			words := strings.Fields(input.GetText())
 
 			withoutlast := words[:len(words)-1]
-			withoutlast = append(
-				withoutlast,
-				strings.Split(fuzzied[i], " - ")[0],
-			)
+			withoutlast = append(withoutlast, fuzzied[i][1])
 
 			input.SetText(strings.Join(withoutlast, " ") + " ")
 
@@ -92,7 +96,7 @@ func fuzzyMessages(text string) {
 	app.Draw()
 
 	autocomp.SetChangedFunc(func(i int, t string, st string, s rune) {
-		ID := strings.Split(t, " - ")[0]
+		ID := fuzzied[i][1]
 
 		if Channel != nil {
 			id, _ := strconv.ParseInt(ID, 10, 64)

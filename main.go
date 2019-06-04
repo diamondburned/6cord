@@ -8,10 +8,10 @@ import (
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/discordgo"
-	keyring "github.com/zalando/go-keyring"
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview"
 	"github.com/valyala/fasttemplate"
+	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/image"
 	"gitlab.com/diamondburned/6cord/md"
 	"gitlab.com/diamondburned/6cord/shortener"
@@ -422,6 +422,8 @@ func main() {
 
 	go messageRenderer()
 	go renderCallback()
+
+	imageRendererPipeline = startImageRendererPipeline()
 
 	log.Println("Storing token inside keyring...")
 	if err := keyring.Set(AppName, "token", d.Token); err != nil {
