@@ -95,12 +95,12 @@ func loadCfg() error {
 		}
 	}
 
-	messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
-
 	if cfg.Prop.CompactMode {
+		messageRawFormat = " " + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
 		authorPrefix = "\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::][""]`
 	} else {
+		messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
 		authorPrefix = "\n\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::] [::d]{time}[::-][""]`
 	}
