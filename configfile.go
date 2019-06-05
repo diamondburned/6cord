@@ -15,6 +15,7 @@ var cfg Config
 // Properties ..
 type Properties struct {
 	CompactMode                bool   `id:"compact-mode"     default:"true"  desc:"Compact Mode"`
+	TrueColor                  bool   `id:"true-color"       default:"true"  desc:"Enable True color mode instead of 256 color mode"`
 	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
 	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
 	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
@@ -85,6 +86,13 @@ func loadCfg() error {
 			FileDecoder:         gonfig.DecoderTOML,
 			EnvPrefix:           "sixcord_",
 		})
+	}
+
+	if cfg.Prop.TrueColor {
+		term := os.Getenv("TERM")
+		if strings.Contains(term, "-") {
+			os.Setenv("TERM", strings.Split(term, "-")[0]+"-truecolor")
+		}
 	}
 
 	messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`

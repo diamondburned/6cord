@@ -75,10 +75,6 @@ func fmtMessage(m *discordgo.Message) string {
 		)
 	}
 
-	if len(m.Embeds) > 0 && m.Content == "" && cfg.Prop.CompactMode {
-		c.WriteByte('\n')
-	}
-
 	for _, e := range m.Embeds {
 		var embed = make([]string, 0, 5)
 
@@ -250,6 +246,15 @@ func fmtMessage(m *discordgo.Message) string {
 					shortener.GetExtension(a.URL),
 				),
 			))
+		}
+	}
+
+	if cfg.Prop.CompactMode {
+		// If the message begins with a code block,
+		// we don't want the first line of the code
+		// block to warp in the first line.
+		if len(m.Content) > 3 && m.Content[:3] == "```" {
+			return "\n" + chatPadding + c.String()
 		}
 	}
 
