@@ -32,7 +32,7 @@ func safeAuthor(u *discordgo.User) (string, int64) {
 
 func getUserData(u *discordgo.User, chID int64) (name string, color int) {
 	var id int64
-	color = 16711422
+	color = defaultNameColor
 	name, id = safeAuthor(u)
 
 	if d == nil {
@@ -70,7 +70,7 @@ func getUserColor(guildID int64, rls discordgo.IDSlice) int {
 	if err != nil {
 		if g, err = d.Guild(guildID); err != nil {
 			log.Println(err)
-			return 16711422
+			return defaultNameColor
 		}
 	}
 
@@ -87,7 +87,7 @@ func getUserColor(guildID int64, rls discordgo.IDSlice) int {
 		}
 	}
 
-	return 16711422
+	return defaultNameColor
 }
 
 // ReflectStatusColor converts Discord status to HEX colors (#RRGGBB)

@@ -86,7 +86,7 @@ func messageRenderer() {
 
 		case string:
 			msg := authorTmpl.ExecuteString(map[string]interface{}{
-				"color": fmtHex(16777215),
+				"color": cfg.Prop.DefaultNameColor,
 				"name":  "Not Clyde",
 				"time":  time.Now().Format(time.Stamp),
 			})
