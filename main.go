@@ -171,6 +171,7 @@ func main() {
 		guildView.SetBorder(true)
 		guildView.SetBorderAttributes(tcell.AttrDim)
 		guildView.SetBorderPadding(0, 0, 1, 0)
+		guildView.SetBorderColor(tcell.Color(cfg.Prop.ForegroundColor))
 		guildView.SetTitle("[Servers[]")
 		guildView.SetTitleAlign(tview.AlignLeft)
 
@@ -191,6 +192,7 @@ func main() {
 		wrapFrame.SetBorder(true)
 		wrapFrame.SetBorderAttributes(tcell.AttrDim)
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)
+		wrapFrame.SetBorderColor(tcell.Color(cfg.Prop.ForegroundColor))
 		wrapFrame.SetTitle("")
 		wrapFrame.SetTitleAlign(tview.AlignLeft)
 		wrapFrame.SetTitleColor(tcell.Color(cfg.Prop.ForegroundColor))

@@ -15,6 +15,7 @@ token = ""
 	# should only be used as a reference on how to configure.
 	# Keys are optional.
 	true-color = true
+	default-name-color = "#CCCCCC"
 	compact-mode = false
 	show-channels = true
 	chat-padding = 2

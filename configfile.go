@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/stevenroose/gonfig"
@@ -16,6 +18,7 @@ var cfg Config
 type Properties struct {
 	CompactMode                bool   `id:"compact-mode"     default:"true"  desc:"Compact Mode"`
 	TrueColor                  bool   `id:"true-color"       default:"true"  desc:"Enable True color mode instead of 256 color mode"`
+	DefaultNameColor           string `id:"default-name-color" default:"#CCCCCC" desc:"Sets the default name color, format: #XXXXXX"`
 	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
 	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
 	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
@@ -59,6 +62,8 @@ var (
 	messageTmpl *fast.Template
 
 	chatPadding string
+
+	defaultNameColor int
 )
 
 func loadCfg() error {
@@ -70,12 +75,14 @@ func loadCfg() error {
 		}
 	}
 
-	if err := gonfig.Load(&cfg, gonfig.Conf{
+	err := gonfig.Load(&cfg, gonfig.Conf{
 		ConfigFileVariable:  "config",
 		FileDefaultFilename: filepath.Join(xdg, "6cord", "6cord.toml"),
 		FileDecoder:         gonfig.DecoderTOML,
 		EnvPrefix:           "sixcord_",
-	}); err != nil {
+	})
+
+	if err != nil {
 		return err
 	}
 
@@ -95,12 +102,28 @@ func loadCfg() error {
 		}
 	}
 
-	messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
+	hex := cfg.Prop.DefaultNameColor
+	if len(hex) < 6 {
+		return errors.New("Invalid format for name color, refer to help")
+	}
+
+	if hex[0] == '#' {
+		hex = hex[1:]
+	}
+
+	hex64, err := strconv.ParseInt(hex, 16, 64)
+	if err != nil {
+		return err
+	}
+
+	defaultNameColor = int(hex64)
 
 	if cfg.Prop.CompactMode {
+		messageRawFormat = " " + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
 		authorPrefix = "\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::][""]`
 	} else {
+		messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
 		authorPrefix = "\n\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::] [::d]{time}[::-][""]`
 	}

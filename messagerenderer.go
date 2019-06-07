@@ -69,10 +69,11 @@ func messageRenderer() {
 				break
 			}
 
+			id := strconv.FormatInt(m.ID, 10)
 			for i, msg := range messageStore {
-				if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
+				if strings.HasPrefix(msg, messageRawFormat[:3]+id+"\"]") {
 					msg := messageTmpl.ExecuteString(map[string]interface{}{
-						"ID":      strconv.FormatInt(m.ID, 10),
+						"ID":      id,
 						"content": fmtMessage(message),
 					})
 
@@ -85,7 +86,7 @@ func messageRenderer() {
 
 		case string:
 			msg := authorTmpl.ExecuteString(map[string]interface{}{
-				"color": fmtHex(16777215),
+				"color": cfg.Prop.DefaultNameColor,
 				"name":  "Not Clyde",
 				"time":  time.Now().Format(time.Stamp),
 			})
@@ -191,13 +192,8 @@ func rendererCreate(m, lastmsg *discordgo.Message) {
 			"time":  sentTime.Format(time.Stamp),
 		})
 
-		if cfg.Prop.CompactMode {
-			msgFmt = " " + msgFmt[1:]
-		}
-
 		messagesView.Write([]byte(msg + msgFmt))
 		messageStore = append(messageStore, msg, msgFmt)
-
 	} else {
 		messagesView.Write([]byte(msgFmt))
 		messageStore = append(messageStore, msgFmt)

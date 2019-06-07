@@ -60,7 +60,7 @@ func (s *UserStore) InStore(guildID, id int64) bool {
 // DiscordThis interfaces with DiscordGo
 func (s *UserStore) DiscordThis(m *discordgo.Message) (n string, c int) {
 	n = "invalid user"
-	c = 16777215
+	c = defaultNameColor
 
 	if m.Author == nil || s == nil {
 		return
