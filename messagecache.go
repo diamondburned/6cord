@@ -5,9 +5,13 @@ import (
 	"image"
 	"log"
 	"net/http"
+	"path/filepath"
 	"strings"
 	"sync"
 	"time"
+
+	_ "image/jpeg"
+	_ "image/png"
 
 	"github.com/diamondburned/discordgo"
 )
@@ -38,15 +42,17 @@ type imageCacheAsset struct {
 type imageFetchState string
 
 const (
-	imageFetching imageFetchState = "[grey]"
+	imageNotFetched imageFetchState = "[grey]"
+	imageFetching   imageFetchState = "[green]"
+	imageFetched    imageFetchState = "[lime]"
 )
 
-func (c *imageCacheStruct) get(m int64) []*imageCacheAsset {
+func (c *imageCacheStruct) get(m int64) *imageCacheStore {
 	c.RLock()
 	defer c.RUnlock()
 
 	if a, ok := c.store[m]; ok {
-		return a.assets
+		return a
 	}
 
 	return nil
@@ -74,22 +80,22 @@ func (c *imageCacheStruct) calcURL(a *imageCacheAsset) {
 	}
 }
 
-// set checks cache as well
-func (c *imageCacheStruct) upd(m *discordgo.Message) ([]*imageCacheAsset, error) {
-	if assets := c.get(m.ID); assets != nil {
-		return assets, nil
-	}
-
+func (c *imageCacheStruct) markUnfetch(m *discordgo.Message) *imageCacheStore {
 	s := &imageCacheStore{
 		assets: make(
 			[]*imageCacheAsset,
 			0, len(m.Attachments)+len(m.Embeds),
 		),
-		time: time.Now(),
+		time:  time.Now(),
+		state: imageNotFetched,
 	}
 
 	for _, a := range m.Attachments {
-		if a.Width == 0 || a.Height == 0 {
+		if a.Width < 1 || a.Height < 1 {
+			continue
+		}
+
+		if !imageFormatIsSupported(a.Filename) {
 			continue
 		}
 
@@ -105,6 +111,14 @@ func (c *imageCacheStruct) upd(m *discordgo.Message) ([]*imageCacheAsset, error)
 
 	for _, e := range m.Embeds {
 		if t := e.Thumbnail; t != nil {
+			if t.Width < 1 || t.Height < 1 {
+				continue
+			}
+
+			if !imageFormatIsSupported(t.ProxyURL) {
+				continue
+			}
+
 			a := &imageCacheAsset{
 				url: t.ProxyURL,
 				w:   t.Width,
@@ -117,8 +131,39 @@ func (c *imageCacheStruct) upd(m *discordgo.Message) ([]*imageCacheAsset, error)
 	}
 
 	if len(s.assets) == 0 {
+		return nil
+	}
+
+	c.Lock()
+	defer c.Unlock()
+
+	c.store[m.ID] = s
+
+	return s
+}
+
+// set checks cache as well
+func (c *imageCacheStruct) upd(m *discordgo.Message) (*imageCacheStore, error) {
+	s := c.get(m.ID)
+	// If already fetched
+	if s != nil && s.state == imageFetched {
+		return s, nil
+	}
+
+	// If not fetched, but there's something
+	if s == nil {
+		s = c.markUnfetch(m)
+	}
+
+	// If there's nothing
+	if s == nil {
 		return nil, nil
 	}
+
+	c.Lock()
+	defer c.Unlock()
+
+	s.state = imageFetching
 
 	for _, a := range s.assets {
 		r, err := c.client.Get(a.sizedURL)
@@ -138,12 +183,10 @@ func (c *imageCacheStruct) upd(m *discordgo.Message) ([]*imageCacheAsset, error)
 		r.Body.Close()
 	}
 
-	c.Lock()
-	defer c.Unlock()
-
+	s.state = imageFetched
 	c.store[m.ID] = s
 
-	return s.assets, nil
+	return s, nil
 }
 
 func (c *imageCacheStruct) reset() {
@@ -162,4 +205,15 @@ func (c *imageCacheStruct) gc() {
 			delete(c.store, k)
 		}
 	}
+}
+
+func imageFormatIsSupported(filename string) bool {
+	fileExt := filepath.Ext(filename)
+	for _, ext := range []string{".png", ".jpg", ".jpeg"} {
+		if fileExt == ext {
+			return true
+		}
+	}
+
+	return false
 }

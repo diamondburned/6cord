@@ -53,13 +53,13 @@ func startImageRendererPipeline() *imageRendererPipelineStruct {
 			case *discordgo.Message:
 				p.message = i.ID
 
-				a, err := p.cache.upd(i)
-				if err != nil {
-					Warn(err.Error())
+				a := p.cache.get(i.ID)
+				if a == nil || a.state != imageFetched {
+					p.clean()
 					break
 				}
 
-				p.assets = a
+				p.assets = a.assets
 				p.clean()
 
 				if p.assets == nil {

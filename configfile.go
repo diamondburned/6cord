@@ -119,16 +119,16 @@ func loadCfg() error {
 	}
 
 	defaultNameColor = int(hex64)
-	messageRawFormat = `["{ID}"][-]{content}["ENDMESSAGE"][-::-]`
+	messageRawFormat = `["{ID}"][-]{content}[-::-]["ENDMESSAGE"]`
 
 	if cfg.Prop.CompactMode {
 		messageRawFormat = " " + messageRawFormat
 		authorPrefix = "\n[\"author\"]"
-		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::][""]`
+		authorRawFormat = authorPrefix + `[#{color}::]{name}[""]`
 	} else {
 		messageRawFormat = "\n" + messageRawFormat
 		authorPrefix = "\n\n[\"author\"]"
-		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::] [::d]{time}[::-][""]`
+		authorRawFormat = authorPrefix + `[#{color}::]{name} [::d]{time}[::-][""]`
 	}
 
 	authorTmpl = fast.New(authorRawFormat, "{", "}")

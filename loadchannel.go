@@ -71,6 +71,10 @@ func actualLoadChannel(channelID int64) {
 	messageRender <- nil
 
 	for i := 0; i < len(msgs); i++ {
+		imageRendererPipeline.cache.markUnfetch(msgs[i])
+	}
+
+	for i := 0; i < len(msgs); i++ {
 		m := msgs[i]
 
 		if rstore.Check(m.Author, RelationshipBlocked) {
@@ -139,11 +143,11 @@ func actualLoadChannel(channelID int64) {
 		})
 
 		for _, m := range *members {
-			color := 16711422
+			color := defaultNameColor
 
 		RoleLoop:
-			for _, role := range roles {
-				for _, roleID := range m.Roles {
+			for _, roleID := range m.Roles {
+				for _, role := range roles {
 					if role.ID == roleID && role.Color != 0 {
 						color = role.Color
 						break RoleLoop

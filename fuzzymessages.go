@@ -15,34 +15,37 @@ func fuzzyMessages(text string) {
 
 	if len(allMessages) == 0 && Channel != nil {
 		for i := len(messageStore) - 1; i >= 0; i-- {
-			if ID := getIDfromindex(i); ID != 0 {
-				m, err := d.State.Message(Channel.ID, ID)
-				if err != nil {
-					continue
-				}
-
-				username, color := us.DiscordThis(m)
-
-				sentTime, err := m.Timestamp.Parse()
-				if err != nil {
-					sentTime = time.Now()
-				}
-
-				var fetchedColor = readChannelColorPrefix
-				if imageRendererPipeline.cache.get(m.ID) != nil {
-					fetchedColor = unreadChannelColorPrefix
-				}
-
-				id := strconv.FormatInt(ID, 10)
-
-				allMessages = append(allMessages, [2]string{
-					fmt.Sprintf(
-						"%s%s[-::] - [#%06X]%s[-] [::d]- %s[::-]",
-						fetchedColor, id, color, username,
-						sentTime.Local().Format(time.Stamp),
-					), id,
-				})
+			ID := getIDfromindex(i)
+			if ID == 0 {
+				continue
 			}
+
+			m, err := d.State.Message(Channel.ID, ID)
+			if err != nil {
+				continue
+			}
+
+			username, color := us.DiscordThis(m)
+
+			sentTime, err := m.Timestamp.Parse()
+			if err != nil {
+				sentTime = time.Now()
+			}
+
+			var fetchedColor = readChannelColorPrefix
+			if s := imageRendererPipeline.cache.get(m.ID); s != nil {
+				fetchedColor = string(s.state)
+			}
+
+			id := strconv.FormatInt(ID, 10)
+
+			allMessages = append(allMessages, [2]string{
+				fmt.Sprintf(
+					"%s%s[-] - [#%06X]%s[-] [::d]- %s[::-]",
+					fetchedColor, id, color, username,
+					sentTime.Local().Format(time.Stamp),
+				), id,
+			})
 		}
 	}
 

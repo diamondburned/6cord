@@ -21,6 +21,7 @@ func messageRenderer() {
 	for i := range messageRender {
 		switch m := i.(type) {
 		case *discordgo.MessageCreate:
+			imageRendererPipeline.cache.markUnfetch(m.Message)
 			rendererCreate(m.Message, lastmsg)
 
 			lastmsg = m.Message
