@@ -146,8 +146,8 @@ func actualLoadChannel(channelID int64) {
 			color := defaultNameColor
 
 		RoleLoop:
-			for _, roleID := range m.Roles {
-				for _, role := range roles {
+			for _, role := range roles {
+				for _, roleID := range m.Roles {
 					if role.ID == roleID && role.Color != 0 {
 						color = role.Color
 						break RoleLoop
