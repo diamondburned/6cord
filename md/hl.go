@@ -55,7 +55,5 @@ func RenderCodeBlock(lang, literal []byte) string {
 		}
 	}
 
-	log.Println(s.String())
-
 	return s.String() + "\n"
 }
