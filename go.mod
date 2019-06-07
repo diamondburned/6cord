@@ -3,6 +3,7 @@ module gitlab.com/diamondburned/6cord
 go 1.12
 
 require (
+	git.sr.ht/~sircmpwn/aerc v0.0.0-20190605175807-92dc31bad0dc // indirect
 	github.com/alecthomas/chroma v0.6.2
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.1
@@ -16,13 +17,11 @@ require (
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190226134152-2cb437b15ebe
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
-	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
 	github.com/hashicorp/go-retryablehttp v0.5.2 // indirect
 	github.com/jonas747/gojay v0.0.0-20181010205435-9081ac11e06c
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kylelemons/godebug v0.0.0-20170820004349-d65d576e9348 // indirect
-	github.com/mattn/go-isatty v0.0.7 // indirect
 	github.com/mattn/go-sixel v0.0.0-20190216163338-cdfbdd9946b1
 	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
@@ -38,8 +37,6 @@ require (
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190501034854-d555fcbeb023
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
 	golang.org/x/crypto v0.0.0-20190422183909-d864b10871cd // indirect
-	golang.org/x/sys v0.0.0-20190424175732-18eb32c0e2f0 // indirect
-	golang.org/x/text v0.3.1 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/toast.v1 v1.0.0-20180812000517-0a84660828b2 // indirect
 )

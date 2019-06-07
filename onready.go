@@ -34,12 +34,12 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	})
 
 	for _, ch := range r.PrivateChannels {
-		var display string
+		var display = generateName(ch) + "[-::-]"
 
 		if isUnread(ch) {
-			display = unreadChannelColorPrefix + makeDMName(ch) + "[-::-]"
+			display = unreadChannelColorPrefix + display
 		} else {
-			display = readChannelColorPrefix + makeDMName(ch) + "[-::-]"
+			display = readChannelColorPrefix + display
 		}
 
 		chNode := tview.NewTreeNode(display)
@@ -99,9 +99,11 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				continue
 			}
 
+			var name = generateName(ch)
+
 			switch ch.Type {
 			case discordgo.ChannelTypeGuildCategory:
-				chNode := tview.NewTreeNode("[::b]" + ch.Name + "[::-]")
+				chNode := tview.NewTreeNode(unreadChannelColorPrefix + name + "[::-]")
 				chNode.SetSelectable(false)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
@@ -110,7 +112,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				this.AddChild(chNode)
 
 			case discordgo.ChannelTypeGuildVoice:
-				chNode := tview.NewTreeNode("[-::-]v - " + ch.Name + "[-::-]")
+				chNode := tview.NewTreeNode("[-::-]" + name + "[-::-]")
 				chNode.SetReference(ch)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
@@ -133,7 +135,7 @@ func onReady(s *discordgo.Session, r *discordgo.Ready) {
 				}
 
 			default:
-				chNode := tview.NewTreeNode(readChannelColorPrefix + "#" + ch.Name + "[-::-]")
+				chNode := tview.NewTreeNode(readChannelColorPrefix + name + "[-::-]")
 				chNode.SetReference(ch)
 				chNode.SetColor(tcell.Color(cfg.Prop.ForegroundColor))
 				chNode.SetSelectedColor(tcell.ColorBlack)
@@ -336,6 +338,19 @@ func isSendCh(t discordgo.ChannelType) bool {
 	/**/ return t == discordgo.ChannelTypeGuildText ||
 		/*****/ t == discordgo.ChannelTypeDM ||
 		/*****/ t == discordgo.ChannelTypeGroupDM
+}
+
+func generateName(ch *discordgo.Channel) string {
+	switch ch.Type {
+	case discordgo.ChannelTypeDM, discordgo.ChannelTypeGroupDM:
+		return makeDMName(ch)
+	case discordgo.ChannelTypeGuildVoice:
+		return "v- " + ch.Name
+	case discordgo.ChannelTypeGuildCategory:
+		return ch.Name
+	default:
+		return "#" + ch.Name
+	}
 }
 
 func makeDMName(ch *discordgo.Channel) string {

@@ -181,11 +181,8 @@ func markUnread(m *discordgo.Message) {
 				return false
 			}
 
-			if reference.GuildID == 0 {
-				node.SetText(unreadChannelColorPrefix + reference.Name + "[-::-]")
-			} else {
-				node.SetText(unreadChannelColorPrefix + "#" + reference.Name + "[-::-]")
-			}
+			var name = generateName(reference)
+			node.SetText(unreadChannelColorPrefix + name + "[-::-]")
 
 			return false
 		default:
@@ -251,11 +248,7 @@ func ackMeUI(ch *discordgo.Channel) {
 				return false
 			}
 
-			var name = makeDMName(reference)
-			if reference.GuildID != 0 {
-				name = "#" + name
-			}
-
+			var name = generateName(reference)
 			node.SetText(readChannelColorPrefix + name + "[-::-]")
 		default:
 			return true
@@ -314,14 +307,16 @@ Main:
 			continue
 		}
 
+		var name = generateName(ch)
+
 		for _, u := range unreads {
 			if u.ID == ch.ID {
-				node.SetText(unreadChannelColorPrefix + "#" + ch.Name + "[-::-]")
+				node.SetText(unreadChannelColorPrefix + name + "[-::-]")
 				continue Main
 			}
 		}
 
-		node.SetText(readChannelColorPrefix + "#" + ch.Name + "[-::-]")
+		node.SetText(readChannelColorPrefix + name + "[-::-]")
 	}
 
 	app.Draw()
