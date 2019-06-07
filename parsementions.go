@@ -53,9 +53,9 @@ func parseMessageContent(m *discordgo.Message) (content string, emojiMap map[str
 			username = tview.Escape(member.Nick)
 		}
 
-		var color = "[:blue:]"
+		var color = "[-:" + cfg.Prop.MentionColor + ":-]"
 		if user.ID == d.State.User.ID {
-			color = "[:#17AC86:]"
+			color = "[-:" + cfg.Prop.MentionSelfColor + ":-]"
 		}
 
 		content = strings.NewReplacer(
@@ -68,6 +68,8 @@ func parseMessageContent(m *discordgo.Message) (content string, emojiMap map[str
 		).Replace(content)
 	}
 
+	var color = "[-:" + cfg.Prop.MentionColor + ":-]"
+
 	for _, roleID := range m.MentionRoles {
 		role, err := d.State.Role(channel.GuildID, roleID)
 		if err != nil {
@@ -77,7 +79,7 @@ func parseMessageContent(m *discordgo.Message) (content string, emojiMap map[str
 		content = strings.Replace(
 			content,
 			fmt.Sprintf("<@&%d>", role.ID),
-			"[:blue:]@"+role.Name+"[:-:]",
+			color+"@"+role.Name+"[:-:]",
 			1,
 		)
 	}
@@ -93,7 +95,7 @@ func parseMessageContent(m *discordgo.Message) (content string, emojiMap map[str
 			return mention
 		}
 
-		return "[:blue:]#" + channel.Name + "[:-:]"
+		return color + "#" + channel.Name + "[:-:]"
 	})
 
 	return

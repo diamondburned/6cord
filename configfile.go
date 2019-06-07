@@ -19,6 +19,8 @@ type Properties struct {
 	CompactMode                bool   `id:"compact-mode"     default:"true"  desc:"Compact Mode"`
 	TrueColor                  bool   `id:"true-color"       default:"true"  desc:"Enable True color mode instead of 256 color mode"`
 	DefaultNameColor           string `id:"default-name-color" default:"#CCCCCC" desc:"Sets the default name color, format: #XXXXXX"`
+	MentionColor               string `id:"mention-color"      default:"#0D4A91" desc:"The default mention background color"`
+	MentionSelfColor           string `id:"mention-self-color" default:"#17AC86" desc:"The default mention background color, when the target is you"`
 	ShowChannelsOnStartup      bool   `id:"show-channels"    default:"true"  desc:"Show the left channel bar on startup."`
 	ChatPadding                int    `id:"chat-padding"     default:"2"     desc:"Determine the default indentation of messages from the left side."`
 	SidebarRatio               int    `id:"sidebar-ratio"    default:"3"     desc:"The sidebar width in ratio of 1:N, whereas N is the ratio for the message box. The higher the number is, the narrower the sidebar is."`
@@ -117,13 +119,14 @@ func loadCfg() error {
 	}
 
 	defaultNameColor = int(hex64)
+	messageRawFormat = `["{ID}"][-]{content}["ENDMESSAGE"][-::-]`
 
 	if cfg.Prop.CompactMode {
-		messageRawFormat = " " + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
+		messageRawFormat = " " + messageRawFormat
 		authorPrefix = "\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::][""]`
 	} else {
-		messageRawFormat = "\n" + `["{ID}"]{content}["ENDMESSAGE"][-::-]`
+		messageRawFormat = "\n" + messageRawFormat
 		authorPrefix = "\n\n[\"author\"]"
 		authorRawFormat = authorPrefix + `[#{color}::]{name}[#FFFFFF::] [::d]{time}[::-][""]`
 	}

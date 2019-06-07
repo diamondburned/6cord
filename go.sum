@@ -43,6 +43,8 @@ github.com/diamondburned/tview v1.1.2-0.20190603173113-c4a2742b73f4 h1:UKkDdMsBO
 github.com/diamondburned/tview v1.1.2-0.20190603173113-c4a2742b73f4/go.mod h1:ZjOV14D0Cot9qaYwCgsuIqLPIw8aSa8kQeKqCbZbiSM=
 github.com/diamondburned/tview v1.1.2-0.20190603181702-ef08083df63c h1:k57FzgBgQrGTyHLuaZgbuX/U4g5spVmflNdlIsUjdDo=
 github.com/diamondburned/tview v1.1.2-0.20190603181702-ef08083df63c/go.mod h1:ZjOV14D0Cot9qaYwCgsuIqLPIw8aSa8kQeKqCbZbiSM=
+github.com/diamondburned/tview v1.2.0 h1:LSG6xEwfkBuwny21t2iYTriaNFhfSCREdCy+pvvaDNg=
+github.com/diamondburned/tview v1.2.0/go.mod h1:Tqv4hTWU43p8D99JRd7yWaASwxZEphl08B+MwvIbsto=
 github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJMJXc/mA=
 github.com/disintegration/imaging v1.6.0/go.mod h1:xuIt+sRxDFrHS0drzXUlCJthkJ8k7lkkUojDSR247MQ=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=
@@ -125,6 +127,8 @@ github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c h1:g/UvEDB8RutkfYbTULmc
 github.com/rivo/tview v0.0.0-20190406182340-90b4da1bd64c/go.mod h1:J4W+hErFfITUbyFAEXizpmkuxX7ZN56dopxHB4XQhMw=
 github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340 h1:nOZbL5f2xmBAHWYrrHbHV1xatzZirN++oOQ3g83Ypgs=
 github.com/rivo/uniseg v0.0.0-20190313204849-f699dde9c340/go.mod h1:SOLvOL4ybwgLJ6TYoX/rtaJ8EGOulH4XU7E9/TLrTCE=
+github.com/rivo/uniseg v0.0.0-20190513083848-b9f5b9457d44 h1:XKCbzPvK4/BbMXoMJOkYP2ANxiAEO0HM1xn6psSbXxY=
+github.com/rivo/uniseg v0.0.0-20190513083848-b9f5b9457d44/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/riywo/loginshell v0.0.0-20181227004642-c2f4167b2303/go.mod h1:/PfPXh0EntGc3QAAyUaviy4S9tzy4Zp0e2ilq4voC6E=
 github.com/rumblefrog/discordgo v1.0.3/go.mod h1:pci+kabDGw9VXmzgBSCMIUB5Voek7PyMWxCjOtSIA5s=
 github.com/sahilm/fuzzy v0.1.0 h1:FzWGaw2Opqyu+794ZQ9SYifWv2EIXpwP4q8dY1kDAwI=

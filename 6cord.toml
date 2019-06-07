@@ -16,6 +16,8 @@ token = ""
 	# Keys are optional.
 	true-color = true
 	default-name-color = "#CCCCCC"
+	mention-color = "#0D4A91"
+	mention-self-color = "#17AC86"
 	compact-mode = false
 	show-channels = true
 	chat-padding = 2
