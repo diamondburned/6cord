@@ -181,6 +181,12 @@ func markUnread(m *discordgo.Message) {
 				return false
 			}
 
+			if g, ok := parent.GetReference().(*discordgo.Guild); ok {
+				parent.SetText(unreadChannelColorPrefix + g.Name + "[-::-]")
+			} else {
+				parent.SetText(unreadChannelColorPrefix + "Direct Messages[-::-]")
+			}
+
 			var name = generateName(reference)
 			node.SetText(unreadChannelColorPrefix + name + "[-::-]")
 

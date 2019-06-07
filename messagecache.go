@@ -24,6 +24,7 @@ type imageCacheStruct struct {
 type imageCacheStore struct {
 	assets []*imageCacheAsset
 	time   time.Time
+	state  imageFetchState
 }
 
 type imageCacheAsset struct {
@@ -33,6 +34,12 @@ type imageCacheAsset struct {
 
 	i image.Image
 }
+
+type imageFetchState string
+
+const (
+	imageFetching imageFetchState = "[grey]"
+)
 
 func (c *imageCacheStruct) get(m int64) []*imageCacheAsset {
 	c.RLock()

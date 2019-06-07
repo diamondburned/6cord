@@ -36,8 +36,9 @@ func handleReactionEvent(m *discordgo.Message) {
 		return
 	}
 
+	id := strconv.FormatInt(m.ID, 10)
 	for i, msg := range messageStore {
-		if strings.HasPrefix(msg, fmt.Sprintf("\n"+`["%d"]`, m.ID)) {
+		if strings.HasPrefix(msg, messageRawFormat[:3]+id+"\"]") {
 			msg := messageTmpl.ExecuteString(map[string]interface{}{
 				"ID":      strconv.FormatInt(m.ID, 10),
 				"content": fmtMessage(m),
