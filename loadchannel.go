@@ -39,6 +39,7 @@ func actualLoadChannel(channelID int64) {
 
 	Channel = ch
 
+	resetInputBehavior()
 	typing.Reset()
 
 	if !us.Populated(Channel.GuildID) {
@@ -89,7 +90,6 @@ func actualLoadChannel(channelID int64) {
 		Message("There's nothing here!")
 	}
 
-	resetInputBehavior()
 	app.SetFocus(input)
 
 	var frameTitle string

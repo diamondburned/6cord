@@ -1,12 +1,12 @@
 package md
 
 import (
+	"log"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
 	"github.com/alecthomas/chroma/lexers"
 	"github.com/alecthomas/chroma/styles"
-	"github.com/rivo/tview"
 )
 
 // RenderCodeBlock renders the node to a syntax
@@ -46,13 +46,16 @@ func RenderCodeBlock(lang, literal []byte) string {
 		return string(literal)
 	}
 
-	wrapped := tview.WordWrap(code.String(), 80)
+	// wrapped := tview.WordWrap(code.String(), 80)
+	wrapped := strings.Split(code.String(), "\n")
 
 	for _, l := range wrapped {
 		if l != "[-]" {
 			s.WriteString("\n[grey]┃[-] " + l)
 		}
 	}
+
+	log.Println(s.String())
 
 	return s.String() + "\n"
 }

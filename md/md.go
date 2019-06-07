@@ -14,6 +14,7 @@ import (
 const extensions = 0 |
 	ps.Spoilers |
 	ps.FencedCode |
+	ps.NoIntraEmphasis |
 	ps.Strikethrough |
 	ps.NoIndentCodeBlock |
 	ps.HardLineBreak
@@ -82,9 +83,9 @@ func parse(s string, obf bool) (results string) {
 			}
 		case *ast.Spoiler:
 			if entering {
-				builder.Write([]byte("[::d]"))
+				builder.Write([]byte("[#777777]"))
 			} else {
-				builder.Write([]byte("[::-]"))
+				builder.Write([]byte("[-]"))
 			}
 		case *ast.Code:
 			if entering {
