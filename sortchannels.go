@@ -20,7 +20,6 @@ func SortChannels(cs []*discordgo.Channel) (out []*discordgo.Channel) {
 	for _, c := range cs {
 		if c.Type != discordgo.ChannelTypeGuildCategory && c.ParentID != 0 {
 			v, ok := p[c.ParentID]
-
 			if ok {
 				v.Children = append(v.Children, c)
 			} else {
@@ -77,6 +76,10 @@ func SortChannels(cs []*discordgo.Channel) (out []*discordgo.Channel) {
 
 	sort.Slice(a, func(i, j int) bool {
 		return a[i].Underlying.Position < a[j].Underlying.Position
+	})
+
+	sort.SliceStable(a, func(i, j int) bool {
+		return a[i].Children == nil
 	})
 
 	for _, v := range a {

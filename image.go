@@ -112,11 +112,13 @@ func (p *imageRendererPipelineStruct) prev() {
 }
 
 func (p *imageRendererPipelineStruct) clean() {
-	if p.state != nil {
-		p.state.Delete()
-	}
+	if p != nil {
+		if p.state != nil {
+			p.state.Delete()
+		}
 
-	p.cache.gc()
+		p.cache.gc()
+	}
 }
 
 func (p *imageRendererPipelineStruct) show() (err error) {
