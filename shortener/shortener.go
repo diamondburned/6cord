@@ -43,7 +43,7 @@ func ShortenURL(targetURL, customSlug, suffix string) string {
 	filename = filename[:min(len(filename), 8)]
 
 	for {
-		slug := filename + increment()
+		slug := filename + "-" + increment()
 		id = "/" + customSlug + slug + suffix
 		if _, ok := shortenerState[id]; !ok {
 			break

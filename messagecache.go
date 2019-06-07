@@ -201,6 +201,10 @@ func (c *imageCacheStruct) gc() {
 	defer c.Unlock()
 
 	for k, store := range c.store {
+		if Channel != nil && Channel.ID == k {
+			continue
+		}
+
 		if time.Now().Sub(store.time) > c.Age {
 			delete(c.store, k)
 		}

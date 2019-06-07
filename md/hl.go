@@ -1,7 +1,6 @@
 package md
 
 import (
-	"log"
 	"strings"
 
 	"github.com/alecthomas/chroma/formatters"
