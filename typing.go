@@ -15,12 +15,7 @@ func typingTrigger() {
 				return
 			}
 
-			go func() {
-				err := d.ChannelTyping(Channel.ID)
-				if err != nil {
-					Message(err.Error())
-				}
-			}()
+			go d.ChannelTyping(Channel.ID)
 		}
 	default:
 		return
