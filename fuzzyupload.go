@@ -4,6 +4,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -67,9 +68,7 @@ func fuzzyUpload(text string) {
 	if len(fuzzied) > 0 {
 		for i, filename := range fuzzied {
 			autocomp.InsertItem(
-				i,
-				filename[0],
-				"", 0, nil,
+				i, &tview.ListItem{filename[0], "", 0, nil},
 			)
 		}
 

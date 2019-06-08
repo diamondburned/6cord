@@ -45,11 +45,10 @@ func fuzzyCommands(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, u := range fuzzied {
-			autocomp.InsertItem(
-				i,
-				"[::b]"+u.Command+"[::-] - "+tview.Escape(u.Description),
+			autocomp.InsertItem(i, &tview.ListItem{
+				"[::b]" + u.Command + "[::-] - " + tview.Escape(u.Description),
 				"", 0, nil,
-			)
+			})
 		}
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)

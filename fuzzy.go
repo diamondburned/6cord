@@ -62,9 +62,10 @@ func fuzzyHasNeedle(needle int, haystack []int) bool {
 }
 
 func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
+	i, _ := autocomp.GetCurrentItem()
 	switch ev.Key() {
 	case tcell.KeyDown:
-		if autocomp.GetCurrentItem()+1 == autocomp.GetItemCount() {
+		if i+1 == autocomp.GetItemCount() {
 			app.SetFocus(input)
 			return nil
 		}
@@ -72,7 +73,7 @@ func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
 		return ev
 
 	case tcell.KeyUp:
-		if autocomp.GetCurrentItem() == 0 {
+		if i == 0 {
 			app.SetFocus(input)
 			return nil
 		}

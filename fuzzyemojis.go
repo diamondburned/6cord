@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 	"gitlab.com/diamondburned/6cord/demojis"
 )
@@ -55,11 +56,9 @@ func fuzzyEmojis(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, m := range fuzzied {
-			autocomp.InsertItem(
-				i,
-				":"+m.Str+":",
-				"", 0, nil,
-			)
+			autocomp.InsertItem(i, &tview.ListItem{
+				":" + m.Str + ":", "", 0, nil,
+			})
 
 			if i == 25 {
 				break

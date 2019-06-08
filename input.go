@@ -144,6 +144,8 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			return nil
 		}
 	} else {
+		acItem, _ := autocomp.GetCurrentItem()
+
 		switch ev.Key() {
 		case tcell.KeyEscape:
 			resetInputBehavior()
@@ -214,7 +216,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			if autocomp.GetItemCount() < 1 {
 				app.SetFocus(messagesView)
 			} else {
-				if autocomp.GetCurrentItem() == 0 {
+				if acItem == 0 {
 					newitem := autocomp.GetItemCount() - 1
 					autocomp.SetCurrentItem(newitem)
 				}
@@ -223,7 +225,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			}
 
 		case tcell.KeyDown:
-			var newitem = autocomp.GetCurrentItem() + 1
+			var newitem = acItem + 1
 
 			switch {
 			case autocomp.GetItemCount() == 0:
@@ -237,7 +239,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() > 0 {
-				autofillfunc(autocomp.GetCurrentItem())
+				autofillfunc(acItem)
 				return nil
 			}
 
@@ -245,7 +247,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case tcell.KeyEnter:
 			if autocomp.GetItemCount() > 0 {
-				autofillfunc(autocomp.GetCurrentItem())
+				autofillfunc(acItem)
 				return nil
 			}
 

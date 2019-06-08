@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -73,11 +74,7 @@ func fuzzyMentions(last string) {
 				}
 			}
 
-			autocomp.InsertItem(
-				i,
-				"@"+username,
-				"", 0, nil,
-			)
+			autocomp.InsertItem(i, &tview.ListItem{"@" + username, "", 0, nil})
 		}
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)

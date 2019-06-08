@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/diamondburned/tview"
 )
 
 // [0]:format [1]:ID
@@ -71,8 +73,7 @@ func fuzzyMessages(text string) {
 
 		for i, u := range fuzzied {
 			autocomp.InsertItem(
-				i, u[0],
-				"", 0, nil,
+				i, &tview.ListItem{u[0], "", 0, nil},
 			)
 		}
 

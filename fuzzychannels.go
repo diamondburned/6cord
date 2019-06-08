@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/discordgo"
+	"github.com/diamondburned/tview"
 	"github.com/sahilm/fuzzy"
 )
 
@@ -94,11 +95,7 @@ func fuzzyChannels(last string) {
 
 	if len(fuzzied) > 0 {
 		for i, fz := range fuzzied {
-			autocomp.InsertItem(
-				i,
-				fz.Str,
-				"", 0, nil,
-			)
+			autocomp.InsertItem(i, &tview.ListItem{fz.Str, "", 0, nil})
 
 			if i == 25 {
 				break
