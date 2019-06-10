@@ -197,8 +197,6 @@ func markUnread(m *discordgo.Message) {
 
 		return true
 	})
-
-	app.Draw()
 }
 
 var lastAck string
