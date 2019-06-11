@@ -2,6 +2,7 @@ package shortener
 
 import (
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 	"sync"
@@ -27,28 +28,31 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, ou, http.StatusTemporaryRedirect)
 }
 
-func ShortenURL(targetURL, customSlug, suffix string) string {
+func ShortenURL(targetURL string) string {
 	shortenerMutex.Lock()
 	defer shortenerMutex.Unlock()
 
-	if customSlug != "" {
-		customSlug += "-"
+	u, err := url.Parse(targetURL)
+	if err != nil {
+		return targetURL
 	}
 
 	var id string
+	var ext = GetExtension(u.Path)
 
-	fileshards := strings.Split(targetURL, "/")
+	var fileshards []string
+	if u.Path != "" {
+		fileshards = strings.Split(u.Path, "/")
+	} else {
+		fileshards = []string{u.Host}
+	}
+
 	filename := fileshards[len(fileshards)-1]
-	filename = filename[:max(len(filename)-len(suffix), 0)]
+	filename = filename[:max(len(filename)-len(ext), 0)]
 	filename = filename[:min(len(filename), 8)]
 
-	for {
-		slug := filename + "-" + increment()
-		id = "/" + customSlug + slug + suffix
-		if _, ok := shortenerState[id]; !ok {
-			break
-		}
-	}
+	slug := filename + "-" + increment()
+	id = "/" + slug + ext
 
 	shortenerState[id] = targetURL
 	return "http://" + URL + id
