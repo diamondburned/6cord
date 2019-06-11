@@ -33,10 +33,10 @@ func splitEmbedLine(e string, customMarkup ...string) (spl []string) {
 
 	for _, l := range lines {
 		splwrap := strings.Split(
-			md.Parse(strings.Join(
+			md.Parse(tview.Escape(strings.Join(
 				tview.WordWrap(l, min(col-5, 100)),
 				"\n",
-			)),
+			))),
 			"\n",
 		)
 

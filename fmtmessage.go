@@ -8,7 +8,6 @@ import (
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tview"
 	"gitlab.com/diamondburned/6cord/antitele"
-	"gitlab.com/diamondburned/6cord/md"
 	"gitlab.com/diamondburned/6cord/shortener"
 )
 
@@ -125,10 +124,7 @@ func fmtMessage(m *discordgo.Message) string {
 		if e.Description != "" {
 			var desc, emojis = parseEmojis(e.Description)
 
-			embed = append(
-				embed,
-				splitEmbedLine(md.Parse(desc))...,
-			)
+			embed = append(embed, splitEmbedLine(desc)...)
 
 			for _, arr := range emojis {
 				attachments = append(
