@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"strings"
 )
 
@@ -26,6 +25,11 @@ var commands = Commands{
 		Command:     "/goto",
 		Function:    gotoChannel,
 		Description: "[channel name] - jumps to a channel",
+	},
+	Command{
+		Command:     "/editor",
+		Function:    commandEditor,
+		Description: "Pop up $EDITOR to send a message <C-e>",
 	},
 	Command{
 		Command:     "/mentions",
@@ -105,13 +109,12 @@ var commands = Commands{
 	Command{
 		Command:     "/quit",
 		Function:    commandExit,
-		Description: "quits",
+		Description: "quits <C-c>",
 	},
 }
 
 func commandExit(text []string) {
 	app.Stop()
-	os.Exit(0)
 }
 
 // CommandHandler .
