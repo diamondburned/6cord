@@ -29,7 +29,8 @@ type Properties struct {
 	TriggerTyping              bool   `id:"trigger-typing"   default:"true"  desc:"Send a TypingStart event periodically to the Discord server, default behavior of clients."`
 	ForegroundColor            int    `id:"foreground-color" default:"15"    desc:"Default foreground color, 0-255, 0 is black, 15 is white."`
 	BackgroundColor            int    `id:"background-color" default:"-1"    desc:"Acceptable values: tcell.Color*, -1, 0-255 (terminal colors)."`
-	CommandPrefix              string `id:"command-prefix"   default:"[${GUILD}${CHANNEL}] " desc:"The prefix of the input box"`
+  AuthorFormat               string `id:"author-format"    default:"[#{color}::]{name}" desc:"The formatting of message authors"`
+  CommandPrefix              string `id:"command-prefix"   default:"[${GUILD}${CHANNEL}] " desc:"The prefix of the input box"`
 	DefaultStatus              string `id:"default-status"   default:"Send a message or input a command" desc:"The message in the status bar."`
 	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html."`
 	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs."`
@@ -124,11 +125,11 @@ func loadCfg() error {
 	if cfg.Prop.CompactMode {
 		messageRawFormat = " " + messageRawFormat
 		authorPrefix = "\n[\"author\"]"
-		authorRawFormat = authorPrefix + `[#{color}::]{name}[""]`
+    authorRawFormat = authorPrefix + cfg.Prop.AuthorFormat + `[::-][""]`
 	} else {
 		messageRawFormat = "\n" + messageRawFormat
 		authorPrefix = "\n\n[\"author\"]"
-		authorRawFormat = authorPrefix + `[#{color}::]{name} [::d]{time}[::-][""]`
+		authorRawFormat = authorPrefix + cfg.Prop.AuthorFormat + ` [::d]{time}[::-][""]`
 	}
 
 	authorTmpl = fast.New(authorRawFormat, "{", "}")
