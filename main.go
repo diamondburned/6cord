@@ -304,12 +304,16 @@ func main() {
 	app.SetInputCapture(func(event *tcell.EventKey) *tcell.EventKey {
 		switch event.Key() {
 		case tcell.KeyF5:
-			print("\033[2J")
-			app.ForceDraw()
+			fmt.Print("\033[2J")
+			app.Screen.Sync()
+			app.Draw()
 
 		case tcell.KeyCtrlC:
-			image.Close()
 			app.Stop()
+
+		case tcell.KeyCtrlE:
+			commandEditor(nil)
+			return nil
 
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() < 1 {
