@@ -1,27 +1,19 @@
 package main
 
-import (
-	"os"
-	"os/exec"
-)
-
-func summonEditor() (err error) {
-	editor := os.Getenv("EDITOR")
-	if editor == "" {
-		editor = "nano"
+func commandEditor(text []string) {
+	if Channel == nil {
+		Message("You're not in a channel!")
+		return
 	}
 
-	f, err := TempFile("", "6cord-editor-")
+	b, err := summonEditor()
 	if err != nil {
-		return err
+		Warn(err.Error())
+		return
 	}
 
-	defer os.Remove(f.Name())
-
-	cmd := exec.Command(editor, f.Name())
-	cmd.Stdout = os.Stdout
-	cmd.Stdin = os.Stdin
-
-	app.Suspend(func() { err = cmd.Run() })
-	return
+	if _, err := d.ChannelMessageSend(Channel.ID, string(b)); err != nil {
+		Warn(err.Error())
+		return
+	}
 }
