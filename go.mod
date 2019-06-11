@@ -14,7 +14,7 @@ require (
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.7-0.20190608162241-468b8880ec7a
-	github.com/diamondburned/tview v1.2.2-0.20190608202613-6bf6ab6f6ebb
+	github.com/diamondburned/tview v1.2.2-0.20190611035142-4319f6aefdb1
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190603194150-07ff5e574111
 	github.com/gobwas/ws v1.0.1 // indirect

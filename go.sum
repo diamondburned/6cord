@@ -34,6 +34,8 @@ github.com/diamondburned/tview v1.2.2-0.20190608194413-ac08a5681b8b h1:Mf4SR1Goi
 github.com/diamondburned/tview v1.2.2-0.20190608194413-ac08a5681b8b/go.mod h1:tZsjm9ZcT1t+snNqo5XOF1jHCtTkrBmHOE+X1NgsXKQ=
 github.com/diamondburned/tview v1.2.2-0.20190608202613-6bf6ab6f6ebb h1:5GQEY5xWAdvKdC+AcVTCkxmtNujaXcr+yHMKr/dJH8Q=
 github.com/diamondburned/tview v1.2.2-0.20190608202613-6bf6ab6f6ebb/go.mod h1:tZsjm9ZcT1t+snNqo5XOF1jHCtTkrBmHOE+X1NgsXKQ=
+github.com/diamondburned/tview v1.2.2-0.20190611035142-4319f6aefdb1 h1:n9MkDaNyO7hIh/zeqU3LFuz0HPZUqMKyvPlcfIzEtDI=
+github.com/diamondburned/tview v1.2.2-0.20190611035142-4319f6aefdb1/go.mod h1:tZsjm9ZcT1t+snNqo5XOF1jHCtTkrBmHOE+X1NgsXKQ=
 github.com/disintegration/imaging v1.6.0/go.mod h1:xuIt+sRxDFrHS0drzXUlCJthkJ8k7lkkUojDSR247MQ=
 github.com/dlclark/regexp2 v1.1.6/go.mod h1:2pZnwuY/m+8K6iRw6wQdMtk+rH5tNGR1i55kozfMjCc=
 github.com/gdamore/encoding v1.0.0/go.mod h1:alR0ol34c49FCSBLjhosxzcPHQbf2trDkoo5dl+VrEg=

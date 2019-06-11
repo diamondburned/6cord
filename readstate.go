@@ -281,6 +281,8 @@ func checkGuild(g *discordgo.Guild) {
 		}
 
 		checkGuildNode(g, n)
+
+		app.Draw()
 		return
 	}
 }
@@ -322,8 +324,6 @@ Main:
 
 		node.SetText(readChannelColorPrefix + name + "[-::-]")
 	}
-
-	app.Draw()
 }
 
 // TODO: Check if guild has unread channel
