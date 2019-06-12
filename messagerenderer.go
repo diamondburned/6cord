@@ -25,7 +25,13 @@ func messageRenderer() {
 			rendererCreate(m.Message, lastmsg)
 
 			lastmsg = m.Message
-			scrollChat()
+			if m.Author.ID == d.State.User.ID {
+				messagesView.ScrollToEnd()
+			} else if !scrollChat() {
+				messagesView.SetTitle(
+					generateTitle(Channel, "[red]Unread messages[-]"),
+				)
+			}
 
 		case *discordgo.Message:
 			rendererCreate(m, lastmsg)

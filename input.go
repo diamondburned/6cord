@@ -212,6 +212,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case tcell.KeyUp:
 			if autocomp.GetItemCount() < 1 {
+				// Todo: replace with /edit call
 				app.SetFocus(messagesView)
 			} else {
 				acItem, _ := autocomp.GetCurrentItem()
@@ -236,6 +237,13 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 			autocomp.SetCurrentItem(newitem)
 			app.SetFocus(autocomp)
+
+		case tcell.KeyPgUp, tcell.KeyPgDn:
+			// Handle scrolling with PgUp/Dn in the input box
+			app.SetFocus(messagesView)
+			messagesView.InputHandler()(ev, nil)
+			handleScroll()
+			return nil
 
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() > 0 {

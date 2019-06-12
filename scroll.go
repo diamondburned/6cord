@@ -16,6 +16,8 @@ func handleScroll() {
 		"%d/%d %d%%",
 		current, lines, min(current*100/lines, 100),
 	))
+
+	app.Draw()
 }
 
 func getLineStatus() (current, total int) {

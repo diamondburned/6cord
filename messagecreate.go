@@ -47,5 +47,4 @@ func messageCreate(s *discordgo.Session, m *discordgo.MessageCreate) {
 
 	// messagerenderer.go
 	messageRender <- m
-	scrollChat()
 }

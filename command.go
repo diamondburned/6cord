@@ -175,6 +175,9 @@ func CommandHandler() {
 			if err != nil {
 				Warn("Failed to send message:\n" + text + "\nError: " + err.Error())
 			}
+
+			messagesView.ScrollToEnd()
+			app.Draw()
 		}(text)
 	}
 }

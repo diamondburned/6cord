@@ -20,9 +20,20 @@ func cleanupBuffer() {
 	}
 }
 
-func scrollChat() {
+func scrollChat() bool {
+	current, lines := getLineStatus()
+	if lines-current > 5 {
+		return false
+	}
+
+	if Channel == nil {
+		wrapFrame.SetTitle(generateTitle(Channel))
+	}
+
 	if !messagesView.HasFocus() && !autocomp.HasFocus() {
 		messagesView.ScrollToEnd()
 		cleanupBuffer()
 	}
+
+	return true
 }

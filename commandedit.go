@@ -50,6 +50,8 @@ func editMessage(text []string) {
 	input.SetLabel("Edit ")
 	input.SetPlaceholder("Send this empty message to delete it")
 	input.SetText(lastMsg.Content)
+
+	messagesView.Highlight(strconv.FormatInt(lastMsg.ID, 10))
 }
 
 func editHandler() {

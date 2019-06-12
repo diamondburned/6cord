@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/diamondburned/discordgo"
@@ -91,32 +92,8 @@ func actualLoadChannel(channelID int64) {
 	}
 
 	app.SetFocus(input)
-
-	var frameTitle string
-
-	if ch.Name != "" {
-		frameTitle = "[#" + ch.Name + "]"
-
-		if ch.Topic != "" {
-			topic, _ := parseEmojis(ch.Topic)
-			frameTitle += " - [" + topic + "]"
-		}
-	} else {
-		if len(ch.Recipients) == 1 {
-			frameTitle = "[" + ch.Recipients[0].String() + "]"
-		} else {
-			var names = make([]string, len(ch.Recipients))
-			for i, r := range ch.Recipients {
-				names[i] = r.Username
-			}
-
-			frameTitle = "[" + HumanizeStrings(names) + "]"
-		}
-	}
-
-	app.QueueUpdateDraw(func() {
-		wrapFrame.SetTitle(tview.Escape(frameTitle))
-	})
+	wrapFrame.SetTitle(generateTitle(ch))
+	app.Draw()
 
 	go func() {
 		if ch.GuildID == 0 {
@@ -165,6 +142,34 @@ func actualLoadChannel(channelID int64) {
 			)
 		}
 	}()
+}
+
+func generateTitle(ch *discordgo.Channel, custom ...string) (frameTitle string) {
+	var Custom = strings.Join(custom, " ")
+
+	if ch.Name != "" {
+		frameTitle = "[#" + ch.Name + "]"
+
+		if Custom != "" {
+			frameTitle += " - " + Custom
+		} else if ch.Topic != "" {
+			topic, _ := parseEmojis(ch.Topic)
+			frameTitle += " - [" + tview.Escape(topic) + "]"
+		}
+	} else {
+		if len(ch.Recipients) == 1 {
+			frameTitle = "[" + ch.Recipients[0].String() + "]"
+		} else {
+			var names = make([]string, len(ch.Recipients))
+			for i, r := range ch.Recipients {
+				names[i] = r.Username
+			}
+
+			frameTitle = "[" + HumanizeStrings(names) + "]"
+		}
+	}
+
+	return
 }
 
 func messageisOld(m, l *discordgo.Message) bool {
