@@ -145,6 +145,10 @@ func actualLoadChannel(channelID int64) {
 }
 
 func generateTitle(ch *discordgo.Channel, custom ...string) (frameTitle string) {
+	if ch == nil {
+		return "[#nil[]"
+	}
+
 	var Custom = strings.Join(custom, " ")
 
 	if ch.Name != "" {
@@ -159,6 +163,8 @@ func generateTitle(ch *discordgo.Channel, custom ...string) (frameTitle string) 
 	} else {
 		if len(ch.Recipients) == 1 {
 			frameTitle = "[" + ch.Recipients[0].String() + "]"
+		} else if Custom != "" {
+			frameTitle += " - " + Custom
 		} else {
 			var names = make([]string, len(ch.Recipients))
 			for i, r := range ch.Recipients {

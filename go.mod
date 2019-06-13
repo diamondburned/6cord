@@ -13,8 +13,8 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.1.2
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
-	github.com/diamondburned/tcell v1.1.7-0.20190608162241-468b8880ec7a
-	github.com/diamondburned/tview v1.2.2-0.20190611043218-c864b02cba8f
+	github.com/diamondburned/tcell v1.1.7
+	github.com/diamondburned/tview v1.2.2-0.20190613103510-49fecf658239
 	github.com/disintegration/imaging v1.6.0
 	github.com/gen2brain/beeep v0.0.0-20190603194150-07ff5e574111
 	github.com/gobwas/ws v1.0.1 // indirect
@@ -42,11 +42,7 @@ require (
 	github.com/zalando/go-keyring v0.0.0-20190603084339-02404fc6afd1
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190608163716-1b390b8a3d1f
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
-	golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5 // indirect
 	golang.org/x/image v0.0.0-20190523035834-f03afa92d3ff // indirect
-	golang.org/x/net v0.0.0-20190611141213-3f473d35a33a // indirect
-	golang.org/x/sys v0.0.0-20190610200419-93c9922d18ae // indirect
-	golang.org/x/tools v0.0.0-20190611154301-25a4f137592f // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/toast.v1 v1.0.0-20180812000517-0a84660828b2 // indirect
 )
