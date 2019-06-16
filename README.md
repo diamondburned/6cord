@@ -35,7 +35,7 @@ echo PATH="$HOME/bin:$PATH" >> ~/.bashrc && . ~/.bashrc # or any shellrc
 
 This is possible from both the web client and the Electron client.
 
-1. Hit <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>I</kbd>
+1. Hit <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>
 2. Switch to the `Network` tab
 3. Find Discord API requests. This is usually called `messages`, `ack`, `typing`, etc
 4. Search for the `Authorization` header. This is the token.

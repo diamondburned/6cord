@@ -311,10 +311,6 @@ func main() {
 		case tcell.KeyCtrlC:
 			app.Stop()
 
-		case tcell.KeyCtrlE:
-			commandEditor(nil)
-			return nil
-
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() < 1 {
 				toggleChannels()

@@ -278,6 +278,11 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 			return nil
 		}
+
+		if ev.Name() == "'" && ev.Modifiers() == tcell.ModCtrl {
+			commandEditor(nil)
+			return nil
+		}
 	}
 
 	return ev
