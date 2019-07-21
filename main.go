@@ -105,7 +105,7 @@ func main() {
 
 	messagesView.SetRegions(true)
 	messagesView.SetWrap(true)
-	messagesView.SetWordWrap(false)
+	messagesView.SetWordWrap(true)
 	messagesView.SetScrollable(true)
 	messagesView.SetDynamicColors(true)
 	messagesView.SetTextColor(tcell.Color(cfg.Prop.ForegroundColor))
