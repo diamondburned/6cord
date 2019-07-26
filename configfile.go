@@ -46,6 +46,8 @@ type Config struct {
 	Password string `id:"password" short:"p" default:"" desc:"Used when token is empty"`
 	Token    string `id:"token" short:"t" default:"" desc:"Authentication Token, recommended way of using"`
 
+	Login bool `id:"login" short:"l" default:"false" desc:"Force pop up a login prompt"`
+
 	Prop Properties `id:"properties"`
 
 	Debug bool `id:"debug" short:"d" default:"false" desc:"Enables debug mode"`

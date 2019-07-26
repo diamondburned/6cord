@@ -118,55 +118,51 @@ func main() {
     - /goto [#channel] jumps to that channel
 	- Page Up/Down jumps between the server entries`)
 
-	var (
-		login []interface{}
-		err   error
-	)
+	var login = &discordgo.Login{
+		Email:    cfg.Username,
+		Password: cfg.Password,
+		Token:    cfg.Token,
+	}
 
-	switch {
-	case cfg.Token != "":
-		login = append(login, cfg.Token)
-
+	if cfg.Token != "" {
 		if err := keyring.Delete(AppName, "token"); err == nil {
 			log.Println("Keyring deleted.")
 		}
-
-	case cfg.Username != "" && cfg.Password != "":
-		login = append(login, cfg.Username)
-		login = append(login, cfg.Password)
-
-		if cfg.Token != "" {
-			login = append(login, cfg.Token)
-		}
-
-	default:
+	} else {
 		k, err := keyring.Get(AppName, "token")
 		if err == nil {
-			login = append(login, k)
+			login.Token = k
 		}
 	}
 
-	var message = "Login to Discord:"
-	for {
-		if len(login) == 0 {
-			u, p, ok := promptLogin(message)
-			if !ok {
+	for message, mfa := "Login to Discord:", false; ; {
+		if cfg.Token == "" && (cfg.Username == "" || cfg.Password == "") {
+			if !promptLogin(login, message, mfa) {
+				if message != "Login to Discord:" {
+					println(message)
+				}
+
 				os.Exit(2)
 			}
-
-			login = []interface{}{u, p}
 		}
 
-		d, err = discordgo.New(login...)
+		s, err := discordgo.New(*login)
 		if err == nil {
+			d = s
 			break
 		}
 
-		login = nil
-		message = err.Error()
+		if err == discordgo.ErrMFA {
+			mfa = true
+			message = "Enter Discord Auth code"
+		} else {
+			message = err.Error()
+		}
 	}
 
-	d.UserAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3534.4 Safari/537.36`
+	d.UserAgent = `Mozilla/5.0 (X11; Linux x86_64) ` +
+		`AppleWebKit/537.36 (KHTML, like Gecko) ` +
+		`Chrome/70.0.3534.4 Safari/537.36`
 
 	d.State.MaxMessageCount = 50
 
@@ -429,11 +425,6 @@ func main() {
 	go renderCallback()
 
 	imageRendererPipeline = startImageRendererPipeline()
-
-	log.Println("Storing token inside keyring...")
-	if err := keyring.Set(AppName, "token", d.Token); err != nil {
-		log.Println("Failed to set keyring! Continuing anyway...", err.Error())
-	}
 
 	if cfg.Prop.ShortenURL {
 		if err := shortener.StartHTTP("127.0.0.1"); err != nil {
