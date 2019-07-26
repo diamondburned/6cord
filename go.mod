@@ -8,10 +8,9 @@ require (
 	github.com/alecthomas/repr v0.0.0-20181024024818-d37bc2a10ba1 // indirect
 	github.com/andreyvit/diff v0.0.0-20170406064948-c7f18ee00883
 	github.com/atotto/clipboard v0.1.2
-	github.com/bwmarrin/discordgo v0.19.0 // indirect
 	github.com/danieljoos/wincred v1.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1
-	github.com/diamondburned/discordgo v1.1.2
+	github.com/diamondburned/discordgo v1.2.1
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.8
 	github.com/diamondburned/tview v1.2.2-0.20190706005248-5ebfbd170dd0
@@ -28,12 +27,11 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/kr/pty v1.1.8 // indirect
 	github.com/kylelemons/godebug v1.1.0 // indirect
-	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/mattn/go-isatty v0.0.8 // indirect
 	github.com/mattn/go-sixel v0.0.0-20190320171103-a8fac8fa7d81
 	github.com/mattn/go-tty v0.0.0-20190424173100-523744f04859
 	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d // indirect
 	github.com/pelletier/go-toml v1.4.0 // indirect
-	github.com/rumblefrog/discordgo v1.0.3 // indirect
 	github.com/sahilm/fuzzy v0.1.0
 	github.com/soniakeys/quant v1.0.0 // indirect
 	github.com/stevenroose/gonfig v0.1.4
