@@ -26,6 +26,9 @@ compile:
       - export GOOS=windows
       - time go get 
       - time go build -o $CI_PROJECT_DIR/6cord.exe
+      - export GOOS=linux GOARCH=arm64
+      - time go get
+      - time go build -o $CI_PROJECT_DIR/6cord_arm64
     artifacts:
       paths:
         - 6cord
