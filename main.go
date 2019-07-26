@@ -141,18 +141,29 @@ func main() {
 
 	default:
 		k, err := keyring.Get(AppName, "token")
-		if err != nil {
-			fmt.Println("Missing token OR username and password!")
-			panic(err)
+		if err == nil {
+			login = append(login, k)
 		}
-
-		login = append(login, k)
 	}
 
-	d, err = discordgo.New(login...)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic(err)
+	var message = "Login to Discord:"
+	for {
+		if len(login) == 0 {
+			u, p, ok := promptLogin(message)
+			if !ok {
+				os.Exit(2)
+			}
+
+			login = []interface{}{u, p}
+		}
+
+		d, err = discordgo.New(login...)
+		if err == nil {
+			break
+		}
+
+		login = nil
+		message = err.Error()
 	}
 
 	d.UserAgent = `Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3534.4 Safari/537.36`
