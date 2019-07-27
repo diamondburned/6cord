@@ -10,7 +10,7 @@ import (
 
 // String returns the fuzzy search part of the struct
 func (cmds Commands) String(i int) string {
-	return cmds[i].Command + " " + cmds[i].Description
+	return cmds[i].Command
 }
 
 // Len returns the length of the Emojis slice
