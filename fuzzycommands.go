@@ -1,6 +1,7 @@
 package main
 
 import (
+	"sort"
 	"strings"
 
 	"github.com/diamondburned/tview"
@@ -37,6 +38,9 @@ func fuzzyCommands(last string) {
 			)
 		}
 
+		sort.Slice(fuzzied, func(i, j int) bool {
+			return len(fuzzied[i].Command) < len(fuzzied[j].Command)
+		})
 	} else {
 		fuzzied = append(fuzzied, commands...)
 	}

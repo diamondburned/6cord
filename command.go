@@ -102,6 +102,11 @@ var commands = Commands{
 		Description: "[@mention] - unblocks someone",
 	},
 	Command{
+		Command:     "/copytoken",
+		Function:    commandCopyToken,
+		Description: "prints your token",
+	},
+	Command{
 		Command:     "/debug",
 		Function:    commandDebug,
 		Description: "prints extra debug info",
