@@ -13,7 +13,7 @@ require (
 	github.com/diamondburned/discordgo v1.2.1
 	github.com/diamondburned/markdown v0.0.0-20190331092810-a5d3b972382c
 	github.com/diamondburned/tcell v1.1.8
-	github.com/diamondburned/tview v1.2.2-0.20190729061334-99ebec35fe54
+	github.com/diamondburned/tview v1.2.2-0.20190729221834-1e6d8dbf0984
 	github.com/disintegration/imaging v1.6.0
 	github.com/gdamore/tcell v1.1.4 // indirect
 	github.com/gen2brain/beeep v0.0.0-20190603194150-07ff5e574111
