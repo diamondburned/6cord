@@ -64,6 +64,8 @@ github.com/diamondburned/tview v1.2.2-0.20190729061334-99ebec35fe54 h1:qaNWaHaML
 github.com/diamondburned/tview v1.2.2-0.20190729061334-99ebec35fe54/go.mod h1:k1JPclsaKGzV2ypfjgS/QEqhq0ImKQTSEA9drkYXntY=
 github.com/diamondburned/tview v1.2.2-0.20190729221834-1e6d8dbf0984 h1:zmfbFEDvMIxDCLbtwNG2n5eO8Zhn1O8qqFPV+CoY5yY=
 github.com/diamondburned/tview v1.2.2-0.20190729221834-1e6d8dbf0984/go.mod h1:k1JPclsaKGzV2ypfjgS/QEqhq0ImKQTSEA9drkYXntY=
+github.com/diamondburned/tview v1.2.2-0.20190729223701-d5af0dcdd2b6 h1:98+eeehFTlXGG24N4X0finBjSjE4xU0RkwGScaGYiBA=
+github.com/diamondburned/tview v1.2.2-0.20190729223701-d5af0dcdd2b6/go.mod h1:k1JPclsaKGzV2ypfjgS/QEqhq0ImKQTSEA9drkYXntY=
 github.com/disintegration/imaging v1.6.0 h1:nVPXRUUQ36Z7MNf0O77UzgnOb1mkMMor7lmJMJXc/mA=
 github.com/disintegration/imaging v1.6.0/go.mod h1:xuIt+sRxDFrHS0drzXUlCJthkJ8k7lkkUojDSR247MQ=
 github.com/dlclark/regexp2 v1.1.6 h1:CqB4MjHw0MFCDj+PHHjiESmHX+N7t0tJzKvC6M97BRg=

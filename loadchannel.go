@@ -4,6 +4,7 @@ import (
 	"log"
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/diamondburned/discordgo"
@@ -11,6 +12,9 @@ import (
 )
 
 const prefetchMessageCount = 35
+
+var fetchedMembersGuild = map[int64]struct{}{}
+var fetchedMembersGuildMu sync.Mutex
 
 func loadChannel(channelID int64) {
 	app.QueueUpdateDraw(func() {
@@ -42,11 +46,10 @@ func actualLoadChannel(channelID int64) {
 
 	resetInputBehavior()
 	typing.Reset()
+	app.SetFocus(input)
 
-	if !us.Populated(Channel.GuildID) {
-		d.GatewayManager.SubscribeGuild(
-			Channel.GuildID, true, true,
-		)
+	if len(ch.Messages) > 0 {
+		drawMsgs(ch.Messages)
 	}
 
 	msgs, err := d.ChannelMessages(
@@ -59,9 +62,7 @@ func actualLoadChannel(channelID int64) {
 		return
 	}
 
-	sort.Slice(msgs, func(i, j int) bool {
-		return msgs[i].ID < msgs[j].ID
-	})
+	ch.Messages = msgs
 
 	if len(msgs) > 0 {
 		go func(c *discordgo.Channel, msgs []*discordgo.Message) {
@@ -69,29 +70,12 @@ func actualLoadChannel(channelID int64) {
 		}(ch, msgs)
 	}
 
-	// Clears the buffer
-	messageRender <- nil
-
-	for i := 0; i < len(msgs); i++ {
-		imageRendererPipeline.cache.markUnfetch(msgs[i])
-	}
-
-	for i := 0; i < len(msgs); i++ {
-		m := msgs[i]
-
-		if rstore.Check(m.Author, RelationshipBlocked) {
-			continue
-		}
-
-		messageRender <- m
-		d.State.MessageAdd(m)
-	}
+	drawMsgs(msgs)
 
 	if len(msgs) == 0 {
 		Message("There's nothing here!")
 	}
 
-	app.SetFocus(input)
 	wrapFrame.SetTitle(generateTitle(ch))
 	app.Draw()
 
@@ -99,6 +83,14 @@ func actualLoadChannel(channelID int64) {
 		if ch.GuildID == 0 {
 			return
 		}
+
+		if us.Populated(ch.GuildID) {
+			return
+		}
+
+		d.GatewayManager.SubscribeGuild(
+			Channel.GuildID, true, true,
+		)
 
 		members := &([]*discordgo.Member{})
 
@@ -142,6 +134,29 @@ func actualLoadChannel(channelID int64) {
 			)
 		}
 	}()
+}
+
+func drawMsgs(msgs []*discordgo.Message) {
+	sort.Slice(msgs, func(i, j int) bool {
+		return msgs[i].ID < msgs[j].ID
+	})
+
+	// Clears the buffer
+	messageRender <- nil
+
+	for i := 0; i < len(msgs); i++ {
+		imageRendererPipeline.cache.markUnfetch(msgs[i])
+	}
+
+	for i := 0; i < len(msgs); i++ {
+		m := msgs[i]
+
+		if rstore.Check(m.Author, RelationshipBlocked) {
+			continue
+		}
+
+		messageRender <- m
+	}
 }
 
 func generateTitle(ch *discordgo.Channel, custom ...string) (frameTitle string) {

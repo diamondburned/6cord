@@ -118,6 +118,7 @@ func (p *imageRendererPipelineStruct) clean() {
 		}
 
 		p.cache.gc()
+		p.index = 0
 	}
 }
 
