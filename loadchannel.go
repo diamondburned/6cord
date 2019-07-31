@@ -16,6 +16,18 @@ const prefetchMessageCount = 35
 var fetchedMembersGuild = map[int64]struct{}{}
 var fetchedMembersGuildMu sync.Mutex
 
+func isFetched(guildID int64) bool {
+	fetchedMembersGuildMu.Lock()
+	defer fetchedMembersGuildMu.Unlock()
+
+	if _, ok := fetchedMembersGuild[guildID]; ok {
+		return true
+	}
+
+	fetchedMembersGuild[guildID] = struct{}{}
+	return false
+}
+
 func loadChannel(channelID int64) {
 	app.QueueUpdateDraw(func() {
 		wrapFrame.SetTitle("[Loading...[]")
@@ -84,7 +96,8 @@ func actualLoadChannel(channelID int64) {
 			return
 		}
 
-		if us.Populated(ch.GuildID) {
+		// If the huge members list is already fetched, return
+		if isFetched(ch.GuildID) {
 			return
 		}
 
