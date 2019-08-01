@@ -21,10 +21,11 @@ func messageGetTopID() int64 {
 }
 
 func getIDfromindex(i int) int64 {
-	if len(messageStore) < i || i < 0 {
+	if len(messageStore) <= i || i < 0 {
 		return 0
 	}
 
+	// magic number lo
 	if len(messageStore[i]) < 23 {
 		return 0
 	}
