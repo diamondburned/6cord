@@ -1,12 +1,9 @@
 <h1 align="center">6cord</h1>
-
-<a align="center" href="https://liberapay.com/diamondburned/donate">
-	<img align="center" alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">
-</a>
-
 <p align="center">
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" />
-	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/img.png" />
+	<a href="https://liberapay.com/diamondburned/donate">
+		<img align="center" alt="Donate using Liberapay" src="https://liberapay.com/assets/widgets/donate.svg">
+	</a>
+	<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/latest.png" />
 	<img src="https://u.cubeupload.com/diamondburned/MCz9fP.png" />
 </p>
 
@@ -104,6 +101,8 @@ Currently, Xorg is the only supported image backend. SIXEL support proved itself
 ## Screenshots
 
 <p align="center">
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/guildview.png" />
+<img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/img.png" />
 <img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/clean.png" />
 <img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/mentions.png" />
 <img src="https://gitlab.com/diamondburned/6cord/raw/master/_screenshots/commands.png" />
