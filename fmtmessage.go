@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"gitlab.com/diamondburned/6cord/antitele"
 	"gitlab.com/diamondburned/6cord/shortener"
 )

@@ -8,13 +8,22 @@ import (
 	"time"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 const prefetchMessageCount = 35
 
 var fetchedMembersGuild = map[int64]struct{}{}
 var fetchedMembersGuildMu sync.Mutex
+
+var _loadingChannel bool
+
+func loadingChannel() func() {
+	_loadingChannel = true
+	return func() {
+		_loadingChannel = false
+	}
+}
 
 func isFetched(guildID int64) bool {
 	fetchedMembersGuildMu.Lock()
@@ -29,14 +38,19 @@ func isFetched(guildID int64) bool {
 }
 
 func loadChannel(channelID int64) {
-	app.QueueUpdateDraw(func() {
-		wrapFrame.SetTitle("[Loading...[]")
-	})
+	if _loadingChannel {
+		return
+	}
+
+	wrapFrame.SetTitle("[Loading...[]")
+	app.Draw()
 
 	go actualLoadChannel(channelID)
 }
 
 func actualLoadChannel(channelID int64) {
+	defer loadingChannel()()
+
 	ch, err := d.State.Channel(channelID)
 	if err != nil {
 		ch, err = d.Channel(channelID)

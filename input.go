@@ -7,7 +7,7 @@ import (
 
 	"github.com/atotto/clipboard"
 	"github.com/diamondburned/tcell"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"gitlab.com/diamondburned/6cord/antitele"
 )
 
@@ -22,14 +22,12 @@ var (
 )
 
 func resetInputBehavior() {
-	app.QueueUpdate(func() {
-		input.SetLabel(templatePrefix())
-		input.SetLabelColor(tcell.Color(cfg.Prop.BackgroundColor))
-		input.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
-		input.SetFieldBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
-		input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
-		input.SetText("")
-	})
+	input.SetLabel(templatePrefix())
+	input.SetLabelColor(tcell.Color(cfg.Prop.BackgroundColor))
+	input.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+	input.SetFieldBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+	input.SetPlaceholderTextColor(tcell.ColorDarkCyan)
+	input.SetText("")
 	clearList()
 
 	stateResetter()
@@ -148,9 +146,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 		case tcell.KeyEscape:
 			resetInputBehavior()
 			if showChannels {
-				app.QueueUpdateDraw(func() {
-					toggleChannels()
-				})
+				toggleChannels()
 			}
 
 			app.SetFocus(guildView)
@@ -194,10 +190,12 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 						}()
 					}
 
-					app.SetRoot(appflex, true).SetFocus(input)
+					app.SetRoot(appflex, true)
+					app.SetFocus(input)
 				})
 
-				app.SetRoot(modal, false).SetFocus(modal)
+				app.SetRoot(modal, false)
+				app.SetFocus(modal)
 
 			} else {
 				input.SetText(input.GetText() + cb)
@@ -215,7 +213,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 				// Todo: replace with /edit call
 				app.SetFocus(messagesView)
 			} else {
-				acItem, _ := autocomp.GetCurrentItem()
+				acItem := autocomp.GetCurrentItem()
 				if acItem == 0 {
 					newitem := autocomp.GetItemCount() - 1
 					autocomp.SetCurrentItem(newitem)
@@ -225,7 +223,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			}
 
 		case tcell.KeyDown:
-			acItem, _ := autocomp.GetCurrentItem()
+			acItem := autocomp.GetCurrentItem()
 			var newitem = acItem + 1
 
 			switch {
@@ -247,7 +245,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case tcell.KeyTab:
 			if autocomp.GetItemCount() > 0 {
-				acItem, _ := autocomp.GetCurrentItem()
+				acItem := autocomp.GetCurrentItem()
 				autofillfunc(acItem)
 				return nil
 			}
@@ -256,7 +254,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		case tcell.KeyEnter:
 			if autocomp.GetItemCount() > 0 {
-				acItem, _ := autocomp.GetCurrentItem()
+				acItem := autocomp.GetCurrentItem()
 				autofillfunc(acItem)
 				return nil
 			}

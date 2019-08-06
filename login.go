@@ -5,7 +5,7 @@ import (
 
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tcell"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"gitlab.com/diamondburned/6cord/center"
 )
 
@@ -65,7 +65,8 @@ func promptLogin(l *discordgo.Login, text string, mfa bool) (ok bool) {
 	center.MaxWidth = 70
 	center.MaxHeight = 10
 
-	if err := app.SetRoot(center, true).Run(); err != nil {
+	app.SetRoot(center, true)
+	if err := app.Run(); err != nil {
 		fmt.Println(err.Error())
 		panic(err)
 	}

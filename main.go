@@ -9,7 +9,7 @@ import (
 	"github.com/davecgh/go-spew/spew"
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tcell"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"github.com/valyala/fasttemplate"
 	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/image"
@@ -22,7 +22,7 @@ const (
 )
 
 var (
-	app           = tview.NewApplication()
+	app           = tview.Initialize()
 	appflex       = tview.NewFlex()
 	rightflex     = tview.NewFlex()
 	guildView     = tview.NewTreeView()
@@ -44,7 +44,7 @@ var (
 	prefixTpl *fasttemplate.Template
 )
 
-func init() {
+func main() {
 	// less aggressive garbage collector
 	// debug.SetGCPercent(200)
 
@@ -74,9 +74,20 @@ func init() {
 	})
 
 	commands = append(commands, CustomCommands...)
-}
 
-func main() {
+	// Shitty app actually needs a high refresh rate LOL
+	tview.RefreshRate = 120 // 120Hz or 120fps max
+
+	// Initialize a bunch of global states
+	app = tview.Initialize()
+	appflex = tview.NewFlex()
+	rightflex = tview.NewFlex()
+	guildView = tview.NewTreeView()
+	messagesView = tview.NewTextView()
+	messagesFrame = tview.NewFrame(messagesView)
+	input = tview.NewInputField()
+	autocomp = tview.NewList()
+
 	tview.Borders.HorizontalFocus = tview.Borders.Horizontal
 	tview.Borders.VerticalFocus = tview.Borders.Vertical
 

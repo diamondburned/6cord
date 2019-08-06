@@ -42,7 +42,7 @@ type imageCacheAsset struct {
 type imageFetchState string
 
 const (
-	imageNotFetched imageFetchState = "[grey]"
+	imageNotFetched imageFetchState = "[#424242]"
 	imageFetching   imageFetchState = "[green]"
 	imageFetched    imageFetchState = "[lime]"
 )
@@ -185,6 +185,8 @@ func (c *imageCacheStruct) upd(m *discordgo.Message) (*imageCacheStore, error) {
 
 	s.state = imageFetched
 	c.store[m.ID] = s
+
+	go app.Draw()
 
 	return s, nil
 }

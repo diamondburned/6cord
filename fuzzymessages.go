@@ -6,14 +6,14 @@ import (
 	"strings"
 	"time"
 
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 // [0]:format [1]:ID
-var allMessages [][2]string
+var allMessages []*tview.ListItem
 
 func fuzzyMessages(text string) {
-	var fuzzied [][2]string
+	var fuzzied []*tview.ListItem
 
 	if len(allMessages) == 0 && Channel != nil {
 		for i := len(messageStore) - 1; i >= 0; i-- {
@@ -22,41 +22,16 @@ func fuzzyMessages(text string) {
 				continue
 			}
 
-			m, err := d.State.Message(Channel.ID, ID)
-			if err != nil {
-				continue
-			}
-
-			username, color := us.DiscordThis(m)
-
-			sentTime, err := m.Timestamp.Parse()
-			if err != nil {
-				sentTime = time.Now()
-			}
-
-			var fetchedColor = readChannelColorPrefix
-			if s := imageRendererPipeline.cache.get(m.ID); s != nil {
-				fetchedColor = string(s.state)
-			}
-
-			id := strconv.FormatInt(ID, 10)
-
-			allMessages = append(allMessages, [2]string{
-				fmt.Sprintf(
-					"%s%s[-] - [#%06X]%s[-] [::d]- %s[::-]",
-					fetchedColor, id, color, username,
-					sentTime.Local().Format(time.Stamp),
-				), id,
-			})
+			allMessages = append(allMessages, makeMessageItem(ID))
 		}
 	}
 
 	if len(text) > 1 {
 		text := strings.TrimPrefix(text, "~")
-		fuzzied = make([][2]string, 0, len(allMessages))
+		fuzzied = make([]*tview.ListItem, 0, len(allMessages))
 
 		for _, m := range allMessages {
-			if strings.Contains(m[0], text) {
+			if strings.Contains(m.MainText, text) {
 				fuzzied = append(fuzzied)
 			}
 		}
@@ -71,12 +46,7 @@ func fuzzyMessages(text string) {
 			fuzzied[i], fuzzied[j] = fuzzied[j], fuzzied[i]
 		}
 
-		for i, u := range fuzzied {
-			autocomp.InsertItem(
-				i, &tview.ListItem{u[0], "", 0, nil},
-			)
-		}
-
+		autocomp.SetItems(fuzzied)
 		autocomp.SetCurrentItem(-1)
 
 		rightflex.ResizeItem(autocomp, min(len(fuzzied), 10), 1)
@@ -85,7 +55,7 @@ func fuzzyMessages(text string) {
 			words := strings.Fields(input.GetText())
 
 			withoutlast := words[:len(words)-1]
-			withoutlast = append(withoutlast, fuzzied[i][1])
+			withoutlast = append(withoutlast, fuzzied[i].SecondaryText)
 
 			input.SetText(strings.Join(withoutlast, " ") + " ")
 
@@ -104,13 +74,19 @@ func fuzzyMessages(text string) {
 			return
 		}
 
-		ID := fuzzied[i][1]
+		ID := fuzzied[i].SecondaryText
 
 		if Channel != nil {
 			id, _ := strconv.ParseInt(ID, 10, 64)
 			if id != 0 {
 				m, err := d.State.Message(Channel.ID, id)
 				if err == nil {
+					// Update the list entry
+					item := makeMessageItem(id)
+					if item.MainText != t {
+						fuzzied[i].MainText = item.MainText
+					}
+
 					imageRendererPipeline.add(m)
 				}
 			}
@@ -119,4 +95,41 @@ func fuzzyMessages(text string) {
 		messagesView.Highlight(ID)
 		messagesView.ScrollToHighlight()
 	})
+}
+
+func makeMessageItem(ID int64) *tview.ListItem {
+	id := strconv.FormatInt(ID, 10)
+
+	m, err := d.State.Message(Channel.ID, ID)
+	if err != nil {
+		return &tview.ListItem{
+			MainText:      id + " - ???",
+			SecondaryText: id,
+			Shortcut:      0,
+			Selected:      nil,
+		}
+	}
+
+	username, color := us.DiscordThis(m)
+
+	sentTime, err := m.Timestamp.Parse()
+	if err != nil {
+		sentTime = time.Now()
+	}
+
+	var fetchedColor = readChannelColorPrefix
+	if s := imageRendererPipeline.cache.get(m.ID); s != nil {
+		fetchedColor = string(s.state)
+	}
+
+	return &tview.ListItem{
+		MainText: fmt.Sprintf(
+			"%s%s[-] - [#%06X]%s[-] [::d]- %s[::-]",
+			fetchedColor, id, color, username,
+			sentTime.Local().Format(time.Stamp),
+		),
+		SecondaryText: id,
+		Shortcut:      0,
+		Selected:      nil,
+	}
 }

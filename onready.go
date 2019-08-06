@@ -6,7 +6,7 @@ import (
 
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tcell"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	keyring "github.com/zalando/go-keyring"
 )
 

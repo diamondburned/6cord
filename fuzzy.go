@@ -3,13 +3,14 @@ package main
 import (
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tcell"
+	"github.com/diamondburned/tview/v2"
 	"github.com/sahilm/fuzzy"
 )
 
 func stateResetter() {
 	channelFuzzyCache = allChannels([]fuzzyReadState{})
 	discordEmojis = DiscordEmojis([]*discordgo.Emoji{})
-	allMessages = make([][2]string, 0, len(messageStore))
+	allMessages = make([]*tview.ListItem, 0, len(messageStore))
 	autocomp.SetChangedFunc(nil)
 	messagesView.Highlight()
 
@@ -62,7 +63,8 @@ func fuzzyHasNeedle(needle int, haystack []int) bool {
 }
 
 func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
-	i, _ := autocomp.GetCurrentItem()
+	i := autocomp.GetCurrentItem()
+
 	switch ev.Key() {
 	case tcell.KeyDown:
 		if i+1 == autocomp.GetItemCount() {

@@ -4,7 +4,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"github.com/sahilm/fuzzy"
 )
 

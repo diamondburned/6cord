@@ -6,7 +6,7 @@ import (
 	"math"
 
 	"github.com/alecthomas/chroma"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 var (

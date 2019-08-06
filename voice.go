@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 func voiceStateUpdate(s *discordgo.Session, vsu *discordgo.VoiceStateUpdate) {
@@ -78,10 +78,7 @@ func refreshVoiceStates(vc *discordgo.VoiceState) {
 					}
 				}
 
-				app.QueueUpdateDraw(func() {
-					parent.SetChildren(nodes)
-				})
-
+				parent.SetChildren(nodes)
 				return false
 			}
 
@@ -117,9 +114,7 @@ func refreshVoiceTreeNode(node *tview.TreeNode, guildID, channelID int64) {
 		nodes = append(nodes, vcNode)
 	}
 
-	app.QueueUpdateDraw(func() {
-		node.SetChildren(nodes)
-	})
+	node.SetChildren(nodes)
 }
 
 func generateVoiceNode(vc *discordgo.VoiceState) *tview.TreeNode {

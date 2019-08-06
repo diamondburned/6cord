@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 func commandMentions(text []string) {

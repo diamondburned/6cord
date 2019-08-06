@@ -8,7 +8,7 @@ import (
 func deleteMessage(text []string) {
 	toDelete := make([]int64, 0, len(text))
 
-	if len(text) < 2 {
+	if len(text) == 1 {
 		lastMsg := matchMyMessage(0)
 		if lastMsg == nil {
 			Message("Can't find your last message :(")

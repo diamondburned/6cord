@@ -25,9 +25,11 @@ func summonEditor() (b []byte, err error) {
 		cmd.Stdout = os.Stdout
 		cmd.Stdin = os.Stdin
 
-		app.Suspend(func() {
+		app.Suspend(func() error {
 			fmt.Println("Opening", editor+"...")
 			err = cmd.Run()
+
+			return nil
 		})
 
 		if err != nil {

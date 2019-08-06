@@ -137,7 +137,7 @@ func editMessageRegex(text string) {
 
 func matchMyMessage(residue int) *discordgo.Message {
 	m, err := d.State.Message(Channel.ID, int64(residue))
-	if err == nil && m.Author.ID == d.State.User.ID {
+	if err == nil {
 		return m
 	}
 

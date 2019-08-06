@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 func parseChannelID(input string) int64 {

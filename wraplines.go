@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 	"gitlab.com/diamondburned/6cord/md"
 )
 

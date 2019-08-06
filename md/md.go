@@ -8,7 +8,7 @@ import (
 	md "github.com/diamondburned/markdown"
 	"github.com/diamondburned/markdown/ast"
 	ps "github.com/diamondburned/markdown/parser"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 const extensions = 0 |

@@ -131,10 +131,7 @@ func loadMore() {
 	//wg.Wait()
 
 	messageStore = append(reversed, messageStore...)
-
-	app.QueueUpdateDraw(func() {
-		messagesView.SetText(strings.Join(messageStore, ""))
-	})
+	messagesView.SetText(strings.Join(messageStore, ""))
 
 	input.SetPlaceholder("Done.")
 

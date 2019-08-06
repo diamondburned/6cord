@@ -5,7 +5,7 @@ import (
 	"log"
 	"runtime"
 
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 // Warn ..
@@ -33,11 +33,13 @@ func Warn(c string) {
 	modal.SetText(c)
 	modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 		if buttonLabel == "mkay" {
-			app.SetRoot(appflex, true).SetFocus(input)
+			app.SetRoot(appflex, true)
+			app.SetFocus(input)
 		}
 	})
 
-	app.SetRoot(modal, false).SetFocus(modal)
+	app.SetRoot(modal, false)
+	app.SetFocus(modal)
 	app.Draw()
 }
 

@@ -1,6 +1,6 @@
 package center
 
-import "github.com/diamondburned/tview"
+import "github.com/diamondburned/tview/v2"
 
 type Center struct {
 	MaxWidth  int

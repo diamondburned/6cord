@@ -36,7 +36,7 @@ var imageRendererPipeline *imageRendererPipelineStruct
 
 func startImageRendererPipeline() *imageRendererPipelineStruct {
 	p := &imageRendererPipelineStruct{
-		event: make(chan interface{}, 5),
+		event: make(chan interface{}, prefetchMessageCount),
 		cache: &imageCacheStruct{
 			Age: 5 * time.Minute,
 			client: &http.Client{

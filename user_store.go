@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/diamondburned/discordgo"
-	"github.com/diamondburned/tview"
+	"github.com/diamondburned/tview/v2"
 )
 
 // User is used for one user

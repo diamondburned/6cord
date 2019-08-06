@@ -1,6 +1,6 @@
 package main
 
-import "github.com/diamondburned/tview"
+import "github.com/diamondburned/tview/v2"
 
 // CollapseAll collapses all tree nodes
 func CollapseAll(gn *tview.TreeNode) {
