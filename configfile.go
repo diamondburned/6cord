@@ -35,6 +35,7 @@ type Properties struct {
 	SyntaxHighlightColorscheme string `id:"syntax-highlight-colorscheme" default:"emacs" desc:"The color scheme for syntax highlighting, refer to https://xyproto.github.io/splash/docs/all.html."`
 	ShowEmojiURLs              bool   `id:"show-emoji-urls"  default:"true"  desc:"Converts emojis into clickable URLs."`
 	ObfuscateWords             bool   `id:"obfuscate-words"  default:"false" desc:"Insert a zero-width space to obfuscate word-logging telemetry."`
+	ChatMaxWidth               int    `id:"chat-max-width"   default:"0"     desc:"The maximum width of the chat box, if smaller, will be centered."`
 	ImageFetchTimeout          int    `id:"image-fetch-timeout" default:"1"  desc:"The timeout to fetch images, in seconds."`
 	ImageWidth                 int    `id:"image-width"      default:"400"   desc:"The maximum width for an image."`
 	ImageHeight                int    `id:"image-height"     default:"400"   desc:"The maximum height for an image."`

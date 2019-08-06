@@ -7,8 +7,8 @@ import (
 // hopefully avoids messagesView going out of range after a
 // while
 func cleanupBuffer() {
-	if len(messageStore) > prefetchMessageCount*3 {
-		messageStore = messageStore[prefetchMessageCount*2:]
+	if len(messageStore) > prefetchMessageCount*6 {
+		messageStore = messageStore[prefetchMessageCount*4:]
 
 		messagesView.SetText(
 			strings.Join(messageStore, ""),

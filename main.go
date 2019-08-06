@@ -12,6 +12,7 @@ import (
 	"github.com/diamondburned/tview/v2"
 	"github.com/valyala/fasttemplate"
 	keyring "github.com/zalando/go-keyring"
+	"gitlab.com/diamondburned/6cord/center"
 	"gitlab.com/diamondburned/6cord/image"
 	"gitlab.com/diamondburned/6cord/shortener"
 )
@@ -22,15 +23,15 @@ const (
 )
 
 var (
-	app           = tview.Initialize()
-	appflex       = tview.NewFlex()
-	rightflex     = tview.NewFlex()
-	guildView     = tview.NewTreeView()
-	messagesView  = tview.NewTextView()
-	messagesFrame = tview.NewFrame(messagesView)
+	app           *tview.Application
+	appflex       *tview.Flex
+	rightflex     *tview.Flex
+	guildView     *tview.TreeView
+	messagesView  *tview.TextView
+	messagesFrame *tview.Frame
 	wrapFrame     *tview.Frame
-	input         = tview.NewInputField()
-	autocomp      = tview.NewList()
+	input         *tview.InputField
+	autocomp      *tview.List
 
 	// Channel stores the current channel's pointer
 	Channel *discordgo.Channel
@@ -61,6 +62,7 @@ func main() {
 
 	prefixTpl = t
 
+	app = tview.Initialize()
 	app.SetBeforeDrawFunc(func(s tcell.Screen) bool {
 		if cfg.Prop.BackgroundColor == -1 {
 			s.Clear()
@@ -79,7 +81,6 @@ func main() {
 	tview.RefreshRate = 120 // 120Hz or 120fps max
 
 	// Initialize a bunch of global states
-	app = tview.Initialize()
 	appflex = tview.NewFlex()
 	rightflex = tview.NewFlex()
 	guildView = tview.NewTreeView()
@@ -87,6 +88,9 @@ func main() {
 	messagesFrame = tview.NewFrame(messagesView)
 	input = tview.NewInputField()
 	autocomp = tview.NewList()
+
+	center := center.New(rightflex)
+	center.MaxWidth = cfg.Prop.ChatMaxWidth
 
 	tview.Borders.HorizontalFocus = tview.Borders.Horizontal
 	tview.Borders.VerticalFocus = tview.Borders.Vertical
@@ -206,7 +210,7 @@ func main() {
 		rightflex.SetDirection(tview.FlexRow)
 		rightflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
 
-		wrapFrame = tview.NewFrame(rightflex)
+		wrapFrame = tview.NewFrame(center)
 		wrapFrame.SetBorder(true)
 		wrapFrame.SetBorderAttributes(tcell.AttrDim)
 		wrapFrame.SetBorders(0, 0, 0, 0, 0, 0)

@@ -37,13 +37,13 @@ func (c *Center) SetRect(x, y, w, h int) {
 	)
 
 	// If the height is bigger than the max height
-	if h > c.MaxHeight {
+	if c.MaxHeight > 0 && h > c.MaxHeight {
 		pH = c.MaxHeight           // min
 		pY = y + (h-c.MaxHeight)/2 // also center the primitive
 	}
 
 	// If the width is bigger than the max width
-	if w > c.MaxWidth {
+	if c.MaxWidth > 0 && w > c.MaxWidth {
 		pW = c.MaxWidth           // min
 		pX = x + (w-c.MaxWidth)/2 // center
 	}

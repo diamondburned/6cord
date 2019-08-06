@@ -33,6 +33,7 @@ token = ""
 	syntax-highlight-colorscheme = "emacs"
 	show-emoji-urls = true
 	obfuscate-words = false
+	chat-max-width = 0
 	image-fetch-timeout = 1
 	image-width = 400
 	image-height = 400
