@@ -129,6 +129,10 @@ func (p *imageRendererPipelineStruct) show() (err error) {
 		return nil
 	}
 
+	if p.assets[p.index].i == nil {
+		return nil
+	}
+
 	p.state, err = img.New(p.assets[p.index].i)
 	if err != nil {
 		return err
