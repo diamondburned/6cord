@@ -29,8 +29,23 @@ func gotoChannel(text []string) {
 		return
 	}
 
-	id := parseChannelID(text[1])
+	var id int64
+
+	switch {
+	case strings.HasPrefix(text[1], "<#"):
+		id = parseChannelID(text[1])
+	case strings.HasPrefix(text[1], "<@"):
+		ch, err := d.UserChannelCreate(parseUserMention(text[1]))
+		if err != nil {
+			Warn(err.Error())
+			return
+		}
+
+		id = ch.ID
+	}
+
 	if id == 0 {
+		Message("No channels given!")
 		return
 	}
 
