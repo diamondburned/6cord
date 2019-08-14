@@ -18,7 +18,7 @@ func parseUserMention(m string) int64 {
 	})
 
 	id, _ := strconv.ParseInt(trim, 10, 64)
-	if i == 0 {
+	if i != 3 {
 		return 0
 	}
 
