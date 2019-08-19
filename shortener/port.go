@@ -36,5 +36,7 @@ func StartHTTP(ip string) error {
 	http.HandleFunc("/", Handler)
 	go http.ListenAndServe(URL, nil)
 
+	Enabled = true
+
 	return nil
 }

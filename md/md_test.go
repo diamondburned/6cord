@@ -1,55 +1,53 @@
 package md
 
 import (
-	"strings"
 	"testing"
 
-	"github.com/andreyvit/diff"
+	"github.com/go-test/deep"
 )
 
+const s = `**test**
+
+__bro__, that is ***cringe!***
+
+****test****
+
+` + "```" + `go
+println('a')
+` + "```" + `
+
+> cringe lmao
+> kek
+
+>lol
+>   cringe
+
+__**test**__
+
+\*lol\*`
+
+const results = `[::b]test[::-]
+
+[::u]bro[::-], that is [::ib]cringe![::-]
+
+[::ib][::i]test[::-][::-]
+
+[grey]┃[-] println([#af0000]'a'[-])
+
+[#789922]
+> cringe lmao
+> kek[-]
+
+>lol[#789922]
+>   cringe[-]
+
+[::u][::b]test[::-][::-]
+
+\*lol\*`
+
 func TestParse(t *testing.T) {
-	var testSuite = []string{
-		"asdasd\n\nasd\nasdasd\n\n",
-		"*test* **strong** ~~no~~",
-		"____**__test__**",
-		"```js\nconsole.log(\"Your mom gay\");```",
-		">be me\n>is retarded\nokay homo",
-		"`just normal code`",
-		"https://google.com",
-		"### expert mode!",
-		"| lol | retard |\n| - | - |\n| | |",
-		"![wtf](https://google.com)",
-		"[ur mom](https://google.com)",
-		"- that's\n- bullshit",
-		"3. ur mom\n4. gay",
-	}
-
-	var result = `asdasd
-asd
-asdasd
-[::i]test[::-] [::b]strong[::-] [::s]no[::-]
-__[::u]**[::-]test__**
-
-[grey]┃[-] console.log([#af0000]"Your mom gay"[-]);
-[grey]┃[-] 
-
-[green]>be me[-]
-[green]>is retarded[-]
-okay homo
-[:#4f4f4f:]just normal code[:-:]
-https://google.com
-### expert mode!
-| lol | retard |
-| - | - |
-| | |
-![wtf[](https://google.com)
-[ur mom[](https://google.com)
-- that's
-- bullshit
-3. ur mom
-4. gay`
-
-	if p := Parse(strings.Join(testSuite, "\n\n")); p != result {
-		t.Errorf("Test failed---\n%v", diff.LineDiff(p, result))
+	html := Parse(s)
+	if diff := deep.Equal(html, results); diff != nil {
+		t.Fatal(diff)
 	}
 }

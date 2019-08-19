@@ -13,6 +13,9 @@ var (
 	shortenerMutex = &sync.RWMutex{}
 
 	incr int
+
+	// Enabled once StartHTTP is run
+	Enabled = false
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -29,6 +32,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func ShortenURL(targetURL string) string {
+	if !Enabled {
+		return targetURL
+	}
+
 	shortenerMutex.Lock()
 	defer shortenerMutex.Unlock()
 
