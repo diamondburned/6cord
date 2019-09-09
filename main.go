@@ -436,6 +436,13 @@ func main() {
 	defer d.Close()
 	defer app.Stop()
 
+	if err := drpc.Start(d); err != nil {
+		fmt.Println(err.Error())
+		panic(err)
+	}
+	
+	defer drpc.Close()
+
 	go messageRenderer()
 	go renderCallback()
 

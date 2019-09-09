@@ -70,6 +70,7 @@ require (
 	github.com/ugorji/go v1.1.7 // indirect
 	github.com/valyala/fasttemplate v1.0.1
 	github.com/zalando/go-keyring v0.0.0-20190603084339-02404fc6afd1
+	gitlab.com/diamondburned/drpc-server v0.0.0-20190623145539-de44dfcf90a8 // indirect
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190608163716-1b390b8a3d1f
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
 	go.etcd.io/bbolt v1.3.3 // indirect
