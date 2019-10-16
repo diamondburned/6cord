@@ -12,8 +12,8 @@
 ### Method 1. (recommended)
 
 **[Linux](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux)**
-**[Linux (arm64)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux_arm64)**
-**[Windows](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=windows)**
+**[Linux (arm64)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord_arm64?job=linux_arm64)**
+**[Windows](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord.exe?job=windows)**
 
 Only do this if the CI passed (a green tick in the commit bar)
 
