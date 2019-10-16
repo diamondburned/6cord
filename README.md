@@ -11,7 +11,9 @@
 
 ### Method 1. (recommended)
 
-Download https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=compile
+**[Linux](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux)**
+**[Linux (arm64)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux_arm64)**
+**[Windows](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=windows)**
 
 Only do this if the CI passed (a green tick in the commit bar)
 

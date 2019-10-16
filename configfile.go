@@ -40,6 +40,7 @@ type Properties struct {
 	ImageWidth                 int    `id:"image-width"      default:"400"   desc:"The maximum width for an image."`
 	ImageHeight                int    `id:"image-height"     default:"400"   desc:"The maximum height for an image."`
 	ShortenURL                 bool   `id:"shorten-url"      default:"true"  desc:"Opens a webserver to redirect URLs"`
+	RPCServer                  bool   `id:"rpc-server"       default:"true"  desc:"Start a Rich Presence server for applications to use. Experimental. Source: https://gitlab.com/diamondburned/drpc-server"`
 }
 
 type Config struct {

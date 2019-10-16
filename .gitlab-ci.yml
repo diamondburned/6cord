@@ -2,34 +2,42 @@ image: golang:alpine
 
 variables:
   GO111MODULE: "on"
-  REPO_NAME: gitlab.com/diamondburned/6cord
-
+  CGO_ENABLED: 0
 
 before_script:
   - apk add git upx
-  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
-  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
-  - cd $GOPATH/src/$REPO_NAME
 
 stages:
     - build
 
-compile:
+linux:
     stage: build
     script:
-      - time go get 
+      - time go get
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance - disabled for ueberzug + xorg
-      - export CGO_ENABLED=0
       - time go build -ldflags -w -ldflags -s -o $CI_PROJECT_DIR/6cord
       - upx -q --8086 -9 $CI_PROJECT_DIR/6cord
-      - export GOOS=windows
-      - time go get 
-      - time go build -o $CI_PROJECT_DIR/6cord.exe
-      - export GOOS=linux GOARCH=arm64
-      - time go get
-      - time go build -o $CI_PROJECT_DIR/6cord_arm64
     artifacts:
       paths:
         - 6cord
-        - 6cord.exe
+
+windows:
+  stage: build
+  script:
+    - export GOOS=windows
+    - time go get 
+    - time go build -o $CI_PROJECT_DIR/6cord.exe
+  artifacts:
+    paths:
+      - 6cord.exe
+
+linux_arm64:
+  stage: build
+  script:
+    - export GOOS=linux GOARCH=arm64
+    - time go get
+    - time go build -o $CI_PROJECT_DIR/6cord_arm64
+  artifacts:
+    paths:
+      - 6cord_arm64
