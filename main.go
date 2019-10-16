@@ -378,6 +378,9 @@ func main() {
 		}
 	}
 
+	// Silent logger
+	d.Client.Logger = nil
+
 	d.AddHandler(onReady)
 	d.AddHandler(messageCreate)
 	d.AddHandler(messageUpdate)
