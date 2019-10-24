@@ -66,7 +66,7 @@ func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
 	i := autocomp.GetCurrentItem()
 
 	switch ev.Key() {
-	case tcell.KeyDown:
+	case tcell.KeyDown, tcell.KeyCtrlN:
 		if i+1 == autocomp.GetItemCount() {
 			app.SetFocus(input)
 			return nil
@@ -74,7 +74,7 @@ func autocompHandler(ev *tcell.EventKey) *tcell.EventKey {
 
 		return ev
 
-	case tcell.KeyUp:
+	case tcell.KeyUp, tcell.KeyCtrlP:
 		if i == 0 {
 			app.SetFocus(input)
 			return nil
