@@ -208,7 +208,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 			app.SetFocus(guildView)
 			return nil
 
-		case tcell.KeyUp:
+		case tcell.KeyUp, tcell.KeyCtrlP:
 			if autocomp.GetItemCount() < 1 {
 				// Todo: replace with /edit call
 				app.SetFocus(messagesView)
@@ -222,7 +222,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 				app.SetFocus(autocomp)
 			}
 
-		case tcell.KeyDown:
+		case tcell.KeyDown, tcell.KeyCtrlN:
 			acItem := autocomp.GetCurrentItem()
 			var newitem = acItem + 1
 
