@@ -61,7 +61,7 @@ This is possible from both the web client and the Electron client.
 - <kbd>Tab</kbd> to show/hide the server list
 - Input field history is cycled with <kbd>Alt</kbd> + <kbd>Up</kbd>/<kbd>Down</kbd>
 - <kbd>PgUp</kbd> and <kbd>PgDn</kbd> can be used to jump between servers in the list
-- There are some Vim binds available
+- There are some Vim binds available ie ^n and ^p to move between fuzzy listed items
 
 ### `command-prefix`
 
