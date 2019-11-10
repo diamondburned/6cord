@@ -1,5 +1,4 @@
-// +build !linux,!windows
-// +build !unix,amd64
+// +build !linux,!darwin,!freebsd,!windows
 
 package main
 
