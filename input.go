@@ -190,7 +190,7 @@ func inputKeyHandler(ev *tcell.EventKey) *tcell.EventKey {
 						}()
 					}
 
-					app.SetRoot(appflex, true)
+					app.SetRoot(appgrid, true)
 					app.SetFocus(input)
 				})
 

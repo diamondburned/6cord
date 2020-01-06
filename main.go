@@ -24,7 +24,7 @@ const (
 
 var (
 	app           *tview.Application
-	appflex       *tview.Flex
+	appgrid       *tview.Grid
 	rightflex     *tview.Flex
 	guildView     *tview.TreeView
 	messagesView  *tview.TextView
@@ -81,7 +81,7 @@ func main() {
 	tview.RefreshRate = 120 // 120Hz or 120fps max
 
 	// Initialize a bunch of global states
-	appflex = tview.NewFlex()
+	appgrid = tview.NewGrid()
 	rightflex = tview.NewFlex()
 	guildView = tview.NewTreeView()
 	messagesView = tview.NewTextView()
@@ -182,9 +182,9 @@ func main() {
 	d.State.MaxMessageCount = 50
 
 	// Main app page
-
-	appflex.SetDirection(tview.FlexColumn)
-	appflex.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+	appgrid.SetBackgroundColor(tcell.Color(cfg.Prop.BackgroundColor))
+	appgrid.SetRows(0)
+	appgrid.SetColumns(cfg.Prop.SidebarWidth, 0)
 
 	{ // Left container
 		guildView.SetPrefixes([]string{"", ""})
@@ -345,7 +345,7 @@ func main() {
 		return event
 	})
 
-	app.SetRoot(appflex, true)
+	app.SetRoot(appgrid, true)
 
 	toggleChannels()
 

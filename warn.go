@@ -33,7 +33,7 @@ func Warn(c string) {
 	modal.SetText(c)
 	modal.SetDoneFunc(func(buttonIndex int, buttonLabel string) {
 		if buttonLabel == "mkay" {
-			app.SetRoot(appflex, true)
+			app.SetRoot(appgrid, true)
 			app.SetFocus(input)
 		}
 	})

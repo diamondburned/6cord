@@ -10,7 +10,8 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/diamondburned/discordgo v1.2.1
 	github.com/diamondburned/tcell v1.1.8
-	github.com/diamondburned/tview/v2 v2.4.0
+	github.com/diamondburned/tview v1.3.0 // indirect
+	github.com/diamondburned/tview/v2 v2.4.1-0.20191123215835-c5e682ac54fc
 	github.com/disintegration/imaging v1.6.1
 	github.com/dlclark/regexp2 v1.2.0 // indirect
 	github.com/francoispqt/gojay v1.2.13 // indirect
