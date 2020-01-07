@@ -140,9 +140,12 @@ func main() {
 	}
 
 	if cfg.Token != "" {
-		if err := keyring.Delete(AppName, "token"); err == nil {
-			log.Println("Keyring deleted.")
-		}
+		// Fixes hanging with broken dbus
+		go func() {
+			if err := keyring.Delete(AppName, "token"); err == nil {
+				log.Println("Keyring deleted.")
+			}
+		}()
 	} else {
 		k, err := keyring.Get(AppName, "token")
 		if err == nil {
