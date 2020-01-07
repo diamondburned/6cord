@@ -60,6 +60,9 @@ func actualLoadChannel(channelID int64) {
 		}
 	}
 
+	log.Println("Booted stage 1")
+	time.Sleep(10 * time.Second)
+
 	switch ch.Type {
 	case discordgo.ChannelTypeGuildVoice:
 		Message("Voice is currently not working D:")
@@ -88,10 +91,16 @@ func actualLoadChannel(channelID int64) {
 		return
 	}
 
+	log.Println("Booted stage 2")
+	time.Sleep(10 * time.Second)
+
 	ch.Messages = msgs
 
 	if len(msgs) > 0 {
 		go func(c *discordgo.Channel, msgs []*discordgo.Message) {
+			log.Println("Prepare to ack...")
+			time.Sleep(3 * time.Second)
+			log.Println("Acking...")
 			ackMe(c.ID, msgs[len(msgs)-1].ID)
 		}(ch, msgs)
 	}
@@ -115,6 +124,9 @@ func actualLoadChannel(channelID int64) {
 			return
 		}
 
+		log.Println("Booted stage 3")
+		time.Sleep(2 * time.Second)
+
 		d.GatewayManager.SubscribeGuild(
 			Channel.GuildID, true, true,
 		)
@@ -129,7 +141,13 @@ func actualLoadChannel(channelID int64) {
 			}
 		}
 
+		log.Println("Halting stage 4...")
+		return
+
 		recurseMembers(members, ch.GuildID, 0)
+
+		log.Println("Booted stage 4")
+		time.Sleep(2 * time.Second)
 
 		guild.Members = *members
 
@@ -239,21 +257,25 @@ func messageisOld(m, l *discordgo.Message) bool {
 }
 
 func recurseMembers(memstore *[]*discordgo.Member, guildID, after int64) {
-	members, err := d.GuildMembers(guildID, after, 1000)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	if len(members) == 1000 {
-		recurseMembers(
-			memstore,
-			guildID,
-			members[999].User.ID,
-		)
-	}
-
-	*memstore = append(*memstore, members...)
-
 	return
+
+	/*
+		members, err := d.GuildMembers(guildID, after, 1000)
+		if err != nil {
+			log.Println(err)
+			return
+		}
+
+		if len(members) == 1000 {
+			recurseMembers(
+				memstore,
+				guildID,
+				members[999].User.ID,
+			)
+		}
+
+		*memstore = append(*memstore, members...)
+
+		return
+	*/
 }
