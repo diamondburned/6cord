@@ -9,7 +9,7 @@
 
 ## Installation
 
-### Method 1. (recommended)
+### Method 1. (recommended, precompiled binaries)
 
 **[Linux](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux)**
 **[Linux (arm64)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord_arm64?job=linux_arm64)**
@@ -17,7 +17,7 @@
 
 Only do this if the CI passed (a green tick in the commit bar)
 
-### Method 2. 
+### Method 2. (building from source)
 
 ```sh
 git clone https://gitlab.com/diamondburned/6cord
@@ -28,6 +28,18 @@ cd 6cord && go build
 mkdir -p ~/bin/
 mv ./6cord ~/bin/
 echo PATH="$HOME/bin:$PATH" >> ~/.bashrc && . ~/.bashrc # or any shellrc
+```
+
+### Method 3. (package manager)
+
+```sh
+# Arch Linux, using your favourite AUR helper:
+yay install 6cord
+# Alternatively you can install '6cord-git'
+# which is the latest development version.
+
+# FreeBSD:
+pkg install 6cord
 ```
 
 ## Getting the token
