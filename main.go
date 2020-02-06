@@ -11,15 +11,10 @@ import (
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview/v2"
 	"github.com/valyala/fasttemplate"
-	keyring "github.com/zalando/go-keyring"
 	"gitlab.com/diamondburned/6cord/center"
 	"gitlab.com/diamondburned/6cord/image"
+	"gitlab.com/diamondburned/6cord/keyring"
 	"gitlab.com/diamondburned/6cord/shortener"
-)
-
-const (
-	// AppName used for keyrings
-	AppName = "6cord"
 )
 
 var (
@@ -141,14 +136,9 @@ func main() {
 
 	if cfg.Token != "" {
 		// Fixes hanging with broken dbus
-		go func() {
-			if err := keyring.Delete(AppName, "token"); err == nil {
-				log.Println("Keyring deleted.")
-			}
-		}()
+		go keyring.Set(cfg.Token)
 	} else {
-		k, err := keyring.Get(AppName, "token")
-		if err == nil {
+		if k := keyring.Get(); k != "" {
 			login.Token = k
 		}
 	}

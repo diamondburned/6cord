@@ -7,16 +7,14 @@ import (
 	"github.com/diamondburned/discordgo"
 	"github.com/diamondburned/tcell"
 	"github.com/diamondburned/tview/v2"
-	keyring "github.com/zalando/go-keyring"
+	"gitlab.com/diamondburned/6cord/keyring"
 )
 
 func onReady(s *discordgo.Session, r *discordgo.Ready) {
 	// Store the token in a keyring
 	go func() {
 		log.Println("Storing token inside keyring...")
-		if err := keyring.Set(AppName, "token", d.Token); err != nil {
-			log.Println("Failed to set keyring! Continuing anyway...", err.Error())
-		}
+		keyring.Set(d.Token)
 	}()
 
 	rstore.Relationships = r.Relationships

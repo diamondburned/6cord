@@ -14,13 +14,27 @@ linux:
     stage: build
     script:
       - time go get
+      - export FLAGS="-ldflags -w -ldflags -s"
       # compiles 6cord without cgo so that it's statically linked 
       # may affect performance - disabled for ueberzug + xorg
-      - time go build -ldflags -w -ldflags -s -o $CI_PROJECT_DIR/6cord
+      - time go build $FLAGS -o $CI_PROJECT_DIR/6cord
       - upx -q --8086 -9 $CI_PROJECT_DIR/6cord
+      - time go build $FLAGS -o $CI_PROJECT_DIR/6cord_nk -tags nokeyring
+      - upx -q --8086 -9 $CI_PROJECT_DIR/6cord_nk
     artifacts:
       paths:
         - 6cord
+        - 6cord_nk
+
+linux_arm64:
+  stage: build
+  script:
+    - export GOOS=linux GOARCH=arm64
+    - time go get
+    - time go build -o $CI_PROJECT_DIR/6cord_arm64
+  artifacts:
+    paths:
+      - 6cord_arm64
 
 windows:
   stage: build
@@ -32,12 +46,3 @@ windows:
     paths:
       - 6cord.exe
 
-linux_arm64:
-  stage: build
-  script:
-    - export GOOS=linux GOARCH=arm64
-    - time go get
-    - time go build -o $CI_PROJECT_DIR/6cord_arm64
-  artifacts:
-    paths:
-      - 6cord_arm64
