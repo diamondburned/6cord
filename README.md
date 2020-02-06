@@ -12,7 +12,7 @@
 ### Method 1. (recommended, precompiled binaries)
 
 **[Linux](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord?job=linux)**
-**[Linux (no dbus)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord_nk?job=liunx)**
+**[Linux (no dbus)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord_nk?job=linux)**
 **[Linux (arm64)](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord_arm64?job=linux_arm64)**
 **[Windows](https://gitlab.com/diamondburned/6cord/builds/artifacts/master/file/6cord.exe?job=windows)**
 
