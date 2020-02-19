@@ -41,6 +41,9 @@ yay install 6cord
 
 # FreeBSD:
 pkg install 6cord
+
+# Void Linux:
+xbps-install 6cord
 ```
 
 ## Getting the token
