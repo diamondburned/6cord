@@ -44,6 +44,9 @@ pkg install 6cord
 
 # Void Linux:
 xbps-install 6cord
+
+# Alpine Linux (in the testing repo):
+apk add 6cord
 ```
 
 ## Getting the token
