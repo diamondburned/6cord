@@ -1,3 +1,10 @@
+## Deprecated
+
+6cord has been deprecated in favor of [gtkcord3](https://github.com/diamondburned/gtkcord3). Important bugs may not be
+fixed, but PRs are still welcomed.
+
+# 6cord
+
 <h1 align="center">6cord</h1>
 <p align="center">
 	<a href="https://liberapay.com/diamondburned/donate">
