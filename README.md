@@ -1,9 +1,9 @@
-## Deprecated
+<h1 align="center">Deprecated</h1>
 
+<p align="center">
 6cord has been deprecated in favor of [gtkcord3](https://github.com/diamondburned/gtkcord3). Important bugs may not be
 fixed, but PRs are still welcomed.
-
-# 6cord
+</p>
 
 <h1 align="center">6cord</h1>
 <p align="center">
