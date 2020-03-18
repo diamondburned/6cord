@@ -1,7 +1,7 @@
 <h1 align="center">Deprecated</h1>
 
 <p align="center">
-6cord has been deprecated in favor of [gtkcord3](https://github.com/diamondburned/gtkcord3). Important bugs may not be
+6cord has been deprecated in favor of <a href="https://github.com/diamondburned/gtkcord3">gtkcord3</a>. Important bugs may not be
 fixed, but PRs are still welcomed.
 </p>
 
