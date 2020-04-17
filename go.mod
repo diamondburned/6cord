@@ -19,7 +19,6 @@ require (
 	github.com/gobwas/ws v1.0.2 // indirect
 	github.com/gopherjs/gopherjs v0.0.0-20190915194858-d3ddacdb130f // indirect
 	github.com/gopherjs/gopherwasm v1.1.0 // indirect
-	github.com/gorilla/websocket v1.4.1 // indirect
 	github.com/hashicorp/go-retryablehttp v0.6.2 // indirect
 	github.com/jonas747/gojay v0.0.0-20190906102056-b3bd5c8fcd50
 	github.com/kylelemons/godebug v1.1.0 // indirect
@@ -37,6 +36,7 @@ require (
 	github.com/zalando/go-keyring v0.0.0-20190913082157-62750a1ff80d
 	gitlab.com/diamondburned/go-w3m v0.0.0-20190608163716-1b390b8a3d1f
 	gitlab.com/diamondburned/ueberzug-go v0.0.0-20190521043425-7c15a5f63b06
+	gitlab.com/shihoya-inc/ws v0.0.0-20190921174751-da4704c313d7 // indirect
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/sys v0.0.0-20191010194322-b09406accb47 // indirect
