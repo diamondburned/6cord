@@ -61,7 +61,7 @@ func actualLoadChannel(channelID int64) {
 	}
 
 	log.Println("Booted stage 1")
-	time.Sleep(10 * time.Second)
+	// time.Sleep(1 * time.Second)
 
 	switch ch.Type {
 	case discordgo.ChannelTypeGuildVoice:
@@ -92,7 +92,7 @@ func actualLoadChannel(channelID int64) {
 	}
 
 	log.Println("Booted stage 2")
-	time.Sleep(10 * time.Second)
+	// time.Sleep(1 * time.Second)
 
 	ch.Messages = msgs
 
